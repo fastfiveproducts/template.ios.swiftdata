@@ -1,0 +1,35 @@
+# macOS
+.DS_Store
+
+## User settings
+xcuserdata/
+*.xcuserstate
+
+# Add this line if you want to avoid checking in source code from the Xcode workspace
+*.xcworkspace
+
+## Obj-C/Swift specific
+*.hmap
+
+## App packaging
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+## Playgrounds
+timeline.xctimeline
+playground.xcworkspace
+
+# Swift Package Manager
+Packages/
+Package.pins
+Package.resolved
+.swiftpm
+
+
+# firebase connection
+GoogleService-Info.plist
+
+# firebase dataconnect generated files
+dataconnect-generated
+
