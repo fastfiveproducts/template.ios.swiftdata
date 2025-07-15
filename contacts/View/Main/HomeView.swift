@@ -114,10 +114,11 @@ struct HomeView: View {
                             currentUserService: currentUserService)
                     } label: {
                         HStack {
+                            Spacer()
                             Text("Tap Here or ") + Text(Image(systemName: "\(MenuItem.profile.systemImage)")) + Text(" to Sign In!")
+                            Spacer()
                         }
                         .foregroundColor(.accentColor)
-                        .padding(.horizontal)
                     }
                 }
             }
@@ -149,44 +150,9 @@ struct HomeView: View {
                 store: privateMessageStore)
             
         case .comments:
-            VStackBox {
-                HStack {
-                    Text("Testing Talk")
-                        .font(.title2)
-                        .fontWeight(.semibold)
-                    Spacer()
-                    if currentUserService.isSignedIn {
-                        NavigationLink {
-                            UserCommentPostsStackView(
-                                currentUserService: currentUserService,
-                                viewModel: UserPostViewModel<PublicComment>(),
-                                store: publicCommentStore
-                            )
-                        } label: {
-                            Text("Write a Comment")
-                                .font(.caption)
-                                .foregroundColor(.accentColor)
-                        }
-                    }
-                }
-            } content: {
-                if currentUserService.isSignedIn {
-                    PostsScrollView(
-                        store: publicCommentStore,
-                        currentUserId: currentUserService.userKey.uid,
-                        showFromUser: true,
-                        hideWhenEmpty: true
-                    )
-                } else {
-                    HStack {
-                        Text("Not Signed In!")
-                        Spacer()
-                        Text("...tap ") + Text(Image(systemName: "person")) + Text(" above")
-                    }
-                    .padding(.horizontal)
-                }
-            }
-//            Spacer()
+            CommentPostsStackView(
+                currentUserService: currentUserService,
+                store: publicCommentStore)
             
         case .activity:
             ActivityLogView()
