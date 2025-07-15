@@ -36,7 +36,7 @@ struct UserMessagePostsStackView: View, DebugPrintable {
     private enum Field: Hashable { case firstField, secondField }
     
     var body: some View {
-        VStack(spacing: 16) {
+        VStack(alignment: .leading, spacing: 16) {
             
             // MARK: -- Write
             VStackBox(title: "Write Message"){
@@ -122,6 +122,8 @@ struct UserMessagePostsStackView: View, DebugPrintable {
                 )
                 .padding(.horizontal)
             }
+            
+            Spacer()
         }
         .dynamicTypeSize(...ViewConfiguration.dynamicSizeMax)
         .environment(\.font, Font.body)
@@ -157,10 +159,20 @@ private extension UserMessagePostsStackView {
 
 
 #if DEBUG
-#Preview  {
+#Preview ("Loaded") {
     let currentUserService = CurrentUserTestService.sharedSignedIn
     let viewModel = UserPostViewModel<PrivateMessage>()
     let store = PrivateMessageStore.testLoaded()
+    UserMessagePostsStackView(
+        currentUserService: currentUserService,
+        viewModel: viewModel,
+        store: store
+    )
+}
+#Preview ("Empty") {
+    let currentUserService = CurrentUserTestService.sharedSignedIn
+    let viewModel = UserPostViewModel<PrivateMessage>()
+    let store = PrivateMessageStore()
     UserMessagePostsStackView(
         currentUserService: currentUserService,
         viewModel: viewModel,

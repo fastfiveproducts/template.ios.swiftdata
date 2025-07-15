@@ -35,6 +35,7 @@ struct ActivityLogView: View, DebugPrintable {
                 }
                 .padding(.bottom)
             }
+            
             List {
                 if logEntries.isEmpty {
                     Text("No activity logged yet.")
@@ -49,6 +50,7 @@ struct ActivityLogView: View, DebugPrintable {
                 }
             }
             .listStyle(.plain)
+            
             Spacer()
             Button("Clear All Logs") {
                 clearAllLogs()

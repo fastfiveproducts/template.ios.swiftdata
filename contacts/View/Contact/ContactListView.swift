@@ -19,10 +19,6 @@ struct ContactListView: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("Contacts - My Contacts")
-                .font(.title2)
-                .fontWeight(.semibold)
-        
             List {
                 ForEach(contacts) { contact in
                     Button {
@@ -41,14 +37,17 @@ struct ContactListView: View {
                 .onDelete(perform: deleteContact)
             }
             .listStyle(.plain)
-            .frame(maxHeight: 150) // Optional: constrain list height in the panel
             
+            Divider()
             Button {
                 showAddSheet = true
             } label: {
-                Label("Add Contact", systemImage: "plus")
+                HStack {
+                    Spacer()
+                    Label("Add Contact", systemImage: "plus")
+                    Spacer()
+                }
             }
-            .padding(.top)
         }
         .sheet(isPresented: $showAddSheet) {
             NavigationStack {

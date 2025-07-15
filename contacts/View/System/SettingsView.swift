@@ -32,11 +32,18 @@ struct SettingsView: View {
                 }
                 .padding(.bottom)
             }
-            Toggle("Dark Mode", isOn: $settings.darkMode)
-            Toggle("Sound effects", isOn: $settings.soundEffects)
+            
+            List {
+                Toggle("Dark Mode", isOn: $settings.darkMode)
+                Toggle("Sound effects", isOn: $settings.soundEffects)
+            }
+            .listStyle(.plain)
+            
             Spacer()
             Button("Reset All Settings") {
-                settings.resetAllSettings()
+                withAnimation {
+                    settings.resetAllSettings()
+                }
             }
         }
         .padding()

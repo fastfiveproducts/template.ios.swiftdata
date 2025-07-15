@@ -65,39 +65,6 @@ struct HomeView: View {
         .dynamicTypeSize(...ViewConfiguration.dynamicSizeMax)
         .environment(\.font, Font.body)
     }
-
-    @ViewBuilder
-    var menuView: some View {
-        ForEach(MenuItem.allCases
-            .filter { $0.sortOrder.0 == 0 }
-            .sorted(by: { $0.sortOrder.1 < $1.sortOrder.1 })) { item in
-                Button {
-                    selectedMenuItem = item
-                } label: {
-                    if item == .profile {
-                        Label(item.label, systemImage: currentUserService.isSignedIn ? "\(item.systemImage).fill" : item.systemImage)
-                    } else {
-                        Label(item.label, systemImage: item.systemImage)
-                    }
-                }
-        }
-
-        Divider()
-
-        ForEach(MenuItem.allCases
-            .filter { $0.sortOrder.0 == 1 }
-            .sorted(by: { $0.sortOrder.1 < $1.sortOrder.1 })) { item in
-                Button {
-                    selectedMenuItem = item
-                } label: {
-                    if item == .profile {
-                        Label(item.label, systemImage: currentUserService.isSignedIn ? "\(item.systemImage).fill" : item.systemImage)
-                    } else {
-                        Label(item.label, systemImage: item.systemImage)
-                    }
-                }
-        }
-    }
     
     @ViewBuilder
     var destinationView: some View {
@@ -164,7 +131,40 @@ struct HomeView: View {
             EmptyView()
         }
     }
+
+    @ViewBuilder
+    var menuView: some View {
+        ForEach(MenuItem.allCases
+            .filter { $0.sortOrder.0 == 0 }
+            .sorted(by: { $0.sortOrder.1 < $1.sortOrder.1 })) { item in
+                Button {
+                    selectedMenuItem = item
+                } label: {
+                    menuLabel(item)
+                }
+        }
+        Divider()
+        ForEach(MenuItem.allCases
+            .filter { $0.sortOrder.0 == 1 }
+            .sorted(by: { $0.sortOrder.1 < $1.sortOrder.1 })) { item in
+                Button {
+                    selectedMenuItem = item
+                } label: {
+                    menuLabel(item)
+                }
+        }
+    }
+    
+    @ViewBuilder
+    func menuLabel(_ item: MenuItem) -> some View {
+        if item == .profile {
+            Label(item.label, systemImage: currentUserService.isSignedIn ? "\(item.systemImage).fill" : item.systemImage)
+        } else {
+            Label(item.label, systemImage: item.systemImage)
+        }
+    }
 }
+
 
 #if DEBUG
 #Preview ("test-data signed-in") {
@@ -194,7 +194,6 @@ struct HomeView: View {
     )
     .modelContainer(container)
 }
-
 #Preview ("test-data signed-out") {
     let container = try! ModelContainer()
     let currentUserService = CurrentUserTestService.sharedSignedOut
