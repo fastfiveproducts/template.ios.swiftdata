@@ -27,7 +27,6 @@ struct HomeView: View {
     @ObservedObject var announcementStore: AnnouncementStore
     @ObservedObject var publicCommentStore: PublicCommentStore
     @ObservedObject var privateMessageStore: PrivateMessageStore
-    @ObservedObject var locationStore = ListableFileStore<Location>()
 
     var body: some View {
         NavigationStack {
@@ -82,22 +81,7 @@ struct HomeView: View {
             
         case .contacts:
             ContactListView()
-            
-        case .locations:
-            VStackBox {
-                ListableStoreView(store: locationStore, showSectionHeader: false, showDividers: true)
-            }
-
-            if currentUserService.isSignedIn {
-                ListableCaptureForm(
-                    viewModel: Location.makeCaptureFormViewModel(store: locationStore),
-                    showHeader: true)
-            } else {
-                self.signInLinkView
-            }
-
-            Spacer()
-            
+                        
         case .profile:
             UserAccountView(
                 viewModel: UserAccountViewModel(),
@@ -185,8 +169,6 @@ struct HomeView: View {
     ])
     let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
     let container = try! ModelContainer(for: schema, configurations: [modelConfiguration])
-    
-    let locationStore = ListableFileStore<Location>()
 
     for object in ActivityLogEntry.testObjects {
         container.mainContext.insert(object)
@@ -195,10 +177,6 @@ struct HomeView: View {
     for object in Contact.testObjects {
         container.mainContext.insert(object)
     }
-    
-    for object in Location.testObjects {
-        locationStore.insert(object)
-    }
 
     let currentUserService = CurrentUserTestService.sharedSignedIn
     return HomeView(
@@ -206,8 +184,7 @@ struct HomeView: View {
         currentUserService: currentUserService,
         announcementStore: AnnouncementStore.testLoaded(),
         publicCommentStore: PublicCommentStore.testLoaded(),
-        privateMessageStore: PrivateMessageStore(),             // loading empty because private messages not used yet
-        locationStore: locationStore
+        privateMessageStore: PrivateMessageStore()              // loading empty because private messages not used yet
     )
     .modelContainer(container)
 }
@@ -219,8 +196,7 @@ struct HomeView: View {
         currentUserService: currentUserService,
         announcementStore: AnnouncementStore.testLoaded(),
         publicCommentStore: PublicCommentStore.testLoaded(),
-        privateMessageStore: PrivateMessageStore.testLoaded(),
-        locationStore: ListableFileStore<Location>()
+        privateMessageStore: PrivateMessageStore.testLoaded()
     )
     .modelContainer(container)
 }

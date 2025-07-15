@@ -20,7 +20,6 @@ class HomeViewModel: ObservableObject, DebugPrintable {
 enum MenuItem: String, CaseIterable, Identifiable {
     case announcements,
          contacts,
-         locations,
          comments,
          messages,
          activity,
@@ -32,7 +31,6 @@ enum MenuItem: String, CaseIterable, Identifiable {
         switch self {
         case .announcements: return "Announcements"
         case .contacts: return "Contacts"
-        case .locations: return "Meet-up Spots"
         case .comments: return "Public Comments"
         case .messages: return "Private Messages"
         case .activity: return "Activity Log"
@@ -45,9 +43,8 @@ enum MenuItem: String, CaseIterable, Identifiable {
         switch self {
         case .announcements: return (0,0)
         case .contacts: return (0,1)
-        case .locations: return (0,2)
-        case .messages: return (0,3)
-        case .comments: return (0,4)
+        case .messages: return (0,2)
+        case .comments: return (0,3)
         case .activity: return (1,0)
         case .settings: return (1,1)
         case .profile: return (1,2)
@@ -58,7 +55,6 @@ enum MenuItem: String, CaseIterable, Identifiable {
         switch self {
         case .announcements: return "megaphone"
         case .contacts: return "person.2.circle"
-        case .locations: return "mappin.and.ellipse"
         case .messages: return "envelope"
         case .comments: return "text.bubble"
         case .activity: return "book.pages"
