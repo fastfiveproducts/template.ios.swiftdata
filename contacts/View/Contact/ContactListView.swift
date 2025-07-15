@@ -12,6 +12,7 @@ import SwiftData
 struct ContactListView: View {
     @Environment(\.modelContext) private var modelContext
     @Query private var contacts: [Contact]
+    @ObservedObject var currentUserService: CurrentUserService
     
     @State private var showAddSheet = false
     @State private var newContact = Contact.empty
@@ -38,15 +39,19 @@ struct ContactListView: View {
             }
             .listStyle(.plain)
             
-            Divider()
-            Button {
-                showAddSheet = true
-            } label: {
-                HStack {
-                    Spacer()
-                    Label("Add Contact", systemImage: "plus")
-                    Spacer()
+            if currentUserService.isSignedIn {
+                Divider()
+                Button {
+                    showAddSheet = true
+                } label: {
+                    HStack {
+                        Spacer()
+                        Label("Add Contact", systemImage: "plus")
+                        Spacer()
+                    }
                 }
+            } else {
+                SignUpInLinkView(currentUserService: currentUserService)
             }
         }
         .sheet(isPresented: $showAddSheet) {
@@ -103,7 +108,7 @@ struct ContactListView: View {
 }
 
 #if DEBUG
-#Preview {
+#Preview ("test-data signed-in") {
     let config = ModelConfiguration(isStoredInMemoryOnly: true)
     let container = try! ModelContainer(for: Contact.self, configurations: config)
 
@@ -111,7 +116,14 @@ struct ContactListView: View {
         container.mainContext.insert(task)
     }
 
-    return ContactListView()
+    let currentUserService = CurrentUserTestService.sharedSignedIn
+    return ContactListView(currentUserService: currentUserService)
+        .modelContainer(container)
+}
+#Preview ("no-data and signed-out") {
+    let container = try! ModelContainer()
+    let currentUserService = CurrentUserTestService.sharedSignedOut
+    return ContactListView(currentUserService: currentUserService)
         .modelContainer(container)
 }
 #endif

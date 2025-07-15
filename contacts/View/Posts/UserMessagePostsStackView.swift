@@ -8,7 +8,7 @@
 //      changes should be rare; it is recommended changes are applied to the template
 //      and the entire file compared-and-then-replaced here if/as appropriate
 //
-//      Template v0.1.2 (renamed)
+//      Template v0.1.4 (updated)
 //
 
 
@@ -18,8 +18,8 @@ import SwiftUI
 // ***** WARNING - placeholder only - not fully implemented - not tested *****
 
 struct UserMessagePostsStackView: View, DebugPrintable {
-    @ObservedObject var currentUserService: CurrentUserService
     @ObservedObject var viewModel: UserPostViewModel<PrivateMessage>
+    @ObservedObject var currentUserService: CurrentUserService
     @ObservedObject var store: PrivateMessageStore
     
     @FocusState private var focusedField: Field?
@@ -164,8 +164,8 @@ private extension UserMessagePostsStackView {
     let viewModel = UserPostViewModel<PrivateMessage>()
     let store = PrivateMessageStore.testLoaded()
     UserMessagePostsStackView(
-        currentUserService: currentUserService,
         viewModel: viewModel,
+        currentUserService: currentUserService,
         store: store
     )
 }
@@ -174,8 +174,8 @@ private extension UserMessagePostsStackView {
     let viewModel = UserPostViewModel<PrivateMessage>()
     let store = PrivateMessageStore()
     UserMessagePostsStackView(
-        currentUserService: currentUserService,
         viewModel: viewModel,
+        currentUserService: currentUserService,
         store: store
     )
 }

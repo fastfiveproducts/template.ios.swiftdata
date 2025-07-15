@@ -18,48 +18,28 @@ struct CommentPostsStackView: View, DebugPrintable {
     @ObservedObject var store: PublicCommentStore
     
     var body: some View {
-        if currentUserService.isSignedIn {
-            VStackBox {
-                PostsScrollView(
-                    store: store,
-                    currentUserId: currentUserService.userKey.uid,
-                    showFromUser: true,
-                    hideWhenEmpty: true
+        VStackBox {
+            PostsScrollView(
+                store: store,
+                currentUserId: currentUserService.userKey.uid,
+                showFromUser: true,
+                hideWhenEmpty: true
+            )
+            Divider()
+            NavigationLink {
+                UserCommentPostsStackView(
+                    currentUserService: currentUserService,
+                    viewModel: UserPostViewModel<PublicComment>(),
+                    store: store
                 )
-                Divider()
-                NavigationLink {
-                    UserCommentPostsStackView(
-                        currentUserService: currentUserService,
-                        viewModel: UserPostViewModel<PublicComment>(),
-                        store: store
-                    )
-                } label: {
-                    HStack {
-                        Spacer()
-                        Text("Write a Comment")
-                        Spacer()
-                    }
-                    .foregroundColor(.accentColor)
+            } label: {
+                HStack {
+                    Spacer()
+                    Text("Write a Comment")
+                    Spacer()
                 }
+                .foregroundColor(.accentColor)
             }
-        } else {
-            VStackBox {
-                Text("Not Signed In!")
-                Divider()
-                NavigationLink {
-                    UserAccountView(
-                        viewModel: UserAccountViewModel(),
-                        currentUserService: currentUserService)
-                } label: {
-                    HStack {
-                        Spacer()
-                        Text("Tap Here or ") + Text(Image(systemName: "\(MenuItem.profile.systemImage)")) + Text(" to Sign In!")
-                        Spacer()
-                    }
-                    .foregroundColor(.accentColor)
-                }
-            }
-            Spacer()
         }
     }
 }
