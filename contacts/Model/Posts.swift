@@ -92,6 +92,7 @@ struct PublicComment: Post, Listable {
     // to conform to Listable, use known data to describe the object
     var objectDescription: String { "Comment from " + from.displayName + ": " + content }
     
+    // to conform to Listable, supply a 'is valid' computed property
     var isValid: Bool {
         guard !content.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
               from.isValid
@@ -121,6 +122,7 @@ struct PrivateMessage: Post, Listable  {
     // to conform to Listable, use known data to describe the object
     var objectDescription: String { "Message from " + from.displayName + ": " + content }
     
+    // to conform to Listable, supply a 'is valid' computed property
     var isValid: Bool {
         guard !title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
               !content.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,

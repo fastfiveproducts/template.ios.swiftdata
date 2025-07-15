@@ -38,7 +38,6 @@ struct templateApp: App {
         WindowGroup {
             HomeView(
                 viewModel: HomeViewModel(),
-                sharedModelContainer: sharedModelContainer,         // pass this so it can be force-propagated around non-ContainerViews like ScrollView
                 currentUserService: CurrentUserService.shared,      // will setup its own listener upon initialziation
                 announcementStore: AnnouncementStore.shared,        // call fetch immediately below as fire-and-forget
                 publicCommentStore: PublicCommentStore.shared,      // will observe user sign-in and fetch at that point
