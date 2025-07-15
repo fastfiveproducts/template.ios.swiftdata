@@ -16,10 +16,14 @@
 //     Contact: is a sample of a class that is used in the app
 //     and persisted locally using SwiftData.
 //
+//     Location: is a sample of a struct that is then later used in the app
+//     and persisted locally using FileManager
+//
 //     Also note other examples/samples:
-//     "Annoucement" in this app is ready-only and sourced from Firebase Firestore
+//     "ActivityLog" in this app is persisted locally using SwiftData
+//     "Announcement" in this app is ready-only and sourced from Firebase Firestore
 //     "User" in this app is a mix of Firebase Authentication and Firebase Data Connect
-//     "Post" in this app is read-write and stored via Firebase Data Connect
+//     "Post" in this app is a read-write struct protocol with data stored via Firebase Data Connect
 //
 
 
@@ -64,6 +68,7 @@ extension Contact {
         Contact(firstName: "", lastName: "", contact: "")
     }
 }
+
 
 #if DEBUG
 extension Contact {

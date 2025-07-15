@@ -14,15 +14,31 @@
 
 import Foundation
 
+enum CaptureType: String, Codable { case
+    bool,
+    text
+}
+
 struct CaptureField: Identifiable {
     var id: String            // this will be the 'name' of the field; 'id' ensures conformance to Identifiable
     var labelText: String
     var promptText: String
+    var type: CaptureType
+    var bool: Bool = false
     var text: String = ""
-    var required: Bool = true
+    var required: Bool = false
     var autoCapitalize: Bool = true
     var checkRestrictedWordList: Bool = true
 
+    var value: Any {
+        switch type {
+        case .bool:
+            return bool
+        case .text:
+            return text
+        }
+    }
+    
     var isValid: Bool {
         !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || !required
     }

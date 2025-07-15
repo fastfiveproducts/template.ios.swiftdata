@@ -33,7 +33,7 @@ struct UserCommentPostsStackView: View, DebugPrintable {
     private enum Field: Hashable { case firstField }
          
     var body: some View {
-        VStack(spacing: 16) {
+        VStack(alignment: .leading, spacing: 16) {
             
             // MARK: -- Write
             VStackBox(title: "Write Comment"){
@@ -78,7 +78,6 @@ struct UserCommentPostsStackView: View, DebugPrintable {
                     .font(.title3)
                     .fontWeight(.semibold)
                     .padding(.horizontal)
-
                 PostsScrollView(
                     store: store,
                     currentUserId: currentUserService.userKey.uid,
@@ -86,6 +85,8 @@ struct UserCommentPostsStackView: View, DebugPrintable {
                 )
                 .padding(.horizontal)
             }
+            
+            Spacer()
         }
         .dynamicTypeSize(...ViewConfiguration.dynamicSizeMax)
         .environment(\.font, Font.body)
@@ -119,10 +120,20 @@ private extension UserCommentPostsStackView {
 
 
 #if DEBUG
-#Preview  {
+#Preview ("Loaded") {
     let currentUserService = CurrentUserTestService.sharedSignedIn
     let viewModel = UserPostViewModel<PublicComment>()
     let store = PublicCommentStore.testLoaded()
+    UserCommentPostsStackView(
+        currentUserService: currentUserService,
+        viewModel: viewModel,
+        store: store
+    )
+}
+#Preview ("Empty") {
+    let currentUserService = CurrentUserTestService.sharedSignedIn
+    let viewModel = UserPostViewModel<PublicComment>()
+    let store = PublicCommentStore()
     UserCommentPostsStackView(
         currentUserService: currentUserService,
         viewModel: viewModel,

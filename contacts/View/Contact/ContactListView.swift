@@ -19,10 +19,6 @@ struct ContactListView: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("Contacts - My Contacts")
-                .font(.title2)
-                .fontWeight(.semibold)
-        
             List {
                 ForEach(contacts) { contact in
                     Button {
@@ -35,20 +31,23 @@ struct ContactListView: View {
                             Image(systemName: "chevron.right")
                                 .foregroundColor(.gray)
                         }
-                        .contentShape(Rectangle()) // ensures tap area fills row
+                        .contentShape(Rectangle())
                     }
                 }
                 .onDelete(perform: deleteContact)
             }
             .listStyle(.plain)
-            .frame(maxHeight: 150) // Optional: constrain list height in the panel
             
+            Divider()
             Button {
                 showAddSheet = true
             } label: {
-                Label("Add Contact", systemImage: "plus")
+                HStack {
+                    Spacer()
+                    Label("Add Contact", systemImage: "plus")
+                    Spacer()
+                }
             }
-            .padding(.top)
         }
         .sheet(isPresented: $showAddSheet) {
             NavigationStack {
@@ -94,9 +93,11 @@ struct ContactListView: View {
         .padding(.horizontal)
     }
     
-    private func deleteContact(at offsets: IndexSet) {
-        for index in offsets {
-            modelContext.delete(contacts[index])
+    private func deleteContact(offsets: IndexSet) {
+        withAnimation {
+            for index in offsets {
+                modelContext.delete(contacts[index])
+            }
         }
     }
 }

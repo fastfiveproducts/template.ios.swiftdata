@@ -8,7 +8,7 @@
 //      changes should be rare; it is recommended changes are applied to the template
 //      and the entire file compared-and-then-replaced here if/as appropriate
 //
-//      Template v0.1.2 (updated)
+//      Template v0.1.4 (updated)
 //
 
 
@@ -55,7 +55,16 @@ struct VStackBox<Content: View>: View {
 
 
 #if DEBUG
-#Preview {
+#Preview ("List") {
+    VStackBox () {
+        List {
+            Text("Hello, World!")
+            Text("Hello, World!")
+            Text("Hello, World!")
+        }
+    }
+}
+#Preview ("fancy") {
     NavigationStack {
         VStackBox {
             HStack {
