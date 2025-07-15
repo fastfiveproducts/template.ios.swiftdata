@@ -2,7 +2,7 @@
 //  ActivityLogView.swift
 //
 //  Created by Elizabeth Maiser on 7/5/25.
-//      Template v0.1.3
+//      Template v0.1.4 (updated)
 //      © Fast Five Products LLC, 2025
 //      https://github.com/fastfiveproducts/template.ios
 //      used here per terms of template.ios License file
@@ -14,6 +14,7 @@
 //      from YOUR_NAME
 //
 
+
 import SwiftUI
 import SwiftData
 
@@ -21,15 +22,19 @@ struct ActivityLogView: View, DebugPrintable {
     @Environment(\.modelContext) private var modelContext
     @Query(sort: \ActivityLogEntry.timestamp) var logEntries: [ActivityLogEntry]
     
+    var showTitle: Bool = false
+    
     var body: some View {
         VStack {
-            HStack {
-                Text("Activity Log")
-                    .font(.title2)
-                    .fontWeight(.semibold)
-                Spacer()
+            if showTitle {
+                HStack {
+                    Text("Activity Log")
+                        .font(.title2)
+                        .fontWeight(.semibold)
+                    Spacer()
+                }
+                .padding(.bottom)
             }
-            .padding(.bottom)
             List {
                 if logEntries.isEmpty {
                     Text("No activity logged yet.")
@@ -41,39 +46,37 @@ struct ActivityLogView: View, DebugPrintable {
                             Text(entry.timestamp, style: .time)
                         }
                     }
-                    .onDelete(perform: deleteLogEntry)
                 }
             }
             .listStyle(.plain)
             Spacer()
             Button("Clear All Logs") {
-                                clearAllLogs()
-                            }
-        }
-        .padding()
-        .toolbar {
-            ToolbarItem(placement: .navigationBarTrailing) {
-                EditButton()
+                clearAllLogs()
             }
         }
-    }
-    
-    private func deleteLogEntry(at offsets: IndexSet) {
-        for index in offsets {
-            let entryToDelete = logEntries[index]
-            modelContext.delete(entryToDelete)
-        }
+        .padding()
     }
     
     private func clearAllLogs() {
-            do {
-                try modelContext.delete(model: ActivityLogEntry.self)
-            } catch {
+        withAnimation {
+            for entry in logEntries {
+                modelContext.delete(entry)
             }
         }
+    }
 }
 
+
+#if DEBUG
 #Preview {
-    ActivityLogView()
-        .modelContainer(for: ActivityLogEntry.self, inMemory: true)
+    let config = ModelConfiguration(isStoredInMemoryOnly: true)
+    let container = try! ModelContainer(for: ActivityLogEntry.self, configurations: config)
+    
+    for task in ActivityLogEntry.testObjects {
+        container.mainContext.insert(task)
+    }
+    
+    return ActivityLogView()
+        .modelContainer(container)
 }
+#endif

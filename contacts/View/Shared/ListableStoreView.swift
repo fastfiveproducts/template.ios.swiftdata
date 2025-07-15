@@ -1,5 +1,5 @@
 //
-//  ListableStoreView.swift
+//  ListableStoreView.swift (renamed from StoreListView)
 //
 //  Template created by Pete Maiser, July 2024 through May 2025
 //      © Fast Five Products LLC, 2025
@@ -8,7 +8,7 @@
 //      changes should be rare; it is recommended changes are applied to the template
 //      and the entire file compared-and-then-replaced here if/as appropriate
 //
-//      Template v0.1.2 (renamed from StoreListView)
+//      Template v0.1.4 (updated)
 //
 
 
@@ -47,6 +47,10 @@ struct ListableStoreView<Store: ListableStore>: View {
         let sectionHeader = Text("\(Store.T.typeDescription)s")
         if showSectionHeader && !objects.isEmpty {
             Section(header: sectionHeader) {
+                contentList(objects)
+            }
+        } else if !objects.isEmpty{
+            Section {
                 contentList(objects)
             }
         } else {

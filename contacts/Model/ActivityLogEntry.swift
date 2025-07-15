@@ -2,7 +2,7 @@
 //  ActivityLogEntry.swift
 //
 //  Created by Elizabeth Maiser on 7/5/25.
-//      Template v0.1.3
+//      Template v0.1.4 (updated)
 //      © Fast Five Products LLC, 2025
 //      https://github.com/fastfiveproducts/template.ios
 //      used here per terms of template.ios License file
@@ -27,3 +27,13 @@ final class ActivityLogEntry {
         self.timestamp = timestamp
     }
 }
+
+
+#if DEBUG
+extension ActivityLogEntry {
+    static let testObjects: [ActivityLogEntry] = [
+        ActivityLogEntry("test event"),
+        ActivityLogEntry("another test event")
+    ]
+}
+#endif

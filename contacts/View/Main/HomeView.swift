@@ -18,7 +18,7 @@ import SwiftData
 
 struct HomeView: View {
     @ObservedObject var viewModel: HomeViewModel
-    let sharedModelContainer: ModelContainer
+    @Environment(\.modelContext) private var modelContext
     
     @State private var showMenu = false
     @State private var selectedMenuItem: MenuItem? = .contacts
@@ -38,97 +38,104 @@ struct HomeView: View {
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Menu {
-                        ForEach(MenuItem.allCases
-                            .filter { $0.sortOrder.0 == 0 }
-                            .sorted(by: { $0.sortOrder.1 < $1.sortOrder.1 })) { item in
-                                Button {
-                                    selectedMenuItem = item
-                                } label: {
-                                    Label(item.label, systemImage: item.systemImage)
-                                }
-                        }
-
-                        Divider()
-
-                        ForEach(MenuItem.allCases
-                            .filter { $0.sortOrder.0 == 1 }
-                            .sorted(by: { $0.sortOrder.1 < $1.sortOrder.1 })) { item in
-                                Button {
-                                    selectedMenuItem = item
-                                } label: {
-                                    Label(item.label, systemImage: item.systemImage)
-                                }
-                        }
+                        self.menuView
                     } label: {
                         Label("Menu", systemImage: "line.3.horizontal")
                     }
-
+                }
+                
+                if !currentUserService.isSignedIn && self.selectedMenuItem != .profile {
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        NavigationLink {
+                            UserAccountView(
+                                viewModel: UserAccountViewModel(),
+                                currentUserService: currentUserService)
+                        } label: {
+                            HStack {
+                                Text("Sign In →")
+                                Label(MenuItem.profile.label, systemImage: currentUserService.isSignedIn ? "\(MenuItem.profile.systemImage).fill" : MenuItem.profile.systemImage)
+                            }
+                        }
+                        .buttonStyle(BorderlessButtonStyle())
+                    }
                 }
             }
             .padding(.vertical)
         }
-        
         .dynamicTypeSize(...ViewConfiguration.dynamicSizeMax)
         .environment(\.font, Font.body)
+    }
+
+    @ViewBuilder
+    var menuView: some View {
+        ForEach(MenuItem.allCases
+            .filter { $0.sortOrder.0 == 0 }
+            .sorted(by: { $0.sortOrder.1 < $1.sortOrder.1 })) { item in
+                Button {
+                    selectedMenuItem = item
+                } label: {
+                    if item == .profile {
+                        Label(item.label, systemImage: currentUserService.isSignedIn ? "\(item.systemImage).fill" : item.systemImage)
+                    } else {
+                        Label(item.label, systemImage: item.systemImage)
+                    }
+                }
+        }
+
+        Divider()
+
+        ForEach(MenuItem.allCases
+            .filter { $0.sortOrder.0 == 1 }
+            .sorted(by: { $0.sortOrder.1 < $1.sortOrder.1 })) { item in
+                Button {
+                    selectedMenuItem = item
+                } label: {
+                    if item == .profile {
+                        Label(item.label, systemImage: currentUserService.isSignedIn ? "\(item.systemImage).fill" : item.systemImage)
+                    } else {
+                        Label(item.label, systemImage: item.systemImage)
+                    }
+                }
+        }
     }
     
     @ViewBuilder
     var destinationView: some View {
         switch self.selectedMenuItem {
         case .announcements:
-            Form {
-                ListableStoreView(store: announcementStore, showSectionHeader: true, showDividers: false)
+            VStackBox {
+                ListableStoreView(store: announcementStore, showSectionHeader: false, showDividers: true)
                 
                 if !currentUserService.isSignedIn {
+                    Divider()
                     NavigationLink {
                         UserAccountView(
                             viewModel: UserAccountViewModel(),
                             currentUserService: currentUserService)
                     } label: {
                         HStack {
-                            Text("Tap Here or Menu -> ") + Text("User Profile") + Text(" to Sign In!")
+                            Text("Tap Here or ") + Text(Image(systemName: "\(MenuItem.profile.systemImage)")) + Text(" to Sign In!")
                         }
                         .foregroundColor(.accentColor)
                         .padding(.horizontal)
                     }
                 }
             }
+            Spacer()
             
         case .contacts:
             ContactListView()
-                .modelContainer(sharedModelContainer)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .background(Color(.systemGroupedBackground))
-                .cornerRadius(12)
-                .padding(.horizontal)
             
         case .locations:
             VStackBox {
-                HStack {
-                    Text ("Capture Form Example")
-                        .font(.title2)
-                        .fontWeight(.semibold)
-                    Spacer()
-                    NavigationLink {
-                        Form() {
-                            ListableStoreView(store: templateStructStore, showSectionHeader: true, showDividers: false)
-                        }
-                    } label: {
-                        Text("Records")
-                            .font(.caption)
-                            .foregroundColor(.accentColor)
-                    }
-                }
-            } content: {
+                ListableStoreView(store: templateStructStore, showSectionHeader: false, showDividers: true)
+            }
+            VStackBox(title: "Add New Spot") {
                 CaptureFormView(
                     viewModel: TemplateStruct.makeCaptureFormViewModel(store: templateStructStore),
-                    showHeader: false
-                )
-                .padding(.horizontal)
-                .background(Color(.systemGroupedBackground))
-                .cornerRadius(6)
-                .shadow(color: .black.opacity(0.05), radius: 4, x: 0, y: 2)
+                    showHeader: false)
             }
+            Spacer()
             
         case .profile:
             UserAccountView(
@@ -179,10 +186,10 @@ struct HomeView: View {
                     .padding(.horizontal)
                 }
             }
+//            Spacer()
             
         case .activity:
             ActivityLogView()
-                .modelContainer(sharedModelContainer)
             
         case .settings:
             SettingsView()
@@ -200,22 +207,26 @@ struct HomeView: View {
         ActivityLogEntry.self
     ])
     let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
-    let container = try! ModelContainer(for: Contact.self, configurations: modelConfiguration)
+    let container = try! ModelContainer(for: schema, configurations: [modelConfiguration])
 
     for task in Contact.testObjects {
+        container.mainContext.insert(task)
+    }
+    
+    for task in ActivityLogEntry.testObjects {
         container.mainContext.insert(task)
     }
     
     let currentUserService = CurrentUserTestService.sharedSignedIn
     return HomeView(
         viewModel: HomeViewModel(),
-        sharedModelContainer: container,
         currentUserService: currentUserService,
         announcementStore: AnnouncementStore.testLoaded(),
         publicCommentStore: PublicCommentStore.testLoaded(),
         privateMessageStore: PrivateMessageStore(),             // loading empty because private messages not used yet
         templateStructStore: ListableFileStore<TemplateStruct>()
     )
+    .modelContainer(container)
 }
 
 #Preview ("test-data signed-out") {
@@ -223,12 +234,12 @@ struct HomeView: View {
     let currentUserService = CurrentUserTestService.sharedSignedOut
     return HomeView(
         viewModel: HomeViewModel(),
-        sharedModelContainer: container,
         currentUserService: currentUserService,
         announcementStore: AnnouncementStore.testLoaded(),
         publicCommentStore: PublicCommentStore.testLoaded(),
         privateMessageStore: PrivateMessageStore.testLoaded(),
         templateStructStore: ListableFileStore<TemplateStruct>()
     )
+    .modelContainer(container)
 }
 #endif

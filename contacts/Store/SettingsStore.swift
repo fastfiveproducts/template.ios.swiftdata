@@ -20,7 +20,6 @@ class SettingsStore: ObservableObject {
     @AppStorage("darkMode") var darkMode = false
     @AppStorage("soundEffects") var soundEffects = true
     
-    
     func resetAllSettings() {
         darkMode = false
         soundEffects = true
