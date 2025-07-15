@@ -1,5 +1,5 @@
 //
-//  CaptureFormViewModel.swift
+//  ListableCaptureFormModel.swift
 //
 //  Created by Pete Maiser on 6/20/25.
 //      © Fast Five Products LLC, 2025
@@ -8,14 +8,14 @@
 //      changes should be rare; it is recommended changes are applied to the template
 //      and the entire file compared-and-then-replaced here if/as appropriate
 //
-//      Template v0.1.2 (moved from another Template v0.1.1 file)
+//      Template v0.1.4 (updated)
 //
 
 
 import Foundation
 
 @MainActor
-class CaptureFormViewModel<T: Listable>: ObservableObject {
+class ListableCaptureFormModel<T: Listable>: ObservableObject {
     @Published var fields: [CaptureField]
 
     let title: String
@@ -35,7 +35,9 @@ class CaptureFormViewModel<T: Listable>: ObservableObject {
     }
 
     var isValid: Bool {
-        fields.allSatisfy { $0.isValid }
+        guard fields.allSatisfy({ $0.isValid }) else { return false }
+        let item = makeStruct(fields)
+        return item.isValid
     }
 
     func insert() {

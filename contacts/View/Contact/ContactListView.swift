@@ -31,7 +31,7 @@ struct ContactListView: View {
                             Image(systemName: "chevron.right")
                                 .foregroundColor(.gray)
                         }
-                        .contentShape(Rectangle()) // ensures tap area fills row
+                        .contentShape(Rectangle())
                     }
                 }
                 .onDelete(perform: deleteContact)
@@ -93,9 +93,11 @@ struct ContactListView: View {
         .padding(.horizontal)
     }
     
-    private func deleteContact(at offsets: IndexSet) {
-        for index in offsets {
-            modelContext.delete(contacts[index])
+    private func deleteContact(offsets: IndexSet) {
+        withAnimation {
+            for index in offsets {
+                modelContext.delete(contacts[index])
+            }
         }
     }
 }

@@ -27,7 +27,7 @@ struct HomeView: View {
     @ObservedObject var announcementStore: AnnouncementStore
     @ObservedObject var publicCommentStore: PublicCommentStore
     @ObservedObject var privateMessageStore: PrivateMessageStore
-    @ObservedObject var templateStructStore = ListableFileStore<TemplateStruct>()
+    @ObservedObject var locationStore = ListableFileStore<Location>()
 
     var body: some View {
         NavigationStack {
@@ -69,24 +69,13 @@ struct HomeView: View {
     @ViewBuilder
     var destinationView: some View {
         switch self.selectedMenuItem {
+
         case .announcements:
             VStackBox {
                 ListableStoreView(store: announcementStore, showSectionHeader: false, showDividers: true)
                 
                 if !currentUserService.isSignedIn {
-                    Divider()
-                    NavigationLink {
-                        UserAccountView(
-                            viewModel: UserAccountViewModel(),
-                            currentUserService: currentUserService)
-                    } label: {
-                        HStack {
-                            Spacer()
-                            Text("Tap Here or ") + Text(Image(systemName: "\(MenuItem.profile.systemImage)")) + Text(" to Sign In!")
-                            Spacer()
-                        }
-                        .foregroundColor(.accentColor)
-                    }
+                    self.signInLinkView
                 }
             }
             Spacer()
@@ -96,13 +85,17 @@ struct HomeView: View {
             
         case .locations:
             VStackBox {
-                ListableStoreView(store: templateStructStore, showSectionHeader: false, showDividers: true)
+                ListableStoreView(store: locationStore, showSectionHeader: false, showDividers: true)
             }
-            VStackBox(title: "Add New Spot") {
-                CaptureFormView(
-                    viewModel: TemplateStruct.makeCaptureFormViewModel(store: templateStructStore),
-                    showHeader: false)
+
+            if currentUserService.isSignedIn {
+                ListableCaptureForm(
+                    viewModel: Location.makeCaptureFormViewModel(store: locationStore),
+                    showHeader: true)
+            } else {
+                self.signInLinkView
             }
+
             Spacer()
             
         case .profile:
@@ -130,6 +123,7 @@ struct HomeView: View {
         case .none:
             EmptyView()
         }
+        
     }
 
     @ViewBuilder
@@ -163,6 +157,23 @@ struct HomeView: View {
             Label(item.label, systemImage: item.systemImage)
         }
     }
+    
+    @ViewBuilder
+    var signInLinkView: some View {
+        Divider()
+        NavigationLink {
+            UserAccountView(
+                viewModel: UserAccountViewModel(),
+                currentUserService: currentUserService)
+        } label: {
+            HStack {
+                Spacer()
+                Text("Tap Here or ") + Text(Image(systemName: "\(MenuItem.profile.systemImage)")) + Text(" to Sign In!")
+                Spacer()
+            }
+            .foregroundColor(.accentColor)
+        }
+    }
 }
 
 
@@ -174,15 +185,21 @@ struct HomeView: View {
     ])
     let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
     let container = try! ModelContainer(for: schema, configurations: [modelConfiguration])
+    
+    let locationStore = ListableFileStore<Location>()
 
-    for task in Contact.testObjects {
-        container.mainContext.insert(task)
+    for object in ActivityLogEntry.testObjects {
+        container.mainContext.insert(object)
     }
     
-    for task in ActivityLogEntry.testObjects {
-        container.mainContext.insert(task)
+    for object in Contact.testObjects {
+        container.mainContext.insert(object)
     }
     
+    for object in Location.testObjects {
+        locationStore.insert(object)
+    }
+
     let currentUserService = CurrentUserTestService.sharedSignedIn
     return HomeView(
         viewModel: HomeViewModel(),
@@ -190,7 +207,7 @@ struct HomeView: View {
         announcementStore: AnnouncementStore.testLoaded(),
         publicCommentStore: PublicCommentStore.testLoaded(),
         privateMessageStore: PrivateMessageStore(),             // loading empty because private messages not used yet
-        templateStructStore: ListableFileStore<TemplateStruct>()
+        locationStore: locationStore
     )
     .modelContainer(container)
 }
@@ -203,7 +220,7 @@ struct HomeView: View {
         announcementStore: AnnouncementStore.testLoaded(),
         publicCommentStore: PublicCommentStore.testLoaded(),
         privateMessageStore: PrivateMessageStore.testLoaded(),
-        templateStructStore: ListableFileStore<TemplateStruct>()
+        locationStore: ListableFileStore<Location>()
     )
     .modelContainer(container)
 }

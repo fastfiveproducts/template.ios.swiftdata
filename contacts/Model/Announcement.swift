@@ -24,6 +24,11 @@ struct Announcement: Listable {
 
     // to conform to Listable, use known data to describe the object
     var objectDescription: String { content }
+    
+    // to conform to Listable, supply a 'is valid' computed property
+    var isValid: Bool {
+        !content.trimmingCharacters(in: .whitespaces).isEmpty
+    }
 }
 
 extension Announcement {
@@ -41,20 +46,21 @@ extension Announcement {
 
 #if DEBUG
 extension Announcement {
-    static let testObject = Announcement(
-        id: 202501311200,
-        title: "A Lorem Ipsum Title",
-        content: "Announcement content lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-        displayStartDate: Calendar.current.date(byAdding: .day, value: -2, to: Date())!,
-        displayEndDate: Calendar.current.date(byAdding: .day, value: 364, to: Date())!
-    )
-    static let testObjectAnother = Announcement(
-        id: 202502281200,
-        title: "Another Lorem Ipsum Title",
-        content: "Another announcement content lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-        displayStartDate: Calendar.current.date(byAdding: .day, value: -1, to: Date())!,
-        displayEndDate: Calendar.current.date(byAdding: .day, value: 365, to: Date())!
-    )
-    static let testObjects: [Announcement] = [.testObject, .testObjectAnother]
+    static let testObjects: [Announcement] = [
+        Announcement(
+            id: 202501311200,
+            title: "A Lorem Ipsum Title",
+            content: "Announcement content lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+            displayStartDate: Calendar.current.date(byAdding: .day, value: -2, to: Date())!,
+            displayEndDate: Calendar.current.date(byAdding: .day, value: 364, to: Date())!
+        ),
+        Announcement(
+            id: 202502281200,
+            title: "Another Lorem Ipsum Title",
+            content: "Another announcement content lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+            displayStartDate: Calendar.current.date(byAdding: .day, value: -1, to: Date())!,
+            displayEndDate: Calendar.current.date(byAdding: .day, value: 365, to: Date())!
+        )
+    ]
 }
 #endif
