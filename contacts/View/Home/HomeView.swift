@@ -1,15 +1,19 @@
 //
 //  HomeView.swift
 //
-//  Template by Pete Maiser, July 2024 through May 2025
-//      made availble here:
-//      https://github.com/fastfiveproducts/template.ios
-//      provided via, and used per, terms of the MIT License
+//  Template created by Pete Maiser, July 2024 through May 2025
+//      Template v0.1.1 Fast Five Products LLC's public AGPL template.
 //
-//  This particular implementation is for:
-//      APP_NAME
-//      DATE
-//      YOUR_NAME
+//  Copyright © 2025 Fast Five Products LLC. All rights reserved.
+//
+//  This file is part of a project licensed under the GNU Affero General Public License v3.0.
+//  See the LICENSE file at the root of this repository for full terms.
+//
+//  An exception applies: Fast Five Products LLC retains the right to use this code and
+//  derivative works in proprietary software without being subject to the AGPL terms.
+//  See LICENSE-EXCEPTIONS.md for details.
+//
+//  For licensing inquiries, contact: licenses@fastfiveproducts.llc
 //
 
 
@@ -36,26 +40,12 @@ struct HomeView: View {
             .navigationTitle(selectedMenuItem?.label ?? "Home")
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Menu {
-                        self.menuView
-                    } label: {
-                        Label("Menu", systemImage: "line.3.horizontal")
-                    }
+                    self.menuView
                 }
                 
                 if !currentUserService.isSignedIn && self.selectedMenuItem != .profile {
                     ToolbarItem(placement: .navigationBarTrailing) {
-                        NavigationLink {
-                            UserAccountView(
-                                viewModel: UserAccountViewModel(),
-                                currentUserService: currentUserService)
-                        } label: {
-                            HStack {
-                                Text("Sign In →")
-                                Label(MenuItem.profile.label, systemImage: currentUserService.isSignedIn ? "\(MenuItem.profile.systemImage).fill" : MenuItem.profile.systemImage)
-                            }
-                        }
-                        .buttonStyle(BorderlessButtonStyle())
+                        SignUpInLinkView(currentUserService: currentUserService, inToolbar: true)
                     }
                 }
             }
@@ -68,19 +58,21 @@ struct HomeView: View {
     @ViewBuilder
     var destinationView: some View {
         switch self.selectedMenuItem {
-
         case .announcements:
             VStackBox {
-                ListableStoreView(store: announcementStore, showSectionHeader: false, showDividers: true)
+                ListableStoreView(
+                    store: announcementStore,
+                    showSectionHeader: false,
+                    showDividers: true)
                 
                 if !currentUserService.isSignedIn {
-                    self.signInLinkView
+                    SignUpInLinkView(currentUserService: currentUserService)
                 }
             }
             Spacer()
             
         case .contacts:
-            ContactListView()
+            ContactListView(currentUserService: currentUserService)
                         
         case .profile:
             UserAccountView(
@@ -88,15 +80,31 @@ struct HomeView: View {
                 currentUserService: currentUserService)
             
         case .messages:
-            UserMessagePostsStackView(
-                currentUserService: currentUserService,
-                viewModel: UserPostViewModel<PrivateMessage>(),
-                store: privateMessageStore)
+            if currentUserService.isSignedIn {
+                UserMessagePostsStackView(
+                    viewModel: UserPostViewModel<PrivateMessage>(),
+                    currentUserService: currentUserService,
+                    store: privateMessageStore)
+            } else {
+                VStackBox {
+                    Text("Not Signed In!")
+                    SignUpInLinkView(currentUserService: currentUserService)
+                }
+                Spacer()
+            }
             
         case .comments:
-            CommentPostsStackView(
-                currentUserService: currentUserService,
-                store: publicCommentStore)
+            if currentUserService.isSignedIn {
+                CommentPostsStackView(
+                    currentUserService: currentUserService,
+                    store: publicCommentStore)
+            } else {
+                VStackBox {
+                    Text("Not Signed In!")
+                    SignUpInLinkView(currentUserService: currentUserService)
+                }
+                Spacer()
+            }
             
         case .activity:
             ActivityLogView()
@@ -112,24 +120,28 @@ struct HomeView: View {
 
     @ViewBuilder
     var menuView: some View {
-        ForEach(MenuItem.allCases
-            .filter { $0.sortOrder.0 == 0 }
-            .sorted(by: { $0.sortOrder.1 < $1.sortOrder.1 })) { item in
-                Button {
-                    selectedMenuItem = item
-                } label: {
-                    menuLabel(item)
-                }
-        }
-        Divider()
-        ForEach(MenuItem.allCases
-            .filter { $0.sortOrder.0 == 1 }
-            .sorted(by: { $0.sortOrder.1 < $1.sortOrder.1 })) { item in
-                Button {
-                    selectedMenuItem = item
-                } label: {
-                    menuLabel(item)
-                }
+        Menu {
+            ForEach(MenuItem.allCases
+                .filter { $0.sortOrder.0 == 0 }
+                .sorted(by: { $0.sortOrder.1 < $1.sortOrder.1 })) { item in
+                    Button {
+                        selectedMenuItem = item
+                    } label: {
+                        menuLabel(item)
+                    }
+            }
+            Divider()
+            ForEach(MenuItem.allCases
+                .filter { $0.sortOrder.0 == 1 }
+                .sorted(by: { $0.sortOrder.1 < $1.sortOrder.1 })) { item in
+                    Button {
+                        selectedMenuItem = item
+                    } label: {
+                        menuLabel(item)
+                    }
+            }
+        } label: {
+            Label("Menu", systemImage: "line.3.horizontal")
         }
     }
     
@@ -139,23 +151,6 @@ struct HomeView: View {
             Label(item.label, systemImage: currentUserService.isSignedIn ? "\(item.systemImage).fill" : item.systemImage)
         } else {
             Label(item.label, systemImage: item.systemImage)
-        }
-    }
-    
-    @ViewBuilder
-    var signInLinkView: some View {
-        Divider()
-        NavigationLink {
-            UserAccountView(
-                viewModel: UserAccountViewModel(),
-                currentUserService: currentUserService)
-        } label: {
-            HStack {
-                Spacer()
-                Text("Tap Here or ") + Text(Image(systemName: "\(MenuItem.profile.systemImage)")) + Text(" to Sign In!")
-                Spacer()
-            }
-            .foregroundColor(.accentColor)
         }
     }
 }
@@ -188,7 +183,7 @@ struct HomeView: View {
     )
     .modelContainer(container)
 }
-#Preview ("test-data signed-out") {
+#Preview ("no-data and signed-out") {
     let container = try! ModelContainer()
     let currentUserService = CurrentUserTestService.sharedSignedOut
     return HomeView(

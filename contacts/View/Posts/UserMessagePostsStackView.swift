@@ -2,13 +2,18 @@
 //  UserMessagePostsStackView.swift
 //
 //  Template created by Pete Maiser, July 2024 through May 2025
-//      © Fast Five Products LLC, 2025
-//      https://github.com/fastfiveproducts/template.ios
-//      made available, and used here, per terms of the MIT License
-//      changes should be rare; it is recommended changes are applied to the template
-//      and the entire file compared-and-then-replaced here if/as appropriate
+//      Template v0.1.4 (updated) Fast Five Products LLC's public AGPL template.
 //
-//      Template v0.1.2 (renamed)
+//  Copyright © 2025 Fast Five Products LLC. All rights reserved.
+//
+//  This file is part of a project licensed under the GNU Affero General Public License v3.0.
+//  See the LICENSE file at the root of this repository for full terms.
+//
+//  An exception applies: Fast Five Products LLC retains the right to use this code and
+//  derivative works in proprietary software without being subject to the AGPL terms.
+//  See LICENSE-EXCEPTIONS.md for details.
+//
+//  For licensing inquiries, contact: licenses@fastfiveproducts.llc
 //
 
 
@@ -18,8 +23,8 @@ import SwiftUI
 // ***** WARNING - placeholder only - not fully implemented - not tested *****
 
 struct UserMessagePostsStackView: View, DebugPrintable {
-    @ObservedObject var currentUserService: CurrentUserService
     @ObservedObject var viewModel: UserPostViewModel<PrivateMessage>
+    @ObservedObject var currentUserService: CurrentUserService
     @ObservedObject var store: PrivateMessageStore
     
     @FocusState private var focusedField: Field?
@@ -164,8 +169,8 @@ private extension UserMessagePostsStackView {
     let viewModel = UserPostViewModel<PrivateMessage>()
     let store = PrivateMessageStore.testLoaded()
     UserMessagePostsStackView(
-        currentUserService: currentUserService,
         viewModel: viewModel,
+        currentUserService: currentUserService,
         store: store
     )
 }
@@ -174,8 +179,8 @@ private extension UserMessagePostsStackView {
     let viewModel = UserPostViewModel<PrivateMessage>()
     let store = PrivateMessageStore()
     UserMessagePostsStackView(
-        currentUserService: currentUserService,
         viewModel: viewModel,
+        currentUserService: currentUserService,
         store: store
     )
 }
