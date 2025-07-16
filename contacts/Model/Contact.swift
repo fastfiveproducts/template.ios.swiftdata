@@ -1,29 +1,20 @@
 //
 //  Contact.swift
 //
-//  Created by Pete Maiser on 7/12/25.
-//      Template v0.1.3
-//      © Fast Five Products LLC, 2025
-//      https://github.com/fastfiveproducts/template.ios
-//      used here per terms of template.ios License file
+//  Created by Pete Maiser, Fast Five Products LLC, on 7/12/25.
 //
-//  This particular implementation is for:
-//      APP_NAME
-//      started from template 20YY-MM-DD
-//      modifications cannot be used or copied without permission from YOUR_NAME
+//  Template v0.2.0 — Fast Five Products LLC's public AGPL template.
 //
-//  READ and Delete when using template:
-//     Contact: is a sample of a class that is used in the app
-//     and persisted locally using SwiftData.
+//  Copyright © 2025 Fast Five Products LLC. All rights reserved.
 //
-//     Location: is a sample of a struct that is then later used in the app
-//     and persisted locally using FileManager
+//  This file is part of a project licensed under the GNU Affero General Public License v3.0.
+//  See the LICENSE file at the root of this repository for full terms.
 //
-//     Also note other examples/samples:
-//     "ActivityLog" in this app is persisted locally using SwiftData
-//     "Announcement" in this app is ready-only and sourced from Firebase Firestore
-//     "User" in this app is a mix of Firebase Authentication and Firebase Data Connect
-//     "Post" in this app is a read-write struct protocol with data stored via Firebase Data Connect
+//  An exception applies: Fast Five Products LLC retains the right to use this code and
+//  derivative works in proprietary software without being subject to the AGPL terms.
+//  See LICENSE-EXCEPTIONS.md for details.
+//
+//  For licensing inquiries, contact: licenses@fastfiveproducts.llc
 //
 
 

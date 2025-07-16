@@ -1,8 +1,20 @@
 //
 //  ContactListView.swift
-//  contacts
 //
-//  Created by Pete Maiser on 7/13/25.
+//  Created by Pete Maiser, Fast Five Products LLC, on 7/13/25.
+//
+//  Template v0.2.0 — Fast Five Products LLC's public AGPL template.
+//
+//  Copyright © 2025 Fast Five Products LLC. All rights reserved.
+//
+//  This file is part of a project licensed under the GNU Affero General Public License v3.0.
+//  See the LICENSE file at the root of this repository for full terms.
+//
+//  An exception applies: Fast Five Products LLC retains the right to use this code and
+//  derivative works in proprietary software without being subject to the AGPL terms.
+//  See LICENSE-EXCEPTIONS.md for details.
+//
+//  For licensing inquiries, contact: licenses@fastfiveproducts.llc
 //
 
 
@@ -12,6 +24,7 @@ import SwiftData
 struct ContactListView: View {
     @Environment(\.modelContext) private var modelContext
     @Query private var contacts: [Contact]
+    @ObservedObject var currentUserService: CurrentUserService
     
     @State private var showAddSheet = false
     @State private var newContact = Contact.empty
@@ -38,15 +51,19 @@ struct ContactListView: View {
             }
             .listStyle(.plain)
             
-            Divider()
-            Button {
-                showAddSheet = true
-            } label: {
-                HStack {
-                    Spacer()
-                    Label("Add Contact", systemImage: "plus")
-                    Spacer()
+            if currentUserService.isSignedIn {
+                Divider()
+                Button {
+                    showAddSheet = true
+                } label: {
+                    HStack {
+                        Spacer()
+                        Label("Add Contact", systemImage: "plus")
+                        Spacer()
+                    }
                 }
+            } else {
+                SignUpInLinkView(currentUserService: currentUserService)
             }
         }
         .sheet(isPresented: $showAddSheet) {
@@ -103,7 +120,7 @@ struct ContactListView: View {
 }
 
 #if DEBUG
-#Preview {
+#Preview ("test-data signed-in") {
     let config = ModelConfiguration(isStoredInMemoryOnly: true)
     let container = try! ModelContainer(for: Contact.self, configurations: config)
 
@@ -111,7 +128,14 @@ struct ContactListView: View {
         container.mainContext.insert(task)
     }
 
-    return ContactListView()
+    let currentUserService = CurrentUserTestService.sharedSignedIn
+    return ContactListView(currentUserService: currentUserService)
+        .modelContainer(container)
+}
+#Preview ("no-data and signed-out") {
+    let container = try! ModelContainer()
+    let currentUserService = CurrentUserTestService.sharedSignedOut
+    return ContactListView(currentUserService: currentUserService)
         .modelContainer(container)
 }
 #endif
