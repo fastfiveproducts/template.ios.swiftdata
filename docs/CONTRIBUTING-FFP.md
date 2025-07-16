@@ -33,7 +33,7 @@ If the app is also open source, please see **Case 2** in the public [CONTRIBUTIN
 
 If the app is also open source, use the **Case 1a** header from the public [CONTRIBUTING.md](../CONTRIBUTING.md)  file - thus adding the exception to this new file - but remove this template version line:
 ```swift
-//  Template v0.2.0 — Derived from Fast Five Products LLC's public AGPL template.
+//  Template v0.2.0 — Fast Five Products LLC's public AGPL template.
 ```
 
 ---
@@ -46,7 +46,7 @@ If the app is also open source, use the **Case 1a** header from the public [CONT
 //  Originally created by [Template Developer Name], Fast Five Products LLC
 //  Modified by [App Developer Name], Fast Five Products LLC
 //
-//  Template v0.2.0 — Derived from Fast Five Products LLC's public AGPL template.
+//  Template v0.2.0 — Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025 Fast Five Products LLC. All rights reserved.
 //

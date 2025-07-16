@@ -21,9 +21,9 @@ All Swift files should include a standard file header that provides authorship, 
 ```swift
 //
 //  [Filename].swift
-//  Created by [Template Developer Name], 2025 Fast Five Products LLC
+//  Created by [Template Developer Name], Fast Five Products LLC
 //
-//  Template v0.2.0 — Derived from Fast Five Products LLC's public AGPL template.
+//  Template v0.2.0 — Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025 Fast Five Products LLC. All rights reserved.
 //
@@ -47,7 +47,7 @@ All Swift files should include a standard file header that provides authorship, 
 //  [Filename].swift
 //  Created by [Template Developer Name][, Company Name if applicable]
 //
-//  Template v0.2.0 — Derived from Fast Five Products LLC's public AGPL template.
+//  Template v0.2.0 — Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025 [App Developer Name][, Company Name if applicable].
 //  All rights reserved.
