@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B5362E382E2747FC00E120B7 /* CONTRIBUTING-FFP.md in Resources */ = {isa = PBXBuildFile; fileRef = B5362E362E2747FC00E120B7 /* CONTRIBUTING-FFP.md */; };
 		B5C0BD622E24187300641B69 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = B5C0BD602E24187300641B69 /* LICENSE */; };
 		B5C0BD632E24187300641B69 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = B5C0BD612E24187300641B69 /* README.md */; };
 		B5C0BD652E2418F100641B69 /* LICENSE-EXCEPTIONS.md in Resources */ = {isa = PBXBuildFile; fileRef = B5C0BD642E2418E200641B69 /* LICENSE-EXCEPTIONS.md */; };
@@ -16,12 +17,15 @@
 		B5C0BDED2E241F6F00641B69 /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = B5C0BDEC2E241F6F00641B69 /* FirebaseCore */; };
 		B5C0BDEF2E241F6F00641B69 /* FirebaseDatabase in Frameworks */ = {isa = PBXBuildFile; productRef = B5C0BDEE2E241F6F00641B69 /* FirebaseDatabase */; };
 		B5C0BDF12E241F6F00641B69 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = B5C0BDF02E241F6F00641B69 /* FirebaseFirestore */; };
+		B5C0BE0B2E271C4900641B69 /* CONTRIBUTING.md in Resources */ = {isa = PBXBuildFile; fileRef = B5C0BE0A2E271C4900641B69 /* CONTRIBUTING.md */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		B5362E362E2747FC00E120B7 /* CONTRIBUTING-FFP.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = "CONTRIBUTING-FFP.md"; sourceTree = "<group>"; };
 		B5C0BD602E24187300641B69 /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		B5C0BD612E24187300641B69 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		B5C0BD642E2418E200641B69 /* LICENSE-EXCEPTIONS.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = "LICENSE-EXCEPTIONS.md"; sourceTree = "<group>"; };
+		B5C0BE0A2E271C4900641B69 /* CONTRIBUTING.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CONTRIBUTING.md; sourceTree = "<group>"; };
 		B5D0C78E2E2415FC00B31F19 /* contacts.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = contacts.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -50,13 +54,23 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		B5362E372E2747FC00E120B7 /* docs */ = {
+			isa = PBXGroup;
+			children = (
+				B5362E362E2747FC00E120B7 /* CONTRIBUTING-FFP.md */,
+			);
+			path = docs;
+			sourceTree = "<group>";
+		};
 		B5D0C7852E2415FC00B31F19 = {
 			isa = PBXGroup;
 			children = (
+				B5C0BE0A2E271C4900641B69 /* CONTRIBUTING.md */,
 				B5C0BD602E24187300641B69 /* LICENSE */,
 				B5C0BD642E2418E200641B69 /* LICENSE-EXCEPTIONS.md */,
 				B5C0BD612E24187300641B69 /* README.md */,
 				B5D0C7902E2415FC00B31F19 /* contacts */,
+				B5362E372E2747FC00E120B7 /* docs */,
 				B5D0C78F2E2415FC00B31F19 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -145,6 +159,8 @@
 			files = (
 				B5C0BD622E24187300641B69 /* LICENSE in Resources */,
 				B5C0BD632E24187300641B69 /* README.md in Resources */,
+				B5C0BE0B2E271C4900641B69 /* CONTRIBUTING.md in Resources */,
+				B5362E382E2747FC00E120B7 /* CONTRIBUTING-FFP.md in Resources */,
 				B5C0BD652E2418F100641B69 /* LICENSE-EXCEPTIONS.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -293,16 +309,18 @@
 				DEVELOPMENT_TEAM = 9NMRZ5DQQ6;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 0.2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = llc.fastfiveproducts.contacts;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -321,16 +339,18 @@
 				DEVELOPMENT_TEAM = 9NMRZ5DQQ6;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 0.2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = llc.fastfiveproducts.contacts;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;

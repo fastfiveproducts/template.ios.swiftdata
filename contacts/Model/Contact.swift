@@ -16,13 +16,10 @@
 //     Contact: is a sample of a class that is used in the app
 //     and persisted locally using SwiftData.
 //
-//     Location: is a sample of a struct that is then later used in the app
-//     and persisted locally using FileManager
-//
 //     Also note other examples/samples:
-//     "ActivityLog" in this app is persisted locally using SwiftData
+//     "ActivityLog" in this app is also persisted locally using SwiftData
 //     "Announcement" in this app is ready-only and sourced from Firebase Firestore
-//     "User" in this app is a mix of Firebase Authentication and Firebase Data Connect
+//     "User" in this app is a combination of Firebase Authentication and Firebase Data Connect
 //     "Post" in this app is a read-write struct protocol with data stored via Firebase Data Connect
 //
 
