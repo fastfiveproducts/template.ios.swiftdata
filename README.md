@@ -3,7 +3,9 @@
 The Fast Five Products (FFP) LLC iOS application template app — SwiftData variant
 
 - this template: https://github.com/fastfiveproducts/template.ios.swiftdata
-- was split-off from an early version of: https://github.com/fastfiveproducts/template.ios
+- the other variant (FileData): https://github.com/fastfiveproducts/template.ios.filedata
+- this README itself is versioned as Template v0.2.1
+- it is expected other files in this repository may be 'ahead' of this version number as additons and improvements are made
 
 ---
 
@@ -26,10 +28,8 @@ The Fast Five Products (FFP) LLC iOS application template app — SwiftData vari
 
 ## 🧱 Clone Project
 
-```sh
-cd ~/Programs
-git clone https://github.com/fastfiveproducts/template.ios.swiftdata.git
-```
+- cd to your root Programs folder or directory
+- clone project from GitHub via your preferred method (**main** branch)
 
 ---
 
@@ -52,7 +52,7 @@ git clone https://github.com/fastfiveproducts/template.ios.swiftdata.git
 
 ---
 
-## 📱 Run on iOS Simulator via Xcode (macOS)
+## 💻 Run on iOS Simulator via Xcode (macOS)
 
 1. Open the Xcode project file
 2. Choose your simulator device
@@ -80,6 +80,15 @@ git clone https://github.com/fastfiveproducts/template.ios.swiftdata.git
 
 ---
 
+# template Changes
+
+## 🌿 Branch Structure & Change Approach
+- `develop` is the working/integration branch, where multiple feature branches get squash-merged
+- `main` is the release/production branch, containing a clean linear history with one commit per release
+- see your `OPERATE Developer Pipeline` document for detailed instructions
+
+---
+
 ## 🧾 Contribution Notes
 
 All Swift files in this project follow a structured header format with attribution, versioning, and licensing details.  
@@ -90,3 +99,16 @@ All Swift files in this project follow a structured header format with attributi
 Please follow the documented file header formats and versioning guidelines.  
 All contributions must respect the AGPL-3.0 license and any stated exceptions.
 
+
+## 🛤 Contribution Workflow
+Make feature branches from `develop` to work from; when that work is complete:
+- rebase any changes that may have happened to `develop` back into your feature branch
+- squash the feature branch commits into `develop` as one commit via a GH PR
+
+When ready to release (`develop` to `main`):
+- squash all of `develop`'s commits since last release
+- make that one single commit on top of `main`
+
+Results:
+- `main` reflects the released state via a clean linear history with one commit per release
+- but because the commit hashes will always differ between `main` and `develop`, git and GitHub sees `main` and `develop` as diverged (even though the content is equal after every release)

@@ -26,13 +26,13 @@
 		B5C0BD612E24187300641B69 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		B5C0BD642E2418E200641B69 /* LICENSE-EXCEPTIONS.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = "LICENSE-EXCEPTIONS.md"; sourceTree = "<group>"; };
 		B5C0BE0A2E271C4900641B69 /* CONTRIBUTING.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CONTRIBUTING.md; sourceTree = "<group>"; };
-		B5D0C78E2E2415FC00B31F19 /* contacts.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = contacts.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B5D0C78E2E2415FC00B31F19 /* contacts.swiftdata.swiftdata.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = contacts.swiftdata.swiftdata.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		B5D0C7902E2415FC00B31F19 /* contacts */ = {
+		B5D0C7902E2415FC00B31F19 /* contacts.swiftdata */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = contacts;
+			path = contacts.swiftdata;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -69,7 +69,7 @@
 				B5C0BD602E24187300641B69 /* LICENSE */,
 				B5C0BD642E2418E200641B69 /* LICENSE-EXCEPTIONS.md */,
 				B5C0BD612E24187300641B69 /* README.md */,
-				B5D0C7902E2415FC00B31F19 /* contacts */,
+				B5D0C7902E2415FC00B31F19 /* contacts.swiftdata */,
 				B5362E372E2747FC00E120B7 /* docs */,
 				B5D0C78F2E2415FC00B31F19 /* Products */,
 			);
@@ -78,7 +78,7 @@
 		B5D0C78F2E2415FC00B31F19 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				B5D0C78E2E2415FC00B31F19 /* contacts.app */,
+				B5D0C78E2E2415FC00B31F19 /* contacts.swiftdata.swiftdata.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -86,9 +86,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		B5D0C78D2E2415FC00B31F19 /* contacts */ = {
+		B5D0C78D2E2415FC00B31F19 /* contacts.swiftdata.swiftdata */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = B5D0C79B2E2415FD00B31F19 /* Build configuration list for PBXNativeTarget "contacts" */;
+			buildConfigurationList = B5D0C79B2E2415FD00B31F19 /* Build configuration list for PBXNativeTarget "contacts.swiftdata.swiftdata" */;
 			buildPhases = (
 				B5D0C78A2E2415FC00B31F19 /* Sources */,
 				B5D0C78B2E2415FC00B31F19 /* Frameworks */,
@@ -99,9 +99,9 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				B5D0C7902E2415FC00B31F19 /* contacts */,
+				B5D0C7902E2415FC00B31F19 /* contacts.swiftdata */,
 			);
-			name = contacts;
+			name = contacts.swiftdata.swiftdata;
 			packageProductDependencies = (
 				B5C0BDE52E241F1000641B69 /* DefaultConnector */,
 				B5C0BDE82E241F6F00641B69 /* FirebaseAppCheck */,
@@ -111,7 +111,7 @@
 				B5C0BDF02E241F6F00641B69 /* FirebaseFirestore */,
 			);
 			productName = contacts;
-			productReference = B5D0C78E2E2415FC00B31F19 /* contacts.app */;
+			productReference = B5D0C78E2E2415FC00B31F19 /* contacts.swiftdata.swiftdata.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -129,7 +129,7 @@
 					};
 				};
 			};
-			buildConfigurationList = B5D0C7892E2415FC00B31F19 /* Build configuration list for PBXProject "contacts" */;
+			buildConfigurationList = B5D0C7892E2415FC00B31F19 /* Build configuration list for PBXProject "contacts.swiftdata" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -147,7 +147,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				B5D0C78D2E2415FC00B31F19 /* contacts */,
+				B5D0C78D2E2415FC00B31F19 /* contacts.swiftdata.swiftdata */,
 			);
 		};
 /* End PBXProject section */
@@ -309,6 +309,7 @@
 				DEVELOPMENT_TEAM = 9NMRZ5DQQ6;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = ContactsSwiftData;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -320,8 +321,8 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.2.0;
-				PRODUCT_BUNDLE_IDENTIFIER = llc.fastfiveproducts.contacts;
+				MARKETING_VERSION = 0.2.1;
+				PRODUCT_BUNDLE_IDENTIFIER = "llc.fastfiveproducts.contacts-swiftdata";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -339,6 +340,7 @@
 				DEVELOPMENT_TEAM = 9NMRZ5DQQ6;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = ContactsSwiftData;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -350,8 +352,8 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.2.0;
-				PRODUCT_BUNDLE_IDENTIFIER = llc.fastfiveproducts.contacts;
+				MARKETING_VERSION = 0.2.1;
+				PRODUCT_BUNDLE_IDENTIFIER = "llc.fastfiveproducts.contacts-swiftdata";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -362,7 +364,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		B5D0C7892E2415FC00B31F19 /* Build configuration list for PBXProject "contacts" */ = {
+		B5D0C7892E2415FC00B31F19 /* Build configuration list for PBXProject "contacts.swiftdata" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				B5D0C7992E2415FD00B31F19 /* Debug */,
@@ -371,7 +373,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		B5D0C79B2E2415FD00B31F19 /* Build configuration list for PBXNativeTarget "contacts" */ = {
+		B5D0C79B2E2415FD00B31F19 /* Build configuration list for PBXNativeTarget "contacts.swiftdata.swiftdata" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				B5D0C79C2E2415FD00B31F19 /* Debug */,
