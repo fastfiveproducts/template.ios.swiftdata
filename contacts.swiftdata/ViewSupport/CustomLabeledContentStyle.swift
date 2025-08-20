@@ -19,8 +19,7 @@
 
 import SwiftUI
 
-// MARK: - Top Labeled style, with trailing content support
-
+// define a custom TopLabeledStyle, with trailing content support
 struct TopLabeledContentStyle: LabeledContentStyle {
     @Environment(\.labeledContentTrailing) private var trailing
 
@@ -44,9 +43,7 @@ struct TopLabeledContentStyle: LabeledContentStyle {
     }
 }
 
-
-// MARK: - Environment plumbing for the trailing accessory
-
+// environment plumbing for the trailing accessory
 private struct LabeledContentTrailingKey: EnvironmentKey {
     static let defaultValue: AnyView? = nil
 }
@@ -67,8 +64,6 @@ extension View {
     }
 }
 
-
-// MARK: - Preview / Examples
 
 #if DEBUG
 private struct TopLabelLabeledContentStylePreview: View {

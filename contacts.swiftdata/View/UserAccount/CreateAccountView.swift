@@ -34,7 +34,7 @@ struct CreateAccountView: View, DebugPrintable {
                 focusedField = .none
         }
     }
-    private enum Field: Hashable { case passwordAgain; case displayName}
+    private enum Field: Hashable { case passwordAgain, displayName}
 
     var body: some View {
         

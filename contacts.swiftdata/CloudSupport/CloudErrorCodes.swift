@@ -19,6 +19,29 @@
 
 import Foundation
 
+enum AuthError: Error, LocalizedError {
+    case invalidInput
+    case emailLinkInvalid
+    case signInInputsNotFound
+    case userNotFound
+    case userIdNotFound
+    
+    var errorDescription: String? {
+        switch self {
+            case .invalidInput:
+                return NSLocalizedString("Missing Data, please check all fields and try again", comment: "User Input Error")
+            case .emailLinkInvalid:
+                return NSLocalizedString("Invalid link recieved from cloud in user create process, please try again", comment: "Cloud Services Communications Error")
+            case .userNotFound:
+                return NSLocalizedString("Could not complete sign in as user does not exist", comment: "User does not exist")
+            case .signInInputsNotFound:
+                return NSLocalizedString("Could not complete sign in, please go to sign in page and try again", comment: "Unexpected Internal Error")
+            case .userIdNotFound:
+                return NSLocalizedString("Completed sign in but User Id not found, some features may not work correctly", comment: "Unexpected Cloud Services Error")
+        }
+    }
+}
+
 enum AccountCreationError: Error, LocalizedError {
     case invalidInput
     case userIdNotFound
@@ -38,26 +61,6 @@ enum AccountCreationError: Error, LocalizedError {
                 return NSLocalizedString("Error in user display name creation, default used; you can change display name later in your user profie.", comment: "Cloud Services Communications Error")
             case .setUserDisplayNameFailed:
                 return NSLocalizedString("Error in user display name update, default used; you can change display name later in your user profie.", comment: "Cloud Services Communications Error")
-        }
-    }
-}
-
-enum SignInError: Error, LocalizedError {
-    case emailLinkInvalid
-    case signInInputsNotFound
-    case userNotFound
-    case userIdNotFound
-    
-    var errorDescription: String? {
-        switch self {
-            case .emailLinkInvalid:
-                return NSLocalizedString("Invalid link recieved from cloud in user create process, please try again", comment: "Cloud Services Communications Error")
-            case .userNotFound:
-                return NSLocalizedString("Could not complete sign in as user does not exist", comment: "User does not exist")
-            case .signInInputsNotFound:
-                return NSLocalizedString("Could not complete sign in, please go to sign in page and try again", comment: "Unexpected Internal Error")
-            case .userIdNotFound:
-                return NSLocalizedString("Completed sign in but User Id not found, some features may not work correctly", comment: "Unexpected Cloud Services Error")
         }
     }
 }
