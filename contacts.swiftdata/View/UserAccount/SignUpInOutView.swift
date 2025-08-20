@@ -46,13 +46,23 @@ struct SignUpInOutView: View, DebugPrintable {
                     Text(currentUserService.user.auth.email)
                 } label: { Text("email address:") }
                     .labeledContentStyle(TopLabeledContentStyle())
+               
+                LabeledContent {
+                    Text("********")
+                        .disabled(true)
+                } label: { Text("password:") }
+                    .labeledContentTrailing {
+                        Button(action: changePassword) { Text("change") }
+                            .buttonStyle(.borderless)
+                    }
+                    .labeledContentStyle(TopLabeledContentStyle())
                 
                 LabeledContent {
-                    Text(currentUserService.user.account.displayName)
+                   Text(currentUserService.user.account.displayName)
                 } label: { Text("display name:") }
                     .labeledContentStyle(TopLabeledContentStyle())
                 
-                Button(action: toggleLogin) {
+                Button(action: toggleSignIn) {
                     Text(currentUserService.isSignedIn ? "Sign Out" : "Submit")
                 }
                 .frame(maxWidth: .infinity)
@@ -91,11 +101,11 @@ struct SignUpInOutView: View, DebugPrintable {
                             .keyboardType(.emailAddress)
                             .disableAutocorrection(true)
                             .focused($focusedField, equals: .password)
-                            .onTapGesture { toggleLogin() }
-                            .onSubmit { toggleLogin() }
+                            .onTapGesture { toggleSignIn() }
+                            .onSubmit { toggleSignIn() }
                     } label: { Text("password:") }
                         .labeledContentStyle(TopLabeledContentStyle())
-                    Button(action: toggleLogin) {
+                    Button(action: toggleSignIn) {
                         Text(currentUserService.isSignedIn ? "Sign Out" : "Submit")
                     }
                     .frame(maxWidth: .infinity)
@@ -133,11 +143,11 @@ struct SignUpInOutView: View, DebugPrintable {
 }
 
 private extension SignUpInOutView {
-    private func toggleLogin() {
+    private func toggleSignIn() {
         if currentUserService.isSignedIn {
             do {
                 try CurrentUserService.shared.signOut()
-                addLoginEventToLog()
+                addSignInOutEventToLog()
             } catch {
                 debugprint("(View) Error signing out of User Account: \(error)")
                 viewModel.error = error
@@ -150,7 +160,7 @@ private extension SignUpInOutView {
                                                 password: viewModel.capturedPasswordText)
                     viewModel.capturedPasswordText = ""
                     debugprint("(View) User \(uid) signed in")
-                    addLoginEventToLog()
+                    addSignInOutEventToLog()
                 } catch {
                     if let signInError = error as? SignInError, signInError == .userNotFound {
                         viewModel.createAccountMode = true
@@ -173,8 +183,19 @@ private extension SignUpInOutView {
         }
     }
     
-    private func addLoginEventToLog() {
+    private func changePassword() {
+        print("change password clicked")
+        addChangePasswordEventToLog()
+        
+    }
+
+    private func addSignInOutEventToLog() {
         let newLogEntry = ActivityLogEntry(currentUserService.isSignedIn ? "User signed out": "User signed in")
+        modelContext.insert(newLogEntry)
+    }
+    
+    private func addChangePasswordEventToLog() {
+        let newLogEntry = ActivityLogEntry("User changed password")
         modelContext.insert(newLogEntry)
     }
 }
