@@ -18,16 +18,20 @@
 
 
 import Foundation
+import SwiftUICore
 
 @MainActor
 class UserAccountViewModel: ObservableObject, DebugPrintable
 {
-    // Status
+    @Environment(\.modelContext) private var modelContext
+    
+    // MARK: -- Status
     @Published private(set) var statusText = ""
     @Published var error: Error?
     @Published var createAccountMode = false
     @Published var showStatusMode = false
     @Published var showSuccessMode = false
+    @Published var changePasswordMode = false
     
     init(createAccountMode: Bool = false, showStatusMode: Bool = false) {
         self.createAccountMode = createAccountMode
@@ -37,6 +41,7 @@ class UserAccountViewModel: ObservableObject, DebugPrintable
     // Capture
     @Published var capturedEmailText = ""
     @Published var capturedPhoneNumberText = ""
+    @Published var capturedPasswordTextOld = ""
     @Published var capturedPasswordText = ""
     @Published var capturedPasswordMatchText = ""
     @Published var capturedDisplayNameText = ""
@@ -47,7 +52,7 @@ class UserAccountViewModel: ObservableObject, DebugPrintable
     }
     var dislikesRobots: Bool = false
 
-    // Validation
+    // MARK: -- Validation
     func isReadyToSignIn() -> Bool {
         statusText = ""
         var isReady = true
@@ -69,14 +74,7 @@ class UserAccountViewModel: ObservableObject, DebugPrintable
         if capturedEmailText.isEmpty {
             statusText = ("Please enter a sign-in email")
             isReady = false
-        } else if capturedPasswordText.isEmpty {
-            statusText = ("Complete both password fields with the same password")
-            isReady = false
-        } else if capturedPasswordMatchText.isEmpty {
-            statusText = ("Complete both password fields with the same password")
-            isReady = false
-        } else if capturedPasswordText != capturedPasswordMatchText {
-            statusText = ("Passwords don't match, please try again")
+        } else if capturedPasswordsMatch() == false {
             isReady = false
         } else if capturedDisplayNameText.isEmpty {
             statusText = ("Please enter your display name")
@@ -90,7 +88,33 @@ class UserAccountViewModel: ObservableObject, DebugPrintable
         return isReady
     }
     
-    // Reset
+    func isReadyToResetPassword() -> Bool {
+        statusText = ""
+        var isReady = true
+        
+        if capturedEmailText.isEmpty {
+            statusText = ("Please enter a sign-in email")
+            isReady = false
+        }
+        return isReady
+    }
+    
+    func capturedPasswordsMatch() -> Bool {
+        var match = true
+        if capturedPasswordText.isEmpty {
+            statusText = ("Complete both password fields with the same password")
+            match = false
+        } else if capturedPasswordMatchText.isEmpty {
+            statusText = ("Complete both password fields with the same password")
+            match = false
+        } else if capturedPasswordText != capturedPasswordMatchText {
+            statusText = ("Passwords don't match, please try again")
+            match = false
+        }
+        return match
+    }
+    
+    // MARK: -- Reset Create Account
     func resetCreateAccount(withDelay delay: TimeInterval = 0.0) {
         if delay > 0 {
             Task { @MainActor in
@@ -110,7 +134,7 @@ class UserAccountViewModel: ObservableObject, DebugPrintable
         }
     }
     
-    // Create
+    // MARK: -- Create Account
     var createdUserId: String = ""
     var accountCandidate: UserAccountCandidate {
         return UserAccountCandidate(uid: createdUserId, displayName: capturedDisplayNameText, photoUrl: "")
@@ -120,7 +144,7 @@ class UserAccountViewModel: ObservableObject, DebugPrintable
         
         showStatusMode = true
         
-        // MARK: -- create the user in the Auth system first
+        // MARK:  create the user in the Auth system first
         do {
             createdUserId = try await currentUserService.signInOrCreateUser(
                 email: capturedEmailText,
@@ -131,7 +155,7 @@ class UserAccountViewModel: ObservableObject, DebugPrintable
             throw error
         }
         
-        // MARK: --  then create the user in the Application system
+        // MARK:  then create the user in the Application system
         // use the email address as the display name text to start,
         // making the app functional even if the user's chosen display name is taken
         do {
@@ -142,7 +166,7 @@ class UserAccountViewModel: ObservableObject, DebugPrintable
             throw AccountCreationError.userAccountCreationIncomplete(error)
         }
         
-        // MARK: -- User Account is sufficiently created such that we will no longer throw errors,
+        // MARK:  the User Account has been sufficiently created such that we will no longer throw errors,
         // do less-critial tasks and clean-up
         defer {
             resetCreateAccount(withDelay: 4)
@@ -166,5 +190,55 @@ class UserAccountViewModel: ObservableObject, DebugPrintable
         }
         
     }
+        
+    // MARK: -- Reset Password
+    func resetPasswordWithService(_ currentUserService: CurrentUserService) async throws {
+        
+        // request the Auth system send a password-reset email
+        do {
+            try await currentUserService.resetUserPassword(
+                email: capturedEmailText
+            )
+        } catch {
+            debugprint("(View) Cloud Error sending password reset email from the Authentication system: \(error)")
+            self.error = error
+            throw error
+        }
+    }
 
+    // MARK: -- Change Password
+    func toggleChangePasswordMode() {
+        if changePasswordMode {
+            changePasswordMode = false
+        } else {
+            changePasswordMode = true
+        }
+    }
+    
+    func changePasswordWithService(_ currentUserService: CurrentUserService) async throws {
+        
+        // MARK:  re-authenticate the user in the Auth system first
+        do {
+            try await currentUserService.reAuthenticateUser(
+                email: capturedEmailText,
+                password: capturedPasswordTextOld)
+        } catch {
+            debugprint("(View) Cloud Error reAuthenticating the user: \(error)")
+            self.error = error
+            throw error
+        }
+        
+        // MARK:  then reset the user's Password in the Auth system
+        do {
+            try await currentUserService.reAuthenticateUser(
+                email: capturedEmailText,
+                password: capturedPasswordText)
+            modelContext.insert(ActivityLogEntry("User changed password"))
+        } catch {
+            debugprint("(View) Cloud Error changing user password: \(error)")
+            self.error = error
+            throw error
+        }
+    }
+    
 }

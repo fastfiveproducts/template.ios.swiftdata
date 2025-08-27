@@ -23,6 +23,7 @@ import SwiftData
 struct SignUpInOutView: View, DebugPrintable {
     @ObservedObject var viewModel : UserAccountViewModel
     @ObservedObject var currentUserService: CurrentUserService
+    @State private var showResetConfirmation = false
     
     @Environment(\.modelContext) private var modelContext
     
@@ -40,36 +41,41 @@ struct SignUpInOutView: View, DebugPrintable {
     private enum Field: Hashable { case username; case password }
     
     var body: some View {
+        
         Section(header: Text(currentUserService.isSignedIn ? "Signed-In User" : ( viewModel.createAccountMode ? "Sign-Up" : "Sign-In or Sign-Up"))) {
             if currentUserService.isSignedIn {
+                
+                // email
                 LabeledContent {
                     Text(currentUserService.user.auth.email)
                 } label: { Text("email address:") }
                     .labeledContentStyle(TopLabeledContentStyle())
                
+                // password
                 LabeledContent {
                     Text("********")
-                        .disabled(true)
+                     //   .disabled(true)
                 } label: { Text("password:") }
-                    .labeledContentTrailing {
-                        Button(action: changePassword) { Text("change") }
-                            .buttonStyle(.borderless)
-                    }
                     .labeledContentStyle(TopLabeledContentStyle())
                 
+                // display name
                 LabeledContent {
-                   Text(currentUserService.user.account.displayName)
+                    Text(currentUserService.user.account.displayName)
                 } label: { Text("display name:") }
                     .labeledContentStyle(TopLabeledContentStyle())
                 
+                // action
                 Button(action: toggleSignIn) {
                     Text(currentUserService.isSignedIn ? "Sign Out" : "Submit")
                 }
                 .frame(maxWidth: .infinity)
                 .foregroundColor(.white)
                 .listRowBackground(Color.accentColor)
+                
             }
             else {
+                
+                // email
                 LabeledContent {
                     TextField(text: $viewModel.capturedEmailText, prompt: Text(currentUserService.isSignedIn ? currentUserService.user.auth.email : "sign-in or sign-up email address")) {}
                         .disabled(viewModel.createAccountMode)
@@ -82,6 +88,7 @@ struct SignUpInOutView: View, DebugPrintable {
                 } label: { Text("email address:") }
                     .labeledContentStyle(TopLabeledContentStyle())
                 
+                // password + action (if applicable)
                 if viewModel.createAccountMode {
                     LabeledContent {
                         SecureField(text: $viewModel.capturedPasswordText, prompt: Text("password")) {}
@@ -113,11 +120,37 @@ struct SignUpInOutView: View, DebugPrintable {
                     .listRowBackground(Color.accentColor)
                 }
             }
-            
 
         }
         .onAppear {focusedField = .username}
-        
+        .alert("Password Reset Sent", isPresented: $showResetConfirmation) {
+            Button("OK", role: .cancel) { }
+        } message: {
+            Text("Check your inbox to continue.\nIf you don't see the email, check your Junk folder.")
+        }
+
+        if viewModel.createAccountMode {
+            CreateAccountView(
+                viewModel: viewModel,
+                currentUserService: currentUserService
+            )
+        } else if viewModel.changePasswordMode {
+            ChangePasswordView(
+                viewModel: viewModel,
+                currentUserService: currentUserService
+            )
+        } else if currentUserService.isSignedIn {
+            Button(action: toggleChangePassword) {
+                Text("Change Password")
+            }
+            .frame(maxWidth: .infinity)
+        } else {
+            Button(action: resetPassword) {
+                Text("Reset Password")
+            }
+            .frame(maxWidth: .infinity)
+        }
+    
         Section {
             if currentUserService.isSigningIn {
                 HStack {
@@ -132,13 +165,6 @@ struct SignUpInOutView: View, DebugPrintable {
                 }
             }
         }
-        
-        if viewModel.createAccountMode {
-            CreateAccountView(
-                viewModel: viewModel,
-                currentUserService: currentUserService
-            )
-        }
     }
 }
 
@@ -147,7 +173,6 @@ private extension SignUpInOutView {
         if currentUserService.isSignedIn {
             do {
                 try CurrentUserService.shared.signOut()
-                addSignInOutEventToLog()
             } catch {
                 debugprint("(View) Error signing out of User Account: \(error)")
                 viewModel.error = error
@@ -156,13 +181,12 @@ private extension SignUpInOutView {
             Task {
                 do {
                     let uid = try await currentUserService.signInExistingUser(
-                                                email: viewModel.capturedEmailText,
-                                                password: viewModel.capturedPasswordText)
+                        email: viewModel.capturedEmailText,
+                        password: viewModel.capturedPasswordText)
                     viewModel.capturedPasswordText = ""
                     debugprint("(View) User \(uid) signed in")
-                    addSignInOutEventToLog()
                 } catch {
-                    if let signInError = error as? SignInError, signInError == .userNotFound {
+                    if let authError = error as? AuthError, authError == .userNotFound {
                         viewModel.createAccountMode = true
                     } else {
                         debugprint("(View) Error signing into User Account: \(error)")
@@ -172,6 +196,7 @@ private extension SignUpInOutView {
                 }
             }
         }
+        modelContext.insert(ActivityLogEntry(currentUserService.isSignedIn ? "User signed out": "User signed in"))
     }
     
     private func createAccount() {
@@ -183,20 +208,25 @@ private extension SignUpInOutView {
         }
     }
     
-    private func changePassword() {
-        print("change password clicked")
-        addChangePasswordEventToLog()
-        
-    }
-
-    private func addSignInOutEventToLog() {
-        let newLogEntry = ActivityLogEntry(currentUserService.isSignedIn ? "User signed out": "User signed in")
-        modelContext.insert(newLogEntry)
+    private func resetPassword() {
+        debugprint("resetPassword called")
+        if viewModel.isReadyToResetPassword() {
+            Task {
+                do {
+                    try await viewModel.resetPasswordWithService(currentUserService)
+                } catch {
+                    debugprint("(View) Error requesting password reset: \(error)")
+                    viewModel.error = error
+                    throw error
+                }
+                modelContext.insert(ActivityLogEntry("Password reset email sent"))
+                showResetConfirmation = true
+            }
+        }
     }
     
-    private func addChangePasswordEventToLog() {
-        let newLogEntry = ActivityLogEntry("User changed password")
-        modelContext.insert(newLogEntry)
+    private func toggleChangePassword() {
+        viewModel.toggleChangePasswordMode()
     }
 }
 
