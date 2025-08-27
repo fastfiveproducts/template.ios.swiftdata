@@ -70,18 +70,17 @@ struct CreateAccountView: View, DebugPrintable {
                     Text("I don't even like Robots")
                 }
                 
-                Button(action: createAccount) {
-                    Text("Submit")
-                }
-                .frame(maxWidth: .infinity)
-                .foregroundColor(.white)
-                .listRowBackground(Color.accentColor)
-                .disabled(
-                    !viewModel.notRobot ||
-                    currentUserService.isCreatingUser ||
-                    currentUserService.isCreatingUserAccount ||
-                    currentUserService.isUpdatingUserAccount
-                )
+                Button("Submit", action: createAccount)
+                    .frame(maxWidth: .infinity)
+                    .foregroundColor(.white)
+                    .listRowBackground(Color.accentColor)
+                    .disabled(viewModel.capturedPasswordMatchText.isEmpty ||
+                        viewModel.capturedDisplayNameText.isEmpty ||
+                        viewModel.notRobot == false ||
+                        currentUserService.isCreatingUser ||
+                        currentUserService.isCreatingUserAccount ||
+                        currentUserService.isUpdatingUserAccount
+                    )
                 
             }
             .onAppear { focusedField = .passwordAgain }
@@ -121,12 +120,10 @@ struct CreateAccountView: View, DebugPrintable {
             }
         } else {
             Section {
-                Button(action: startOver) {
-                    Text("Start Over")
-                }
-                .frame(maxWidth: .infinity)
-                .foregroundColor(.white)
-                .listRowBackground(Color.accentColor)
+                Button("Start Over", action: startOver)
+                    .frame(maxWidth: .infinity)
+                    .foregroundColor(.white)
+                    .listRowBackground(Color.accentColor)
             }
         }
     }
@@ -196,9 +193,7 @@ private extension CreateAccountView {
         .environment(\.font, Font.body)
         
         Spacer()
-        Button(action: currentUserService.nextCreateState) {
-            Text("Next State")
-        }
+        Button("Next State", action: currentUserService.nextCreateState)
     }
 }
 #endif

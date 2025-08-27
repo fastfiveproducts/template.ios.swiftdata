@@ -10,6 +10,9 @@ import SwiftUI
 struct ChangePasswordView: View, DebugPrintable {
     @ObservedObject var viewModel : UserAccountViewModel
     @ObservedObject var currentUserService: CurrentUserService
+    @State private var showConfirmation = false
+    
+    @Environment(\.modelContext) private var modelContext
     
     @FocusState private var focusedField: Field?
     private func nextField() {
@@ -28,7 +31,78 @@ struct ChangePasswordView: View, DebugPrintable {
 
     var body: some View {
         Section(header: Text("Change Password")) {
-            Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+            LabeledContent {
+                SecureField(text: $viewModel.capturedPasswordTextOld, prompt: Text("current password")) {}
+                    .autocapitalization(/*@START_MENU_TOKEN@*/.none/*@END_MENU_TOKEN@*/)
+                    .keyboardType(.emailAddress)
+                    .disableAutocorrection(true)
+                    .focused($focusedField, equals: .passwordOld)
+                    .onTapGesture { nextField() }
+                    .onSubmit { nextField() }
+            } label: { Text("current password:") }
+                .labeledContentStyle(TopLabeledContentStyle())
+            
+            LabeledContent {
+                SecureField(text: $viewModel.capturedPasswordText, prompt: Text("new password")) {}
+                    .autocapitalization(/*@START_MENU_TOKEN@*/.none/*@END_MENU_TOKEN@*/)
+                    .keyboardType(.emailAddress)
+                    .disableAutocorrection(true)
+                    .focused($focusedField, equals: .passwordNew)
+                    .onTapGesture { nextField() }
+                    .onSubmit { nextField() }
+            } label: { Text("new password:") }
+                .labeledContentStyle(TopLabeledContentStyle())
+            
+            LabeledContent {
+                SecureField(text: $viewModel.capturedPasswordMatchText, prompt: Text("new password")) {}
+                    .autocapitalization(/*@START_MENU_TOKEN@*/.none/*@END_MENU_TOKEN@*/)
+                    .keyboardType(.emailAddress)
+                    .disableAutocorrection(true)
+                    .focused($focusedField, equals: .passwordAgain)
+                    .onTapGesture { nextField() }
+                    .onSubmit { nextField() }
+            } label: { Text("enter new password again:") }
+                .labeledContentStyle(TopLabeledContentStyle())
+            
+            Button("Submit", action: changePassword)
+                .frame(maxWidth: .infinity)
+                .foregroundColor(.white)
+                .listRowBackground(Color.accentColor)
+                .disabled(viewModel.capturedPasswordTextOld.isEmpty
+                          || viewModel.capturedPasswordText.isEmpty
+                          || viewModel.capturedPasswordMatchText.isEmpty
+                )
+            
+            Button("Cancel", role: .cancel) {
+                viewModel.toggleChangePasswordMode()
+            }
+            .frame(maxWidth: .infinity)
+            
+        }
+        .onAppear {focusedField = .passwordOld}
+        .alert("Password Change Successful", isPresented: $showConfirmation) {
+            Button("OK", role: .cancel) {
+                viewModel.toggleChangePasswordMode()
+            }
+        } 
+    }
+}
+
+private extension ChangePasswordView {
+    private func changePassword() {
+        debugprint("changePassword called")
+        if viewModel.isReadyToChangePassword() {
+            Task {
+                do {
+                    try await viewModel.changePasswordWithService(currentUserService)
+                } catch {
+                    debugprint("(View) Error requesting password change: \(error)")
+                    viewModel.error = error
+                    throw error
+                }
+                modelContext.insert(ActivityLogEntry("Password changed"))
+                showConfirmation = true
+            }
         }
     }
 }

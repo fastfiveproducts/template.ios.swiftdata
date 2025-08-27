@@ -65,7 +65,7 @@ struct SignUpInOutView: View, DebugPrintable {
                     .labeledContentStyle(TopLabeledContentStyle())
                 
                 // action
-                Button(action: toggleSignIn) {
+                Button(action: toggleSignUpInOut) {
                     Text(currentUserService.isSignedIn ? "Sign Out" : "Submit")
                 }
                 .frame(maxWidth: .infinity)
@@ -108,19 +108,22 @@ struct SignUpInOutView: View, DebugPrintable {
                             .keyboardType(.emailAddress)
                             .disableAutocorrection(true)
                             .focused($focusedField, equals: .password)
-                            .onTapGesture { toggleSignIn() }
-                            .onSubmit { toggleSignIn() }
+                            .onTapGesture { toggleSignUpInOut() }
+                            .onSubmit { toggleSignUpInOut() }
                     } label: { Text("password:") }
                         .labeledContentStyle(TopLabeledContentStyle())
-                    Button(action: toggleSignIn) {
+                    Button(action: toggleSignUpInOut) {
                         Text(currentUserService.isSignedIn ? "Sign Out" : "Submit")
                     }
                     .frame(maxWidth: .infinity)
                     .foregroundColor(.white)
                     .listRowBackground(Color.accentColor)
+                    .disabled(viewModel.capturedEmailText.isEmpty
+                        || viewModel.capturedPasswordText.isEmpty
+                    )
                 }
             }
-
+            
         }
         .onAppear {focusedField = .username}
         .alert("Password Reset Sent", isPresented: $showResetConfirmation) {
@@ -140,15 +143,12 @@ struct SignUpInOutView: View, DebugPrintable {
                 currentUserService: currentUserService
             )
         } else if currentUserService.isSignedIn {
-            Button(action: toggleChangePassword) {
-                Text("Change Password")
-            }
-            .frame(maxWidth: .infinity)
+            Button("Change Password", action: toggleChangePasswordMode)
+                .frame(maxWidth: .infinity)
         } else {
-            Button(action: resetPassword) {
-                Text("Reset Password")
-            }
-            .frame(maxWidth: .infinity)
+            Button("Reset Password", action: resetPassword)
+                .frame(maxWidth: .infinity)
+                .disabled(viewModel.capturedEmailText.isEmpty)
         }
     
         Section {
@@ -169,7 +169,7 @@ struct SignUpInOutView: View, DebugPrintable {
 }
 
 private extension SignUpInOutView {
-    private func toggleSignIn() {
+    private func toggleSignUpInOut() {
         if currentUserService.isSignedIn {
             do {
                 try CurrentUserService.shared.signOut()
@@ -225,7 +225,7 @@ private extension SignUpInOutView {
         }
     }
     
-    private func toggleChangePassword() {
+    private func toggleChangePasswordMode() {
         viewModel.toggleChangePasswordMode()
     }
 }

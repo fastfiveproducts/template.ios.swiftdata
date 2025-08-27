@@ -99,6 +99,19 @@ class UserAccountViewModel: ObservableObject, DebugPrintable
         return isReady
     }
     
+    func isReadyToChangePassword() -> Bool {
+        statusText = ""
+        var isReady = true
+        
+        if capturedPasswordTextOld.isEmpty {
+            statusText = ("Please enter your current password")
+            isReady = false
+        } else if capturedPasswordsMatch() == false {
+            isReady = false
+        }
+        return isReady
+    }
+    
     func capturedPasswordsMatch() -> Bool {
         var match = true
         if capturedPasswordText.isEmpty {
@@ -208,6 +221,10 @@ class UserAccountViewModel: ObservableObject, DebugPrintable
 
     // MARK: -- Change Password
     func toggleChangePasswordMode() {
+        capturedPasswordTextOld = ""
+        capturedPasswordText = ""
+        capturedPasswordMatchText = ""
+        error = nil
         if changePasswordMode {
             changePasswordMode = false
         } else {
@@ -220,7 +237,7 @@ class UserAccountViewModel: ObservableObject, DebugPrintable
         // MARK:  re-authenticate the user in the Auth system first
         do {
             try await currentUserService.reAuthenticateUser(
-                email: capturedEmailText,
+                email: currentUserService.user.auth.email,
                 password: capturedPasswordTextOld)
         } catch {
             debugprint("(View) Cloud Error reAuthenticating the user: \(error)")
@@ -230,10 +247,8 @@ class UserAccountViewModel: ObservableObject, DebugPrintable
         
         // MARK:  then reset the user's Password in the Auth system
         do {
-            try await currentUserService.reAuthenticateUser(
-                email: capturedEmailText,
-                password: capturedPasswordText)
-            modelContext.insert(ActivityLogEntry("User changed password"))
+            try await currentUserService.changeUserPassword(
+                newPassword: capturedPasswordText)
         } catch {
             debugprint("(View) Cloud Error changing user password: \(error)")
             self.error = error
