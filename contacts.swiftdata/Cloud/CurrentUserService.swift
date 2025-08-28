@@ -2,7 +2,7 @@
 //  CurrentUserService.swift
 //
 //  Template created by Pete Maiser, July 2024 through May 2025
-//      Template v0.1.1 Fast Five Products LLC's public AGPL template.
+//      Template v0.2.2 (updated) Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025 Fast Five Products LLC. All rights reserved.
 //
@@ -30,9 +30,11 @@ class CurrentUserService: ObservableObject, DebugPrintable {
     
     // ***** Status and Modes *****
 
-    // sign-in process
+    // Auth process
     @Published var isSigningIn = false
     @Published var isSignedIn = false
+    @Published var isReAuthenticatingUser = false
+    @Published var isChangingPassword = false
     
     // because Auth masters users, creating a User in the Authententication system is "creating a user"
     // even if the user is not compplete until the Account is created and complete
@@ -121,20 +123,24 @@ class CurrentUserService: ObservableObject, DebugPrintable {
     
     // ***** Auth Functions *****
     func signInExistingUser(email: String, password: String) async throws -> String {
+        guard !email.isEmpty, !password.isEmpty else {
+            throw AuthError.invalidInput
+        }
+        
         isSigningIn = true
         defer { isSigningIn = false }
         do {
             let result = try await auth.signIn(withEmail: email, password: password)
             if result.user.uid.isEmpty {
                 debugprint("signIn returned successful but user.uid is empty.")
-                self.error = SignInError.userIdNotFound
+                self.error = AuthError.userIdNotFound
             }
             return result.user.uid          // user existed + sign-in successful = we are done
         } catch {
             let nsError = error as NSError
             if nsError.code == AuthErrorCode.userNotFound.rawValue {
                 debugprint("User not found for Sign-In, error: \(error)")
-                throw SignInError.userNotFound
+                throw AuthError.userNotFound
             } else {
                 debugprint("User Sign-In error: \(error)")
                 self.error = error
@@ -144,13 +150,17 @@ class CurrentUserService: ObservableObject, DebugPrintable {
     }
     
     func signInOrCreateUser(email: String, password: String) async throws -> String {
+        guard !email.isEmpty, !password.isEmpty else {
+            throw AuthError.invalidInput
+        }
+        
         isSigningIn = true
         defer { isSigningIn = false }
         do {
             let result = try await auth.signIn(withEmail: email, password: password)
             if !result.user.uid.isEmpty {
                 debugprint("signIn - via signInOrCreateUser func - returned successful but user.uid is empty.")
-                self.error = SignInError.userIdNotFound
+                self.error = AuthError.userIdNotFound
             }
             return result.user.uid          // user existed + sign-in successful = we are done
         } catch {
@@ -176,6 +186,59 @@ class CurrentUserService: ObservableObject, DebugPrintable {
                 self.error = error
                 throw error
             }
+        }
+    }
+    
+    func resetUserPassword(email: String) async throws {
+        guard !email.isEmpty else {
+            throw AuthError.invalidInput
+        }
+        
+        do {
+            try await auth.sendPasswordReset(withEmail: email)
+        } catch {
+            debugprint("Reset Password error: \(error)")
+            self.error = error
+            throw error
+        }
+    }
+    
+    func reAuthenticateUser(email: String, password: String) async throws {
+        guard !email.isEmpty, !password.isEmpty else {
+            throw AuthError.invalidInput
+        }
+        
+        let credential = EmailAuthProvider.credential(withEmail: email, password: password)
+        
+        isReAuthenticatingUser = true
+        defer { isReAuthenticatingUser = false }
+        do {
+            try await auth.currentUser?.reauthenticate(with: credential)
+        } catch {
+            debugprint("Reauthentication error: \(error)")
+            self.error = error
+            throw error
+        }
+    }
+    
+    func changeUserPassword(newPassword: String) async throws {
+        guard !newPassword.isEmpty else {
+            throw AuthError.invalidInput
+        }
+        
+        isChangingPassword = true
+        defer { isChangingPassword = false }
+        do {
+            try await auth.currentUser?.updatePassword(to: newPassword)
+        } catch {
+            let nsError = error as NSError
+            if nsError.code == AuthErrorCode.requiresRecentLogin.rawValue {
+                debugprint("Password cannot be changed because the user needs to re-authenticate.  Error: \(error)")
+            } else {
+                debugprint("Password Change error: \(error)")
+            }
+            self.error = error
+            throw error
         }
     }
     
@@ -213,7 +276,7 @@ extension CurrentUserService {
         isWaitingOnEmailVerification = false
         guard let email = UserDefaults.standard.string(forKey: "emailForSignIn")
         else {
-            self.error = SignInError.signInInputsNotFound
+            self.error = AuthError.signInInputsNotFound
             isCreatingUser = false
             return
         }
@@ -235,7 +298,7 @@ extension CurrentUserService {
                 return
             }
         } else {
-            self.error = SignInError.emailLinkInvalid
+            self.error = AuthError.emailLinkInvalid
             isCreatingUser = false
             return
         }
