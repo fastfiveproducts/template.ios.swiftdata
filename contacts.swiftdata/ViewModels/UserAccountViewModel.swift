@@ -1,8 +1,8 @@
 //
 //  UserAccountViewModel.swift
 //
-//  Template created by Pete Maiser, July 2024 through May 2025
-//      Template v0.1.1 Fast Five Products LLC's public AGPL template.
+//  Template created by Pete Maiser, July 2024 through August 2025
+//      Template v0.2.2 (updated) Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025 Fast Five Products LLC. All rights reserved.
 //
@@ -23,7 +23,13 @@ import SwiftUICore
 @MainActor
 class UserAccountViewModel: ObservableObject, DebugPrintable
 {
-    @Environment(\.modelContext) private var modelContext
+    // Support Previews to jump-start into create-account or status-mode
+    #if DEBUG
+    init(createAccountMode: Bool = false, showStatusMode: Bool = false) {
+        self.createAccountMode = createAccountMode
+        self.showStatusMode = showStatusMode
+    }
+    #endif
     
     // MARK: -- Status
     @Published private(set) var statusText = ""
@@ -32,12 +38,7 @@ class UserAccountViewModel: ObservableObject, DebugPrintable
     @Published var showStatusMode = false
     @Published var showSuccessMode = false
     @Published var changePasswordMode = false
-    
-    init(createAccountMode: Bool = false, showStatusMode: Bool = false) {
-        self.createAccountMode = createAccountMode
-        self.showStatusMode = showStatusMode
-    }
-    
+      
     // Capture
     @Published var capturedEmailText = ""
     @Published var capturedPhoneNumberText = ""
