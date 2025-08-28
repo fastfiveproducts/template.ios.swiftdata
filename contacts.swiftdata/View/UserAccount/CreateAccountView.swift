@@ -1,8 +1,8 @@
 //
 //  CreateAccountView.swift
 //
-//  Template created by Pete Maiser, July 2024 through May 2025
-//      Template v0.1.1 Fast Five Products LLC's public AGPL template.
+//  Template created by Pete Maiser, July 2024 through August 2025
+//      Template v0.2.2 (updated) Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025 Fast Five Products LLC. All rights reserved.
 //
@@ -34,7 +34,7 @@ struct CreateAccountView: View, DebugPrintable {
                 focusedField = .none
         }
     }
-    private enum Field: Hashable { case passwordAgain; case displayName}
+    private enum Field: Hashable { case passwordAgain, displayName}
 
     var body: some View {
         
@@ -70,18 +70,17 @@ struct CreateAccountView: View, DebugPrintable {
                     Text("I don't even like Robots")
                 }
                 
-                Button(action: createAccount) {
-                    Text("Submit")
-                }
-                .frame(maxWidth: .infinity)
-                .foregroundColor(.white)
-                .listRowBackground(Color.accentColor)
-                .disabled(
-                    !viewModel.notRobot ||
-                    currentUserService.isCreatingUser ||
-                    currentUserService.isCreatingUserAccount ||
-                    currentUserService.isUpdatingUserAccount
-                )
+                Button("Submit", action: createAccount)
+                    .frame(maxWidth: .infinity)
+                    .foregroundColor(.white)
+                    .listRowBackground(Color.accentColor)
+                    .disabled(viewModel.capturedPasswordMatchText.isEmpty ||
+                        viewModel.capturedDisplayNameText.isEmpty ||
+                        viewModel.notRobot == false ||
+                        currentUserService.isCreatingUser ||
+                        currentUserService.isCreatingUserAccount ||
+                        currentUserService.isUpdatingUserAccount
+                    )
                 
             }
             .onAppear { focusedField = .passwordAgain }
@@ -121,12 +120,10 @@ struct CreateAccountView: View, DebugPrintable {
             }
         } else {
             Section {
-                Button(action: startOver) {
-                    Text("Start Over")
-                }
-                .frame(maxWidth: .infinity)
-                .foregroundColor(.white)
-                .listRowBackground(Color.accentColor)
+                Button("Start Over", action: startOver)
+                    .frame(maxWidth: .infinity)
+                    .foregroundColor(.white)
+                    .listRowBackground(Color.accentColor)
             }
         }
     }
@@ -196,9 +193,7 @@ private extension CreateAccountView {
         .environment(\.font, Font.body)
         
         Spacer()
-        Button(action: currentUserService.nextCreateState) {
-            Text("Next State")
-        }
+        Button("Next State", action: currentUserService.nextCreateState)
     }
 }
 #endif
