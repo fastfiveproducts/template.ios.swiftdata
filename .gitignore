@@ -1,4 +1,4 @@
-# macOS
+f# macOS
 .DS_Store
 
 ## User settings
@@ -26,10 +26,5 @@ Package.pins
 Package.resolved
 .swiftpm
 
-
-# firebase connection
+# Firebase Connection
 GoogleService-Info.plist
-
-# firebase dataconnect generated files
-dataconnect-generated
-

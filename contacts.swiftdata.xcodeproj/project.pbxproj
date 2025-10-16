@@ -139,8 +139,8 @@
 			mainGroup = B5D0C7852E2415FC00B31F19;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				B5C0BDE42E241F1000641B69 /* XCLocalSwiftPackageReference "dataconnect-generated/swift/DefaultConnector" */,
 				B5C0BDE72E241F6F00641B69 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				B58457672EA07D660093C071 /* XCLocalSwiftPackageReference "../template.firebase/dataconnect-generated/swift/DefaultConnector" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = B5D0C78F2E2415FC00B31F19 /* Products */;
@@ -321,7 +321,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.2.2;
+				MARKETING_VERSION = 0.2.3;
 				PRODUCT_BUNDLE_IDENTIFIER = llc.fastfiveproducts.template;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -352,7 +352,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.2.2;
+				MARKETING_VERSION = 0.2.3;
 				PRODUCT_BUNDLE_IDENTIFIER = llc.fastfiveproducts.template;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -385,9 +385,9 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		B5C0BDE42E241F1000641B69 /* XCLocalSwiftPackageReference "dataconnect-generated/swift/DefaultConnector" */ = {
+		B58457672EA07D660093C071 /* XCLocalSwiftPackageReference "../template.firebase/dataconnect-generated/swift/DefaultConnector" */ = {
 			isa = XCLocalSwiftPackageReference;
-			relativePath = "dataconnect-generated/swift/DefaultConnector";
+			relativePath = "../template.firebase/dataconnect-generated/swift/DefaultConnector";
 		};
 /* End XCLocalSwiftPackageReference section */
 

@@ -18,7 +18,7 @@
 
 
 import Foundation
-import SwiftUICore
+import SwiftUI
 
 @MainActor
 class UserAccountViewModel: ObservableObject, DebugPrintable
