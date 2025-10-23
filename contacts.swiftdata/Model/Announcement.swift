@@ -68,5 +68,14 @@ extension Announcement {
             displayEndDate: Calendar.current.date(byAdding: .day, value: 365, to: Date())!
         )
     ]
+    static let testTiny: [Announcement] = [
+        Announcement(
+            id: 202502281200,
+            title: "A Lorem Ipsum Title",
+            content: "One Line",
+            displayStartDate: Calendar.current.date(byAdding: .day, value: -2, to: Date())!,
+            displayEndDate: Calendar.current.date(byAdding: .day, value: 364, to: Date())!
+        )
+    ]
 }
 #endif

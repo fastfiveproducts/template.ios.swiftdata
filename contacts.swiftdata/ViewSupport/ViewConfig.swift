@@ -26,11 +26,9 @@ struct ViewConfig {
     static let dynamicSizeMax = DynamicTypeSize.xxxLarge
     
     static let bgColor: Color =
-        // Color(UIColor.systemBackground)
-        Color(hex: "#4F7942")
+        Color(UIColor.systemBackground)
     static let fgColor =
-        // Color.accentColor
-        Color.white
+        Color.accentColor
 }
 
 extension Color {

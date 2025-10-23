@@ -22,37 +22,56 @@ import SwiftData
 
 struct HomeView: View {
     @ObservedObject var viewModel: HomeViewModel
-    @Environment(\.modelContext) private var modelContext
-    
-    @State private var showMenu = false
-    @State private var selectedMenuItem: MenuItem? = .contacts
-    
     @ObservedObject var currentUserService: CurrentUserService
+    @ObservedObject var modelContainerManager: ModelContainerManager
     @ObservedObject var announcementStore: AnnouncementStore
     @ObservedObject var publicCommentStore: PublicCommentStore
     @ObservedObject var privateMessageStore: PrivateMessageStore
 
+    @State private var showMenu = false
+    @State private var selectedMenuItem: MenuItem? = .contacts
+    
     var body: some View {
-        NavigationStack {
-            VStack(alignment: .leading, spacing: 24) {
-                self.destinationView
-            }
-            .navigationTitle(selectedMenuItem?.label ?? "Home")
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    self.menuView
+        if let container = modelContainerManager.container {
+            NavigationStack {
+                VStack(alignment: .leading, spacing: 24) {
+                    self.destinationView
                 }
-                
-                if !currentUserService.isSignedIn && self.selectedMenuItem != .profile {
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        SignUpInLinkView(currentUserService: currentUserService, inToolbar: true)
+                .navigationTitle(selectedMenuItem?.label ?? "Home")
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarLeading) {
+                        self.menuView
+                    }
+                    
+                    if !currentUserService.isSignedIn && self.selectedMenuItem != .profile {
+                        ToolbarItem(placement: .navigationBarTrailing) {
+                            SignUpInLinkView(currentUserService: currentUserService, inToolbar: true)
+                        }
                     }
                 }
+                .padding(.vertical)
             }
-            .padding(.vertical)
+            .modelContainer(container)
+            .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
+            .environment(\.font, Font.body)
+        } else {
+            // Fallback while container loads
+            ZStack {
+                ViewConfig.bgColor.ignoresSafeArea()
+                
+                VStack(spacing: 16) {
+                    ProgressView()
+                        .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                    
+                    Text("Checking for local data…")
+                        .font(.title)
+                        .fontWeight(.semibold)
+                        .foregroundColor(.white)
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal)
+                }
+            }
         }
-        .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
-        .environment(\.font, Font.body)
     }
     
     @ViewBuilder
@@ -154,12 +173,14 @@ struct HomeView: View {
 
 #if DEBUG
 #Preview ("test-data signed-in") {
+    let currentUserService = CurrentUserTestService.sharedSignedIn
+    
     let schema = Schema([
         Contact.self,
         ActivityLogEntry.self
     ])
-    let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
-    let container = try! ModelContainer(for: schema, configurations: [modelConfiguration])
+    let config = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
+    let container = try! ModelContainer(for: schema, configurations: [config])
 
     for object in ActivityLogEntry.testObjects {
         container.mainContext.insert(object)
@@ -169,10 +190,13 @@ struct HomeView: View {
         container.mainContext.insert(object)
     }
 
-    let currentUserService = CurrentUserTestService.sharedSignedIn
+    let modelContainerManager = ModelContainerManager(currentUserService: currentUserService)
+    modelContainerManager.injectPreviewContainer(container)
+
     return HomeView(
         viewModel: HomeViewModel(),
         currentUserService: currentUserService,
+        modelContainerManager: modelContainerManager,
         announcementStore: AnnouncementStore.testLoaded(),
         publicCommentStore: PublicCommentStore.testLoaded(),
         privateMessageStore: PrivateMessageStore()              // loading empty because private messages not used yet
@@ -180,11 +204,17 @@ struct HomeView: View {
     .modelContainer(container)
 }
 #Preview ("no-data and signed-out") {
-    let container = try! ModelContainer()
     let currentUserService = CurrentUserTestService.sharedSignedOut
+    
+    let container = try! ModelContainer()
+    
+    let modelContainerManager = ModelContainerManager(currentUserService: currentUserService)
+    modelContainerManager.injectPreviewContainer(container)
+
     return HomeView(
         viewModel: HomeViewModel(),
         currentUserService: currentUserService,
+        modelContainerManager: modelContainerManager,
         announcementStore: AnnouncementStore.testLoaded(),
         publicCommentStore: PublicCommentStore.testLoaded(),
         privateMessageStore: PrivateMessageStore.testLoaded()
