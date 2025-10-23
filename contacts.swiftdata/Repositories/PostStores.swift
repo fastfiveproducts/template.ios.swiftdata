@@ -2,6 +2,7 @@
 //  PostStores.swift
 //
 //  Template created by Pete Maiser, July 2024 through May 2025
+//  Modified by Pete Maiser, Fast Five Products LLC, on 10/23/25.
 //      Template v0.2.3 (updated) Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025 Fast Five Products LLC. All rights reserved.

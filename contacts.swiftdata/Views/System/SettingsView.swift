@@ -1,9 +1,8 @@
 //
 //  SettingsView.swift
 //
-//  Created by Elizabeth Maiser, Fast Five Products LLC, on 7/4/25.
-//
-//  Template v0.2.0 — Fast Five Products LLC's public AGPL template.
+//  Tempalte file created by Elizabeth Maiser, Fast Five Products LLC, on 7/4/25.
+//      Template v0.2.0 — Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025 Fast Five Products LLC. All rights reserved.
 //

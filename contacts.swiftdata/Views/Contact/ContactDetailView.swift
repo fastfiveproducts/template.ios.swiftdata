@@ -1,9 +1,8 @@
 //
 //  ContactDetailView.swift
 //
-//  Created by Pete Maiser, Fast Five Products LLC, on 7/12/25.
-//
-//  Template v0.2.0 — Fast Five Products LLC's public AGPL template.
+//  Template file created by Pete Maiser, Fast Five Products LLC, on 7/12/25.
+//      Template v0.2.0 — Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025 Fast Five Products LLC. All rights reserved.
 //

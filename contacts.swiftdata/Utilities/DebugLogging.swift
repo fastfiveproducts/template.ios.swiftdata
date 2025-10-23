@@ -1,8 +1,9 @@
 //
-//  DebugPrintable.swift
+//  DebugLogging.swift
 //
 //  Template created by Pete Maiser, July 2024 through May 2025
-//      Template v0.1.2 (renamed) Fast Five Products LLC's public AGPL template.
+//  Modified by Pete Maiser, Fast Five Products LLC, on 10/23/25.
+//      Template v0.2.3 (updated) Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025 Fast Five Products LLC. All rights reserved.
 //
@@ -18,6 +19,7 @@
 
 
 import Foundation
+import os.log
 
 protocol DebugPrintable {}
 
@@ -35,4 +37,17 @@ extension DebugPrintable {
             print("\(String(describing: self.self)) \(str)")
         }
     }
+}
+
+func deviceLog(_ message: StaticString, category: String = "General", error: Error? = nil) {
+    
+    let bundleIdentifier: String = Bundle.main.bundleIdentifier ?? "unknownBundleId"
+    let log = OSLog(subsystem: bundleIdentifier, category: category)
+    
+    if let error = error {
+        os_log(.error, log: log, "%{public}@ %@", message as? CVarArg ?? "unknown log message", error.localizedDescription)
+    } else {
+        os_log(.error, log: log, "%{public}@", message as? CVarArg ?? "unknown log message")
+    }
+    
 }
