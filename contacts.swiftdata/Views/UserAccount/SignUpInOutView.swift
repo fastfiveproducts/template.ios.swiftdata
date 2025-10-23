@@ -2,7 +2,7 @@
 //  SignUpSignInSignOutView.swift
 //
 //  Template created by Pete Maiser, July 2024 through August 2025
-//      Template v0.2.2 (updated) Fast Five Products LLC's public AGPL template.
+//      Template v0.2.3 (updated) Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025 Fast Five Products LLC. All rights reserved.
 //
@@ -18,14 +18,11 @@
 
 
 import SwiftUI
-import SwiftData
 
 struct SignUpInOutView: View, DebugPrintable {
     @ObservedObject var viewModel : UserAccountViewModel
     @ObservedObject var currentUserService: CurrentUserService
     @State private var showResetConfirmation = false
-    
-    @Environment(\.modelContext) private var modelContext
     
     @FocusState private var focusedField: Field?
     private func nextField() {
@@ -130,6 +127,11 @@ struct SignUpInOutView: View, DebugPrintable {
             
         }
         .onAppear {focusedField = .username}
+        .onChange(of: currentUserService.isSignedIn) {
+            if currentUserService.isSignedIn {
+                viewModel.capturedPasswordText = ""
+            }
+        }
         .alert("Password Reset Sent", isPresented: $showResetConfirmation) {
             Button("OK", role: .cancel) { }
         } message: {
@@ -178,7 +180,7 @@ private extension SignUpInOutView {
             do {
                 try CurrentUserService.shared.signOut()
             } catch {
-                debugprint("(View) Error signing out of User Account: \(error)")
+                debugprint("🛑 ERROR:  (View) Error signing out of User Account: \(error)")
                 viewModel.error = error
             }
         } else if viewModel.isReadyToSignIn() {
@@ -187,20 +189,18 @@ private extension SignUpInOutView {
                     let uid = try await currentUserService.signInExistingUser(
                         email: viewModel.capturedEmailText,
                         password: viewModel.capturedPasswordText)
-                    viewModel.capturedPasswordText = ""
                     debugprint("(View) User \(uid) signed in")
                 } catch {
                     if let authError = error as? AuthError, authError == .userNotFound {
                         viewModel.createAccountMode = true
                     } else {
-                        debugprint("(View) Error signing into User Account: \(error)")
+                        debugprint("🛑 ERROR:  (View) Error signing into User Account: \(error)")
                         viewModel.error = error
                         throw error
                     }
                 }
             }
         }
-        modelContext.insert(ActivityLogEntry(currentUserService.isSignedIn ? "User signed out": "User signed in"))
     }
     
     private func createAccount() {
@@ -219,11 +219,10 @@ private extension SignUpInOutView {
                 do {
                     try await viewModel.resetPasswordWithService(currentUserService)
                 } catch {
-                    debugprint("(View) Error requesting password reset: \(error)")
+                    debugprint("🛑 ERROR:  (View) Error requesting password reset: \(error)")
                     viewModel.error = error
                     throw error
                 }
-                modelContext.insert(ActivityLogEntry("Password reset email sent"))
                 showResetConfirmation = true
             }
         }
@@ -243,7 +242,6 @@ private extension SignUpInOutView {
             viewModel: UserAccountViewModel(),
             currentUserService: currentUserService
         )
-        .modelContainer(for: ActivityLogEntry.self, inMemory: true)
     }
     .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
     .environment(\.font, Font.body)
@@ -255,7 +253,6 @@ private extension SignUpInOutView {
             viewModel: UserAccountViewModel(),
             currentUserService: currentUserService
         )
-        .modelContainer(for: ActivityLogEntry.self, inMemory: true)
     }
     .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
     .environment(\.font, Font.body)
@@ -268,7 +265,6 @@ private extension SignUpInOutView {
             viewModel: viewModel,
             currentUserService: currentUserService
         )
-        .modelContainer(for: ActivityLogEntry.self, inMemory: true)
     }
     .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
     .environment(\.font, Font.body)

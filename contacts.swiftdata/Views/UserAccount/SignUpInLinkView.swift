@@ -2,8 +2,7 @@
 //  SignUpInLinkView.swift
 //
 //  Created by Pete Maiser, Fast Five Products LLC, on 7/15/25.
-//
-//  Template v0.2.0 — Fast Five Products LLC's public AGPL template.
+//      Template v0.2.3 (updated) Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025 Fast Five Products LLC. All rights reserved.
 //
@@ -24,39 +23,71 @@ struct SignUpInLinkView: View {
     @ObservedObject var currentUserService: CurrentUserService
     
     var inToolbar: Bool = false
-    var asPage: Bool = false
+    
     var leadingText: String {
-        if inToolbar { return "Sign In →" }
-        else { return "Tap Here or" }
+        if inToolbar, !currentUserService.isSignedIn {
+            if #available(iOS 26, *) { return "" }
+            else { return "Sign In →" }
+        } else if inToolbar, currentUserService.isSignedIn {
+            return ""
+        } else if !inToolbar, !currentUserService.isSignedIn {
+            return "Tap Here or"
+        } else {
+            return ""
+        }
+    }
+    
+    var trailingText: String {
+        if !inToolbar {
+            return "to Sign-In!"
+        } else {
+            return ""
+        }
     }
     
     var body: some View {
-        if !inToolbar { Divider() }
-        
-        NavigationLink {
-            UserAccountView(
-                viewModel: UserAccountViewModel(),
-                currentUserService: currentUserService)
-        } label: {
-            HStack {
-                Spacer()
-                Text(leadingText)
-                Label("to Sign-Up or Sign-In!", systemImage: currentUserService.isSignedIn ? "\(NavigationItem.profile.systemImage).fill" : NavigationItem.profile.systemImage)
-                Spacer()
+        if inToolbar || !currentUserService.isSignedIn {
+            
+            if !inToolbar && !currentUserService.isSignedIn {
+                Divider()
             }
-            .foregroundColor(.accentColor)
+            
+            NavigationLink {
+                UserAccountView(
+                    viewModel: UserAccountViewModel(),
+                    currentUserService: currentUserService)
+            } label: {
+                if inToolbar && currentUserService.isSignedIn {
+                    Label("Account Profile", systemImage: "\(NavigationItem.profile.systemImage).fill")
+                } else {
+                    HStack {
+                        Text(leadingText)
+                        Image(systemName: currentUserService.isSignedIn
+                              ? "\(NavigationItem.profile.systemImage).fill"
+                              : NavigationItem.profile.systemImage)
+                        Text(trailingText)
+                    }
+                    .foregroundColor(ViewConfig.fgColor)
+                }
+            }
+            .buttonStyle(BorderlessButtonStyle())
+            
+        } else {
+            EmptyView( )
         }
-        .buttonStyle(BorderlessButtonStyle())
+        
     }
 }
 
 
-#Preview {
-    let currentUserService = CurrentUserTestService.sharedSignedOut
+#if DEBUG
+#Preview ("test-data signed-in") {
+    let currentUserService = CurrentUserTestService.sharedSignedIn
     NavigationStack {
         VStack(alignment: .leading, spacing: 24) {
-            VStackBox(title: "Greeting") {
-                Text("Hello World!")
+            VStackBox(title: "Preview (Signed-In)") {
+                Text("ToolbarItem is filled,")
+                Text("and no message below")
                 SignUpInLinkView(currentUserService: currentUserService)
             }
         }
@@ -67,4 +98,28 @@ struct SignUpInLinkView: View {
         }
         Spacer()
     }
+    .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
+    .environment(\.font, Font.body)
 }
+#Preview ("signed-out") {
+    let currentUserService = CurrentUserTestService.sharedSignedOut
+    NavigationStack {
+        VStack(alignment: .leading, spacing: 24) {
+            VStackBox(title: "Preview (Signed-Out)") {
+                Text("ToolbarItem not filled,")
+                Text("and there is a message below")
+                SignUpInLinkView(currentUserService: currentUserService)
+            }
+        }
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                SignUpInLinkView(currentUserService: currentUserService, inToolbar: true)
+            }
+        }
+        Spacer()
+    }
+    .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
+    .environment(\.font, Font.body)
+}
+#endif
+
