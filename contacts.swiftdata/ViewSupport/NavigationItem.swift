@@ -1,8 +1,8 @@
 //
-//  HomeViewModel.swift
+//  NavigationItem.swift
 //
 //  Template created by Pete Maiser, July 2024 through May 2025
-//      Template v0.1.3 Fast Five Products LLC's public AGPL template.
+//      Template v0.2.3 Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025 Fast Five Products LLC. All rights reserved.
 //
@@ -20,11 +20,7 @@
 import Foundation
 import SwiftUI
 
-class HomeViewModel: ObservableObject, DebugPrintable {
-    
-}
-
-enum MenuItem: String, CaseIterable, Identifiable {
+enum NavigationItem: String, CaseIterable, Identifiable {
     case announcements,
          contacts,
          comments,
@@ -68,5 +64,11 @@ enum MenuItem: String, CaseIterable, Identifiable {
         case .settings: return "gearshape.fill"
         case .profile: return "person.text.rectangle"
         }
+    }
+}
+
+extension NavigationItem {
+    var labelView: Label<Text, Image>  {
+        Label(label, systemImage: systemImage)
     }
 }

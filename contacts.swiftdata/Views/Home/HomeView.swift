@@ -21,7 +21,6 @@ import SwiftUI
 import SwiftData
 
 struct HomeView: View {
-    @ObservedObject var viewModel: HomeViewModel
     @ObservedObject var currentUserService: CurrentUserService
     @ObservedObject var modelContainerManager: ModelContainerManager
     @ObservedObject var announcementStore: AnnouncementStore
@@ -29,7 +28,7 @@ struct HomeView: View {
     @ObservedObject var privateMessageStore: PrivateMessageStore
 
     @State private var showMenu = false
-    @State private var selectedMenuItem: MenuItem? = .contacts
+    @State private var selectedMenuItem: NavigationItem? = .contacts
     
     var body: some View {
         if let container = modelContainerManager.container {
@@ -136,7 +135,7 @@ struct HomeView: View {
     @ViewBuilder
     var menuView: some View {
         Menu {
-            ForEach(MenuItem.allCases
+            ForEach(NavigationItem.allCases
                 .filter { $0.sortOrder.0 == 0 }
                 .sorted(by: { $0.sortOrder.1 < $1.sortOrder.1 })) { item in
                     Button {
@@ -146,7 +145,7 @@ struct HomeView: View {
                     }
             }
             Divider()
-            ForEach(MenuItem.allCases
+            ForEach(NavigationItem.allCases
                 .filter { $0.sortOrder.0 == 1 }
                 .sorted(by: { $0.sortOrder.1 < $1.sortOrder.1 })) { item in
                     Button {
@@ -161,7 +160,7 @@ struct HomeView: View {
     }
     
     @ViewBuilder
-    func menuLabel(_ item: MenuItem) -> some View {
+    func menuLabel(_ item: NavigationItem) -> some View {
         if item == .profile {
             Label(item.label, systemImage: currentUserService.isSignedIn ? "\(item.systemImage).fill" : item.systemImage)
         } else {
@@ -194,7 +193,6 @@ struct HomeView: View {
     modelContainerManager.injectPreviewContainer(container)
 
     return HomeView(
-        viewModel: HomeViewModel(),
         currentUserService: currentUserService,
         modelContainerManager: modelContainerManager,
         announcementStore: AnnouncementStore.testLoaded(),
@@ -212,7 +210,6 @@ struct HomeView: View {
     modelContainerManager.injectPreviewContainer(container)
 
     return HomeView(
-        viewModel: HomeViewModel(),
         currentUserService: currentUserService,
         modelContainerManager: modelContainerManager,
         announcementStore: AnnouncementStore.testLoaded(),

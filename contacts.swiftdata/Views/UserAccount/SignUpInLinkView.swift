@@ -41,7 +41,7 @@ struct SignUpInLinkView: View {
             HStack {
                 Spacer()
                 Text(leadingText)
-                Label("to Sign-Up or Sign-In!", systemImage: currentUserService.isSignedIn ? "\(MenuItem.profile.systemImage).fill" : MenuItem.profile.systemImage)
+                Label("to Sign-Up or Sign-In!", systemImage: currentUserService.isSignedIn ? "\(NavigationItem.profile.systemImage).fill" : NavigationItem.profile.systemImage)
                 Spacer()
             }
             .foregroundColor(.accentColor)

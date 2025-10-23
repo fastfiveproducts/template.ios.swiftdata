@@ -49,7 +49,6 @@ struct templateApp: App {
     var body: some Scene {
         WindowGroup {
             HomeView(
-                viewModel: HomeViewModel(),
                 currentUserService: currentUserService,
                 modelContainerManager: modelContainerManager,
                 announcementStore: AnnouncementStore.shared,
