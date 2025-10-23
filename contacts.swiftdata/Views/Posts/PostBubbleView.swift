@@ -126,7 +126,7 @@ struct PostBubbleView: View {
         }
         .padding()
     }
-    .dynamicTypeSize(...ViewConfiguration.dynamicSizeMax)
+    .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
     .environment(\.font, Font.body)
 }
 #endif

@@ -86,14 +86,14 @@ struct ListableStoreView<Store: ListableStore>: View {
         // this will show the same way:
         ListableStoreView(store: ListableCloudStore<Announcement>.testLoaded(with: Announcement.testObjects), showSectionHeader: true, showDividers: false)
     }
-    .dynamicTypeSize(...ViewConfiguration.dynamicSizeMax)
+    .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
     .environment(\.font, Font.body)
 }
 #Preview ("VStackBox: Loaded") {
     VStackBox(title: "Announcements") {
         ListableStoreView(store: ListableCloudStore<Announcement>.testLoaded(with: Announcement.testObjects))
     }
-    .dynamicTypeSize(...ViewConfiguration.dynamicSizeMax)
+    .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
     .environment(\.font, Font.body)
 }
 #Preview ("Form: Loading, Error") {
@@ -103,7 +103,7 @@ struct ListableStoreView<Store: ListableStore>: View {
             ListableStoreView(store: ListableCloudStore<Announcement>.testError(), showDividers: false)
         }
     }
-    .dynamicTypeSize(...ViewConfiguration.dynamicSizeMax)
+    .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
     .environment(\.font, Font.body)
 }
 #Preview ("Empty") {
@@ -115,7 +115,7 @@ struct ListableStoreView<Store: ListableStore>: View {
         // this will show the same way, including hiding the header it would show if there was content
         ListableStoreView(store: ListableCloudStore<Announcement>.testEmpty(), showSectionHeader: true, showDividers: false)
     }
-    .dynamicTypeSize(...ViewConfiguration.dynamicSizeMax)
+    .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
     .environment(\.font, Font.body)
 }
 #endif

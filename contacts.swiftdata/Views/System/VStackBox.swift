@@ -92,7 +92,7 @@ struct VStackBox<Content: View>: View {
         } content: {
             previewContent()
         }
-        .dynamicTypeSize(...ViewConfiguration.dynamicSizeMax)
+        .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
         .environment(\.font, Font.body)
     }
 }

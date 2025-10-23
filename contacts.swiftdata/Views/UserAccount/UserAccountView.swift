@@ -36,7 +36,7 @@ struct UserAccountView: View {
                 }
             }
         }
-        .dynamicTypeSize(...ViewConfiguration.dynamicSizeMax)
+        .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
         .environment(\.font, Font.body)
         .alert("Error", error: $viewModel.error)
     

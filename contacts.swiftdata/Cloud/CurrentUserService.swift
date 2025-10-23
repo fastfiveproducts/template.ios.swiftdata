@@ -99,6 +99,9 @@ class CurrentUserService: ObservableObject, DebugPrintable {
                     signInPublisher.send()
                 }
                 catch {
+                    // TODO:  (user profile) code below just continues; make this try-again,
+                    // and/or implement logic to impair functionality,
+                    // and encourage user to restart app or etc.
                     user = User(auth: userAuth, account: UserAccount.blankUser)
                     isSigningIn = false
                     isSignedIn = true

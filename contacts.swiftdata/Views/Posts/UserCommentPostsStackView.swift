@@ -93,7 +93,7 @@ struct UserCommentPostsStackView: View, DebugPrintable {
             
             Spacer()
         }
-        .dynamicTypeSize(...ViewConfiguration.dynamicSizeMax)
+        .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
         .environment(\.font, Font.body)
         .disabled(viewModel.isWorking)
         .alert("Error", error: $viewModel.error)

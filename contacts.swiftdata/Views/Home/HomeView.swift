@@ -51,7 +51,7 @@ struct HomeView: View {
             }
             .padding(.vertical)
         }
-        .dynamicTypeSize(...ViewConfiguration.dynamicSizeMax)
+        .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
         .environment(\.font, Font.body)
     }
     

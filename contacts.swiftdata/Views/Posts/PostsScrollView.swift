@@ -146,7 +146,7 @@ struct PostsScrollView<T: Post>: View {
         }
         .padding()
     }
-    .dynamicTypeSize(...ViewConfiguration.dynamicSizeMax)
+    .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
     .environment(\.font, Font.body)
 }
 
@@ -167,7 +167,7 @@ struct PostsScrollView<T: Post>: View {
             )
         }
     }
-    .dynamicTypeSize(...ViewConfiguration.dynamicSizeMax)
+    .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
     .environment(\.font, Font.body)
 }
 #endif

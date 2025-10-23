@@ -120,6 +120,6 @@ private struct TopLabelLabeledContentStylePreview: View {
         }
     }
     .formStyle(.grouped)
-    .dynamicTypeSize(...ViewConfiguration.dynamicSizeMax)
+    .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
 }
 #endif

@@ -1,8 +1,8 @@
 //
-//  ViewConfiguration.swift
+//  ViewConfig.swift
 //
 //  Template created by Pete Maiser, July 2024 through May 2025
-//      Template v0.1.1 Fast Five Products LLC's public AGPL template.
+//      Template v0.2.3 (updated) Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025 Fast Five Products LLC. All rights reserved.
 //
@@ -19,13 +19,35 @@
 
 import SwiftUI
 
-// The "ViewConfiguration" struct contains smallish settings, config, and ref data
+// The "ViewConfig" ("View Configuration") struct contains smallish settings, config, and ref data
 // specific to SwiftUI and this application that are generally hard-coded
 // here or inferred quickly upon app startup
-struct ViewConfiguration {
-    
+struct ViewConfig {
     static let dynamicSizeMax = DynamicTypeSize.xxxLarge
     
+    static let bgColor: Color =
+        // Color(UIColor.systemBackground)
+        Color(hex: "#4F7942")
+    static let fgColor =
+        // Color.accentColor
+        Color.white
+}
+
+extension Color {
+    init(hex: String) {
+        let hex = hex.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
+        var int = UInt64()
+        Scanner(string: hex).scanHexInt64(&int)
+        let r, g, b: UInt64
+        (r, g, b) = ((int >> 16) & 0xFF, (int >> 8) & 0xFF, int & 0xFF)
+        self.init(
+            .sRGB,
+            red: Double(r) / 255,
+            green: Double(g) / 255,
+            blue: Double(b) / 255,
+            opacity: 1
+        )
+    }
 }
 
 

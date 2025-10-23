@@ -175,7 +175,7 @@ private extension CreateAccountView {
                 currentUserService: currentUserService
             )
         }
-        .dynamicTypeSize(...ViewConfiguration.dynamicSizeMax)
+        .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
         .environment(\.font, Font.body)
     }
 }
@@ -189,7 +189,7 @@ private extension CreateAccountView {
                 currentUserService: currentUserService
             )
         }
-        .dynamicTypeSize(...ViewConfiguration.dynamicSizeMax)
+        .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
         .environment(\.font, Font.body)
         
         Spacer()

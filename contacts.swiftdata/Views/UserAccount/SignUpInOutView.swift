@@ -59,10 +59,14 @@ struct SignUpInOutView: View, DebugPrintable {
                     .labeledContentStyle(TopLabeledContentStyle())
                 
                 // display name
-                LabeledContent {
-                    Text(currentUserService.user.account.displayName)
-                } label: { Text("display name:") }
-                    .labeledContentStyle(TopLabeledContentStyle())
+                // TODO:  (user profile) code below just hides displayName
+                // this is a work-around until the user profile fetch is more robust
+                if !currentUserService.user.account.displayName.isEmpty {
+                    LabeledContent {
+                        Text(currentUserService.user.account.displayName)
+                    } label: { Text("display name:") }
+                        .labeledContentStyle(TopLabeledContentStyle())
+                }
                 
                 // action
                 Button(action: toggleSignUpInOut) {
@@ -241,7 +245,7 @@ private extension SignUpInOutView {
         )
         .modelContainer(for: ActivityLogEntry.self, inMemory: true)
     }
-    .dynamicTypeSize(...ViewConfiguration.dynamicSizeMax)
+    .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
     .environment(\.font, Font.body)
 }
 #Preview ("test-data signed-out") {
@@ -253,7 +257,7 @@ private extension SignUpInOutView {
         )
         .modelContainer(for: ActivityLogEntry.self, inMemory: true)
     }
-    .dynamicTypeSize(...ViewConfiguration.dynamicSizeMax)
+    .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
     .environment(\.font, Font.body)
 }
 #Preview ("test-data creating-account") {
@@ -266,7 +270,7 @@ private extension SignUpInOutView {
         )
         .modelContainer(for: ActivityLogEntry.self, inMemory: true)
     }
-    .dynamicTypeSize(...ViewConfiguration.dynamicSizeMax)
+    .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
     .environment(\.font, Font.body)
 }
 #endif
