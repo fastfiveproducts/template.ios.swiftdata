@@ -2,7 +2,7 @@
 //  PostStores.swift
 //
 //  Template created by Pete Maiser, July 2024 through May 2025
-//      Template v0.1.1 Fast Five Products LLC's public AGPL template.
+//      Template v0.2.3 (updated) Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025 Fast Five Products LLC. All rights reserved.
 //
@@ -27,7 +27,7 @@ final class PublicCommentStore: ListableStore<PublicComment> {
     
     // override SignInOutObserver func below to fetch data into the store immediatey after sign-in
     override func postSignInSetup() {
-        fetch()
+        initialize()
         debugprint ("setup after user sign-in")
     }
     
@@ -41,12 +41,11 @@ final class PublicCommentStore: ListableStore<PublicComment> {
     
     func createPublicComment(from candidate: PostCandidate) async throws -> PublicComment {
         do {
-            // ***** Template functionality:  write data to Firebase Data Connect
             let newPost = try await PostsConnector().createPublicComment(candidate)
-            add(newPost)
+            insert(newPost)
             return newPost
         } catch {
-            debugprint("Failed to create public comment: \(error)")
+            debugprint("🛑 ERROR:  Failed to create public comment: \(error)")
             throw error
         }
     }
@@ -69,19 +68,17 @@ final class PrivateMessageStore: ListableStore<PrivateMessage> {
     // override ListableStore func below to set how to fetch data into the store
     override var fetchFromService: () async throws -> [PrivateMessage] {
         {
-            // ***** Template functionality:  retrieve data from Firebase Data Connect
             try await PostsConnector().fetchMyPrivateMessages()
         }
     }
     
     func createPrivateMessage(from candidate: PostCandidate) async throws -> PrivateMessage {
         do {
-            // ***** Template functionality:  write data to Firebase Data Connect
             let newPost = try await PostsConnector().createPrivateMessage(candidate)
-            add(newPost)
+            insert(newPost)
             return newPost
         } catch {
-            debugprint("Failed to create private message: \(error)")
+            debugprint("🛑 ERROR:  Failed to create private message: \(error)")
             throw error
         }
     }

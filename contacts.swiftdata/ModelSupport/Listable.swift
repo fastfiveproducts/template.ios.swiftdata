@@ -2,7 +2,7 @@
 //  Listable.swift
 //
 //  Template created by Pete Maiser, July 2024 through May 2025
-//      Template v0.1.1 Fast Five Products LLC's public AGPL template.
+//      Template v0.2.3 (updated) Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025 Fast Five Products LLC. All rights reserved.
 //
@@ -20,15 +20,12 @@
 import Foundation
 
 protocol Listable: Identifiable, Equatable, Codable, DebugPrintable {
-    var objectDescription: String { get }
+    var title: String { get }
+    var content: String { get }
+    var objectDescription: String { get }       // verbose object description for debug and logging purposes; may combine title, content, and other data
     var isValid: Bool { get }
     static var usePlaceholder: Bool { get }
-    static var placeholder: Self { get }
-}
-
-extension Listable {
-    var title: String { String(describing: Self.self) }                     // TEMP as part of moving to v0.2.3
-    var content: String { objectDescription }                               // TEMP as part of moving to v0.2.3
+    static var placeholder: [Self] { get }
 }
 
 extension Listable {

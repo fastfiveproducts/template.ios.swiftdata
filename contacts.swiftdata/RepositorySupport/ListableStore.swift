@@ -2,7 +2,7 @@
 //  ListableStore.swift
 //
 //  Template created by Pete Maiser, July 2024 through May 2025
-//      Template v0.1.2 (renamed) Fast Five Products LLC's public AGPL template.
+//      Template v0.2.3 (updated) Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025 Fast Five Products LLC. All rights reserved.
 //
@@ -20,11 +20,23 @@
 import Foundation
 
 @MainActor
-class ListableStore<T: Listable>: SignInOutObserver {
+class ListableStore<T: Listable>: SignInOutObserver  {
         
     // primary data available from the store
-    @Published var list: Loadable<[T]> = .none
-        
+    @Published var list: Loadable<[T]> = .none {
+        didSet {
+            switch list {
+            case .loaded(let items):
+                hasData = !items.isEmpty
+            default:
+                hasData = false
+            }
+        }
+    }
+
+    // reactive convenience flag (requires a didSet on list above)
+    @Published private(set) var hasData: Bool = false
+
     // enable generic access to the type
     let storeType: T.Type
 
@@ -35,59 +47,144 @@ class ListableStore<T: Listable>: SignInOutObserver {
     // enable generic access to typeDescription
     var storeTypeDescription: String { T.typeDescription }
     
-    // set how to fetch data into the store
+    // required override, to set how to fetch data into the store
     var fetchFromService: (() async throws -> [T]) {
-        debugprint("fetchFromService() called but no override present in \(storeTypeDescription) store subclass.")
+        debugprint("🛑 ERROR:  fetchFromService() called but no override present in \(storeTypeDescription) store subclass.")
         fatalError("Subclasses must override fetchFromService")
     }
     
-    // fire-and-forget fetch
+    // optionally override this with a filename to enable caching
+    var cacheFilename: String? { nil }
+    
+    // Startup
+    func initialize() {
+        // Skip if already loaded
+        if case .loaded = list { return }
+
+        // 1️⃣ Try cache first
+        if let cacheFilename,
+           let cached = loadFromCache(named: cacheFilename),
+           !cached.isEmpty {
+            list = .loaded(cached)
+            debugprint("loaded \(cached.count) \(storeTypeDescription)(s) from cache ✅.")
+        }
+
+        // 2️⃣ If nothing cached, use placeholder if available
+        else if T.usePlaceholder {
+            list = .loaded(T.placeholder)
+            debugprint("loaded \(T.placeholder.count) \(storeTypeDescription) placeholder(s) 🪣.")
+        }
+
+        // 3️⃣ Fallback to .loading
+        else {
+            list = .loading
+            debugprint("no cache or placeholder \(storeTypeDescription)s available ⚠️.")
+        }
+
+        // 4️⃣ Always kick off a background fetch to refresh
+        Task { fetch() }
+    }
+
+    // fetch, check cache and refresh it if appropriate
     func fetch() {
         Task {
-            list = .loading
             do {
                 let result = try await fetchFromService()
-                debugprint("Fetched \(result.count) \(storeTypeDescription)s")
-                list = .loaded(result)
-                if result.isEmpty && storeType.usePlaceholder {
-                    list = .loaded([storeType.placeholder])
-                    debugprint("\(storeTypeDescription) placeholder used; now we have \(list.count) \(storeTypeDescription)s")
+                
+                // if result is empty but list already loaded (e.g. from cache or placeholders) then continue with only a warning message
+                if result.isEmpty {
+                    if case .loaded = list {
+                        debugprint("⚠️ WARNING: fetched zero \(storeTypeDescription)(s) from service; will use current data.")
+                        return
+                    }
                 }
+                    
+                // otherwise update list and cache normally
+                debugprint("fetched \(result.count) \(storeTypeDescription)(s) from service ☁️.")
+                list = .loaded(result)
+                if let cacheFilename {
+                    saveToCache(result, named: cacheFilename)
+                }
+                
             } catch {
-                list = .error(error)
-                debugprint("Error fetching \(storeTypeDescription)s: \(error)")
+                // if already loaded (e.g. from cache or placeholders) then continue with only a warning message
+                if case .loaded = list {
+                    debugprint("⚠️ WARNING: error fetching \(storeTypeDescription) from service; will use current data.  Error: \(error.localizedDescription)")
+                } else {
+                    list = .error(error)
+                    debugprint("🛑 ERROR: fetching \(storeTypeDescription) from service: \(error.localizedDescription)")
+                }
             }
         }
     }
-    
-    // async/await fetch with a callback return
+
+    // async/await fetch with a callback return, list cleared and set to "loading" to indicate we are waiting
     func fetchAndReturn() async -> Loadable<[T]> {
         list = .loading
         do {
             let result = try await fetchFromService()
-            debugprint("Fetched \(result.count) \(storeTypeDescription)s")
+            debugprint("callback-fetched \(result.count) \(storeTypeDescription)(s) from service ☁️.")
             list = .loaded(result)
-            if result.isEmpty && storeType.usePlaceholder {
-                list = .loaded([storeType.placeholder])
-                debugprint("\(storeTypeDescription) placeholder used; now we have \(list.count) \(storeTypeDescription)s")
-            }
+            if let cacheFilename { saveToCache(result, named: cacheFilename) }
             return list
         } catch {
-            debugprint("Error fetching \(storeTypeDescription)s: \(error)")
+            debugprint("🛑 ERROR: fetching \(storeTypeDescription) from service: \(error.localizedDescription)")
             list = .error(error)
             return list
         }
     }
+        
     
-    // add new data to local store
-    func add(_ item: T) {
+    // insert new data into local store
+    func insert(_ item: T) {
         switch list {
         case .loaded(let currentItems):
-            list = .loaded([item] + currentItems)
-        case .none, .loading:
-            list = .loaded([item])
-        case .error:
-            list = .loaded([item])
+            let updated = [item] + currentItems
+            list = .loaded(updated)
+            if let cacheFilename {
+                saveToCache(updated, named: cacheFilename)
+                debugprint("cached \(T.typeDescription)s after insert; now \(updated.count) items 💾 .")
+            }
+
+        case .none, .loading, .error:
+            let updated = [item]
+            list = .loaded(updated)
+            if let cacheFilename {
+                saveToCache(updated, named: cacheFilename)
+                debugprint("cached \(T.typeDescription) after insert; 1 item in cache 💾.")
+            }
+        }
+    }
+    
+    // local cache helpers
+    fileprivate func cacheURL(named filename: String) -> URL {
+        let dir = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
+        try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
+        return dir.appendingPathComponent(filename)
+    }
+
+    fileprivate func saveToCache(_ objects: [T], named filename: String) {
+        do {
+            let data = try JSONEncoder().encode(objects)
+            try data.write(to: cacheURL(named: filename), options: .atomic)
+            debugprint("saved \(objects.count) \(storeTypeDescription)s to cache (\(filename)) 💾.")
+        } catch {
+            debugprint("WARNING ⚠️:  Failed to save \(storeTypeDescription)s to cache: \(error)")
+        }
+    }
+
+    fileprivate func loadFromCache(named filename: String) -> [T]? {
+        do {
+            let data = try Data(contentsOf: cacheURL(named: filename))
+            return try JSONDecoder().decode([T].self, from: data)
+        } catch {
+            return nil
+        }
+    }
+
+    func clearCache() {
+        if let cacheFilename {
+            try? FileManager.default.removeItem(at: cacheURL(named: cacheFilename))
         }
     }
     

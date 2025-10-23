@@ -2,7 +2,7 @@
 //  Posts.swift
 //
 //  Template created by Pete Maiser, July 2024 through May 2025
-//      Template v0.1.1 Fast Five Products LLC's public AGPL template.
+//      Template v0.2.3 (updated) Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025 Fast Five Products LLC. All rights reserved.
 //
@@ -172,27 +172,27 @@ extension PostCandidate {
 extension PublicComment {
     // to conform to Listable, add placeholder features
     static let usePlaceholder = false
-    static let placeholder = PublicComment(
+    static let placeholder = [PublicComment(
         id: UUID(uuidString: "00000000-0000-0000-0000-000000000000")!,
         timestamp: Date(),
         from: UserKey.blankUser,
         to: UserKey.blankUser,
         title: "",
         content: "No Messages!"
-    )
+    )]
 }
 
 extension PrivateMessage {
     // to conform to Listable, add placeholder features
     static let usePlaceholder = false
-    static let placeholder = PrivateMessage(
+    static let placeholder = [PrivateMessage(
         id: UUID(uuidString: "00000000-0000-0000-0000-000000000000")!,
         timestamp: Date(),
         from: UserKey.blankUser,
         to: UserKey.blankUser,
         title: "",
         content: "No Messages!"
-    )
+    )]
 }
 
 
