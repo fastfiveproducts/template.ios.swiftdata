@@ -49,34 +49,28 @@ struct LaunchView: View {
             // Launch layer Overlay on top
             ViewConfig.bgColor
                 .ignoresSafeArea()
-                .overlay(
-                    VStack(spacing: 20) {
-                        Text("Template App")
-                            .font(.title)
-                            .fontWeight(.semibold)
-                            .minimumScaleFactor(0.6)
-                            .lineLimit(1)
-                            .foregroundColor(ViewConfig.fgColor)
-                            .padding(.horizontal)
-                            .accessibilityAddTraits(.isHeader)
-                        Text("")
-                    }
-                    .opacity(showMain ? 0 : 1)
-                    .animation(.easeIn(duration: 1), value: showMain)
-                )
                 .opacity(showMain ? 0 : 1)
-                .animation(.easeInOut(duration: 1), value: showMain)
-                .onAppear {
-                    showOverlay = true              // show overlay
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-                        showMain = true             // fade overlay out
-                    }
-                }
-            
+                .animation(.easeInOut(duration: 1.0), value: showMain)
+
+            // Text overlay (lingers a bit longer)
+            VStack(spacing: 40) {
+                Text("Template App")
+                    .font(.title)
+                    .fontWeight(.semibold)
+                    .minimumScaleFactor(0.6)
+                    .lineLimit(1)
+                    .foregroundColor(ViewConfig.fgColor)
+                    .padding(.horizontal)
+                    .accessibilityAddTraits(.isHeader)
+                    .opacity(showOverlay ? 1 : 0)
+                    .animation(.easeInOut(duration: 1.0), value: showOverlay)
+                Text("")
+            }
+
             // Insert the Loading Indicator on top, over-the-top if needed,
             // but only when doing showing the Overlay and showing the Main app
             if showLoading, showMain {
-                VStack(spacing: 20) {
+                VStack(spacing: 40) {
                     Text("")
                     HStack(spacing: 8) {
                         ProgressView()
@@ -84,14 +78,25 @@ struct LaunchView: View {
                         Text("Loading local data…")
                             .font(.title)
                             .fontWeight(.semibold)
-                            .minimumScaleFactor(0.6)
-                            .lineLimit(1)
                             .foregroundColor(ViewConfig.fgColor)
                     }
+                    .minimumScaleFactor(0.6)
+                    .lineLimit(1)
                     .padding(.horizontal)
                 }
                 .transition(.opacity)
                 .animation(.easeInOut(duration: 0.25), value: showLoading)
+            }
+        }
+        .onAppear {
+            showOverlay = true
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                withAnimation(.easeIn(duration: 1.0)) {
+                    showMain = true
+                }
+                withAnimation(.easeOut(duration: 1.0)) {
+                    showOverlay = false
+                }
             }
         }
         .task {
