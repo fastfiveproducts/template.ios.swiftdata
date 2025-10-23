@@ -27,6 +27,11 @@ protocol Listable: Identifiable, Equatable, Codable, DebugPrintable {
 }
 
 extension Listable {
+    var title: String { String(describing: Self.self) }                     // TEMP as part of moving to v0.2.3
+    var content: String { objectDescription }                               // TEMP as part of moving to v0.2.3
+}
+
+extension Listable {
     static var typeDescription: String { String(describing: Self.self) }
 }
 

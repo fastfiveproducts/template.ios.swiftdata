@@ -19,7 +19,7 @@
 
 import Foundation
 
-final class AnnouncementStore: ListableCloudStore<Announcement> {
+final class AnnouncementStore: ListableStore<Announcement> {
     
     // initiate this store as a Swift Singleton
     // this is also how to 'get' the singleton store

@@ -19,7 +19,7 @@
 
 import Foundation
 
-final class PublicCommentStore: ListableCloudStore<PublicComment> {
+final class PublicCommentStore: ListableStore<PublicComment> {
     
     // initiate this store as a Swift Singleton
     // this is also how to 'get' the singleton store
@@ -54,7 +54,7 @@ final class PublicCommentStore: ListableCloudStore<PublicComment> {
 }
 
 
-final class PrivateMessageStore: ListableCloudStore<PrivateMessage> {
+final class PrivateMessageStore: ListableStore<PrivateMessage> {
     
     // initiate this store as a Swift Singleton
     // this is also how to 'get' the singleton store

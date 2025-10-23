@@ -1,9 +1,8 @@
 //
 //  ListableStore.swift
 //
-//  Created by Pete Maiser, Fast Five Products LLC, on 7/3/25.
-//
-//  Template v0.2.0 — Fast Five Products LLC's public AGPL template.
+//  Template created by Pete Maiser, July 2024 through May 2025
+//      Template v0.1.2 (renamed) Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025 Fast Five Products LLC. All rights reserved.
 //
@@ -21,7 +20,103 @@
 import Foundation
 
 @MainActor
-protocol ListableStore: ObservableObject {
-    associatedtype T: Listable
-    var list: Loadable<[T]> { get }
+class ListableStore<T: Listable>: SignInOutObserver {
+        
+    // primary data available from the store
+    @Published var list: Loadable<[T]> = .none
+        
+    // enable generic access to the type
+    let storeType: T.Type
+
+    init(type: T.Type = T.self) {
+        self.storeType = type
+    }
+    
+    // enable generic access to typeDescription
+    var storeTypeDescription: String { T.typeDescription }
+    
+    // set how to fetch data into the store
+    var fetchFromService: (() async throws -> [T]) {
+        debugprint("fetchFromService() called but no override present in \(storeTypeDescription) store subclass.")
+        fatalError("Subclasses must override fetchFromService")
+    }
+    
+    // fire-and-forget fetch
+    func fetch() {
+        Task {
+            list = .loading
+            do {
+                let result = try await fetchFromService()
+                debugprint("Fetched \(result.count) \(storeTypeDescription)s")
+                list = .loaded(result)
+                if result.isEmpty && storeType.usePlaceholder {
+                    list = .loaded([storeType.placeholder])
+                    debugprint("\(storeTypeDescription) placeholder used; now we have \(list.count) \(storeTypeDescription)s")
+                }
+            } catch {
+                list = .error(error)
+                debugprint("Error fetching \(storeTypeDescription)s: \(error)")
+            }
+        }
+    }
+    
+    // async/await fetch with a callback return
+    func fetchAndReturn() async -> Loadable<[T]> {
+        list = .loading
+        do {
+            let result = try await fetchFromService()
+            debugprint("Fetched \(result.count) \(storeTypeDescription)s")
+            list = .loaded(result)
+            if result.isEmpty && storeType.usePlaceholder {
+                list = .loaded([storeType.placeholder])
+                debugprint("\(storeTypeDescription) placeholder used; now we have \(list.count) \(storeTypeDescription)s")
+            }
+            return list
+        } catch {
+            debugprint("Error fetching \(storeTypeDescription)s: \(error)")
+            list = .error(error)
+            return list
+        }
+    }
+    
+    // add new data to local store
+    func add(_ item: T) {
+        switch list {
+        case .loaded(let currentItems):
+            list = .loaded([item] + currentItems)
+        case .none, .loading:
+            list = .loaded([item])
+        case .error:
+            list = .loaded([item])
+        }
+    }
+    
 }
+
+#if DEBUG
+extension ListableStore {
+    static func testLoaded(with objects: [T]) -> ListableStore<T> {
+        let store = ListableStore<T>()
+        store.list = .loaded(objects)
+        return store
+    }
+
+    static func testEmpty() -> ListableStore<T> {
+        let store = ListableStore<T>()
+        store.list = .loaded([])
+        return store
+    }
+
+    static func testLoading() -> ListableStore<T> {
+        let store = ListableStore<T>()
+        store.list = .loading
+        return store
+    }
+
+    static func testError(_ error: Error = NSError(domain: "Preview", code: 1, userInfo: nil)) -> ListableStore<T> {
+        let store = ListableStore<T>()
+        store.list = .error(error)
+        return store
+    }
+}
+#endif

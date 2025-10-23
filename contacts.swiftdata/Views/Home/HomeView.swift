@@ -60,11 +60,7 @@ struct HomeView: View {
         switch self.selectedMenuItem {
         case .announcements:
             VStackBox {
-                ListableStoreView(
-                    store: announcementStore,
-                    showSectionHeader: false,
-                    showDividers: true)
-                
+                StoreListView(store: announcementStore)
                 if !currentUserService.isSignedIn {
                     SignUpInLinkView(currentUserService: currentUserService)
                 }
