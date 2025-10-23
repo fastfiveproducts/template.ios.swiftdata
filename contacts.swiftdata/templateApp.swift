@@ -49,16 +49,10 @@ struct templateApp: App {
 
     var body: some Scene {
         WindowGroup {
-            HomeView(
+            LaunchView(
                 currentUserService: currentUserService,
-                modelContainerManager: modelContainerManager,
-                announcementStore: AnnouncementStore.shared,
-                publicCommentStore: PublicCommentStore.shared,
-                privateMessageStore: PrivateMessageStore.shared
+                modelContainerManager: modelContainerManager
             )
-            .task {
-                AnnouncementStore.shared.fetch()
-            }
         }
     }
 }

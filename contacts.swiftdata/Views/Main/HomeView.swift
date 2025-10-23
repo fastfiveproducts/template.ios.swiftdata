@@ -22,7 +22,6 @@ import SwiftData
 
 struct HomeView: View {
     @ObservedObject var currentUserService: CurrentUserService
-    @ObservedObject var modelContainerManager: ModelContainerManager
     @ObservedObject var announcementStore: AnnouncementStore
     @ObservedObject var publicCommentStore: PublicCommentStore
     @ObservedObject var privateMessageStore: PrivateMessageStore
@@ -31,46 +30,26 @@ struct HomeView: View {
     @State private var selectedMenuItem: NavigationItem? = .contacts
     
     var body: some View {
-        if let container = modelContainerManager.container {
-            NavigationStack {
-                VStack(alignment: .leading, spacing: 24) {
-                    self.destinationView
-                }
-                .navigationTitle(selectedMenuItem?.label ?? "Home")
-                .toolbar {
-                    ToolbarItem(placement: .navigationBarLeading) {
-                        self.menuView
-                    }
-                    
-                    if !currentUserService.isSignedIn && self.selectedMenuItem != .profile {
-                        ToolbarItem(placement: .navigationBarTrailing) {
-                            SignUpInLinkView(currentUserService: currentUserService, inToolbar: true)
-                        }
-                    }
-                }
-                .padding(.vertical)
+        NavigationStack {
+            VStack(alignment: .leading, spacing: 24) {
+                self.destinationView
             }
-            .modelContainer(container)
-            .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
-            .environment(\.font, Font.body)
-        } else {
-            // Fallback while container loads
-            ZStack {
-                ViewConfig.bgColor.ignoresSafeArea()
+            .navigationTitle(selectedMenuItem?.label ?? "Home")
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    self.menuView
+                }
                 
-                VStack(spacing: 16) {
-                    ProgressView()
-                        .progressViewStyle(CircularProgressViewStyle(tint: .white))
-                    
-                    Text("Checking for local data…")
-                        .font(.title)
-                        .fontWeight(.semibold)
-                        .foregroundColor(.white)
-                        .multilineTextAlignment(.center)
-                        .padding(.horizontal)
+                if !currentUserService.isSignedIn && self.selectedMenuItem != .profile {
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        SignUpInLinkView(currentUserService: currentUserService, inToolbar: true)
+                    }
                 }
             }
+            .padding(.vertical)
         }
+        .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
+        .environment(\.font, Font.body)
     }
     
     @ViewBuilder
@@ -194,7 +173,6 @@ struct HomeView: View {
 
     return HomeView(
         currentUserService: currentUserService,
-        modelContainerManager: modelContainerManager,
         announcementStore: AnnouncementStore.testLoaded(),
         publicCommentStore: PublicCommentStore.testLoaded(),
         privateMessageStore: PrivateMessageStore()              // loading empty because private messages not used yet
@@ -211,7 +189,6 @@ struct HomeView: View {
 
     return HomeView(
         currentUserService: currentUserService,
-        modelContainerManager: modelContainerManager,
         announcementStore: AnnouncementStore.testLoaded(),
         publicCommentStore: PublicCommentStore.testLoaded(),
         privateMessageStore: PrivateMessageStore.testLoaded()
