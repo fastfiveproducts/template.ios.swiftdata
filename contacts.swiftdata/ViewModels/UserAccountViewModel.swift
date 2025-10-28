@@ -19,7 +19,6 @@
 
 
 import Foundation
-import SwiftUI
 
 @MainActor
 class UserAccountViewModel: ObservableObject, DebugPrintable
@@ -165,7 +164,7 @@ class UserAccountViewModel: ObservableObject, DebugPrintable
                 email: capturedEmailText,
                 password: capturedPasswordText)
         } catch {
-            debugprint("(View) Cloud Error creating User in the Authentication system: \(error)")
+            debugprint("🛑 ERROR:  (View) Cloud Error creating User in the Authentication system: \(error)")
             self.error = error
             throw error
         }
@@ -176,7 +175,7 @@ class UserAccountViewModel: ObservableObject, DebugPrintable
         do {
             try await currentUserService.createUserAccount(accountCandidate, displayNameTextOverride: capturedEmailText)
         } catch {
-            debugprint("(View) User \(createdUserId) created in the Authentication system, but Clould error creating User Account: \(error)")
+            debugprint("🛑 ERROR:  (View) User \(createdUserId) created in the Authentication system, but Clould error creating User Account: \(error)")
             self.error = AccountCreationError.userAccountCreationIncomplete(error)
             throw AccountCreationError.userAccountCreationIncomplete(error)
         }
@@ -191,7 +190,7 @@ class UserAccountViewModel: ObservableObject, DebugPrintable
         do {
             try await currentUserService.createUserDisplayName(accountCandidate.displayName)
         } catch {
-            debugprint("(View) User \(createdUserId) created and Account initialized, but Clould error creating User Display Name: \(error)")
+            debugprint("🛑 ERROR:  (View) User \(createdUserId) created and Account initialized, but Clould error creating User Display Name: \(error)")
             self.error = AccountCreationError.userDisplayNameCreationFailed
         }
         
@@ -200,7 +199,7 @@ class UserAccountViewModel: ObservableObject, DebugPrintable
             try await currentUserService.setUserDisplayName(accountCandidate.displayName)
             showSuccessMode = true
         } catch {
-            debugprint("(View) User \(createdUserId) created, Account initialized, Display Name created, but Cloud Error setting Display Name: \(error)")
+            debugprint("🛑 ERROR:  (View) User \(createdUserId) created, Account initialized, Display Name created, but Cloud Error setting Display Name: \(error)")
             self.error = AccountCreationError.setUserDisplayNameFailed
         }
         
@@ -215,7 +214,7 @@ class UserAccountViewModel: ObservableObject, DebugPrintable
                 email: capturedEmailText
             )
         } catch {
-            debugprint("(View) Cloud Error sending password reset email from the Authentication system: \(error)")
+            debugprint("🛑 ERROR:  (View) Cloud Error sending password reset email from the Authentication system: \(error)")
             self.error = error
             throw error
         }
@@ -242,7 +241,7 @@ class UserAccountViewModel: ObservableObject, DebugPrintable
                 email: currentUserService.user.auth.email,
                 password: capturedPasswordTextOld)
         } catch {
-            debugprint("(View) Cloud Error reAuthenticating the user: \(error)")
+            debugprint("🛑 ERROR:  (View) Cloud Error reAuthenticating the user: \(error)")
             self.error = error
             throw error
         }
@@ -252,7 +251,7 @@ class UserAccountViewModel: ObservableObject, DebugPrintable
             try await currentUserService.changeUserPassword(
                 newPassword: capturedPasswordText)
         } catch {
-            debugprint("(View) Cloud Error changing user password: \(error)")
+            debugprint("🛑 ERROR:  (View) Cloud Error changing user password: \(error)")
             self.error = error
             throw error
         }

@@ -2,7 +2,8 @@
 //  RestrictedWordStore.swift
 //
 //  Template created by Pete Maiser, July 2024 through May 2025
-//      Template v0.1.1 Fast Five Products LLC's public AGPL template.
+//  Modified by Pete Maiser, Fast Five Products LLC, on 10/23/25.
+//      Template v0.2.3 (updated) Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025 Fast Five Products LLC. All rights reserved.
 //
@@ -14,6 +15,13 @@
 //  See LICENSE-EXCEPTIONS.md for details.
 //
 //  For licensing inquiries, contact: licenses@fastfiveproducts.llc
+//
+//  This store contains a list of naughty words
+//  and a function that can be used to check if a string contains one of those words
+//
+//  Keywords: bad words, objectional words, swear words, blocked words, restricted text
+//
+//      Template v0.2.1
 //
 
 
@@ -30,7 +38,7 @@ final class RestrictedWordStore: ObservableObject, DebugPrintable {
     static let shared = RestrictedWordStore()
     
     // set how to fetch data into the store
-    private let fetchFromService = RestrictedWordConnector().fetchRestrictedWords
+    private let fetchFromService = RestrictedWordConnector().fetch
     
     // function to fetch data, will only fetch one time
     func enableRestrictedWordCheck() {
@@ -41,7 +49,7 @@ final class RestrictedWordStore: ObservableObject, DebugPrintable {
             do {
                 let result = try await fetchFromService()
                 if result.isEmpty {
-                    debugprint("WARNING Restricted Word functionality enabled but no Restricted Words found!!! Exceution will continue with reduced functionality.")
+                    debugprint("⚠️ WARNING:  Restricted Word functionality enabled but no Restricted Words found!!! Execution will continue with reduced functionality.")
                     deviceLog("Restricted Word functionality enabled but no Restricted Words found.", category: "RestrictedWords")
                 }
                 list = .loaded(result)
@@ -49,8 +57,8 @@ final class RestrictedWordStore: ObservableObject, DebugPrintable {
             }
             catch {
                 list = .error(error)
-                debugprint("Error fetching Restricted Word List: \(error)")
-                deviceLog("Error fetching Restricted Word List: %@", category: "RestrictedWords", error: error)
+                debugprint("🛑 ERROR:  fetching Restricted Word List: \(error)")
+                deviceLog("🛑 ERROR:  fetching Restricted Word List: %@", category: "RestrictedWords", error: error)
             }
         }
     }
@@ -76,10 +84,10 @@ final class RestrictedWordStore: ObservableObject, DebugPrintable {
                 }
             }
         } else if case .loading = list {
-            debugprint("WARNING Restricted Word functionality requested but Restricted Words are still loading. Exceution will continue with reduced functionality.")
+            debugprint("⚠️ WARNING:  Restricted Word functionality requested but Restricted Words are still loading. Execution will continue with reduced functionality.")
             deviceLog("Restricted Word functionality requested but Restricted Words still loading.", category: "RestrictedWords")
         } else {
-            debugprint("*****FIXME***** Restricted Word functionality requested but was never enabled!!! Exceution will continue.")
+            debugprint("🛑 ERROR:  *****FIXME*****  Restricted Word functionality requested but was never enabled!!! Execution will continue.")
             deviceLog("System Error:  Restricted Word functionality requsted but was never enabled by the application.", category: "RestrictedWords")
         }
         return false

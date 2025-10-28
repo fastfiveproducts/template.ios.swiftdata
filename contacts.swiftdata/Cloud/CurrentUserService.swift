@@ -1,7 +1,7 @@
 //
 //  CurrentUserService.swift
 //
-//  Template created by Pete Maiser, July 2024 through May 2025
+//  Template created by Pete Maiser, July 2024 through August 2025
 //  Modified by Pete Maiser, Fast Five Products LLC, on 8/28/25.
 //      Template v0.2.2 (updated) Fast Five Products LLC's public AGPL template.
 //
@@ -31,11 +31,9 @@ class CurrentUserService: ObservableObject, DebugPrintable {
     
     // ***** Status and Modes *****
 
-    // Auth process
+    // sign-in process
     @Published var isSigningIn = false
     @Published var isSignedIn = false
-    @Published var isReAuthenticatingUser = false
-    @Published var isChangingPassword = false
     
     // because Auth masters users, creating a User in the Authententication system is "creating a user"
     // even if the user is not compplete until the Account is created and complete
@@ -44,6 +42,10 @@ class CurrentUserService: ObservableObject, DebugPrintable {
     // no user is complete without the 'account' in the Application system
     @Published var isCreatingUserAccount = false
     @Published var isUpdatingUserAccount = false
+    
+    // for password maintenance
+    @Published var isReAuthenticatingUser = false
+    @Published var isChangingPassword = false
     
     // for passwordless Authentication setup
     // WARNING - placeholder only - not fully implemented - not tested
@@ -106,7 +108,7 @@ class CurrentUserService: ObservableObject, DebugPrintable {
                     user = User(auth: userAuth, account: UserAccount.blankUser)
                     isSigningIn = false
                     isSignedIn = true
-                    debugprint ("WARNING: unable to fetch user profile after user sign-in; execution will continue")
+                    debugprint ("⚠️ WARNING:  unable to fetch user profile after user sign-in; execution will continue")
                     debugprint ("setup after user sign-in; publishing sign-in")
                     signInPublisher.send()
                     self.error = UserProfileError.userProfileFetch(error)
@@ -136,7 +138,7 @@ class CurrentUserService: ObservableObject, DebugPrintable {
         do {
             let result = try await auth.signIn(withEmail: email, password: password)
             if result.user.uid.isEmpty {
-                debugprint("signIn returned successful but user.uid is empty.")
+                debugprint("⚠️ WARNING:  signIn returned successful but user.uid is empty.")
                 self.error = AuthError.userIdNotFound
             }
             return result.user.uid          // user existed + sign-in successful = we are done
@@ -146,7 +148,7 @@ class CurrentUserService: ObservableObject, DebugPrintable {
                 debugprint("User not found for Sign-In, error: \(error)")
                 throw AuthError.userNotFound
             } else {
-                debugprint("User Sign-In error: \(error)")
+                debugprint("🛑 ERROR:  User Sign-In error: \(error)")
                 self.error = error
                 throw error
             }
@@ -163,7 +165,7 @@ class CurrentUserService: ObservableObject, DebugPrintable {
         do {
             let result = try await auth.signIn(withEmail: email, password: password)
             if !result.user.uid.isEmpty {
-                debugprint("signIn - via signInOrCreateUser func - returned successful but user.uid is empty.")
+                debugprint("⚠️ WARNING:  signIn - via signInOrCreateUser func - returned successful but user.uid is empty.")
                 self.error = AuthError.userIdNotFound
             }
             return result.user.uid          // user existed + sign-in successful = we are done
@@ -175,18 +177,18 @@ class CurrentUserService: ObservableObject, DebugPrintable {
                 do {
                     let result = try await auth.createUser(withEmail: email, password: password)
                     guard !result.user.uid.isEmpty else {
-                        debugprint("createUser returned successful but user.uid is empty.")
+                        debugprint("⚠️ WARNING:  createUser returned successful but user.uid is empty.")
                         self.error = AccountCreationError.userIdNotFound
                         throw AccountCreationError.userIdNotFound
                     }
                     return result.user.uid  // user did not exist + create successful = we are done
                 } catch {
-                    debugprint("User Create error: \(error)")
+                    debugprint("🛑 ERROR:  User Create error: \(error)")
                     self.error = error
                     throw error
                 }
             } else {
-                debugprint("User Sign-In error: \(error)")
+                debugprint("🛑 ERROR:  User Sign-In error: \(error)")
                 self.error = error
                 throw error
             }
@@ -197,39 +199,39 @@ class CurrentUserService: ObservableObject, DebugPrintable {
         guard !email.isEmpty else {
             throw AuthError.invalidInput
         }
-        
+
         do {
             try await auth.sendPasswordReset(withEmail: email)
         } catch {
-            debugprint("Reset Password error: \(error)")
+            debugprint("🛑 ERROR:  Reset Password error: \(error)")
             self.error = error
             throw error
         }
     }
-    
+
     func reAuthenticateUser(email: String, password: String) async throws {
         guard !email.isEmpty, !password.isEmpty else {
             throw AuthError.invalidInput
         }
-        
+
         let credential = EmailAuthProvider.credential(withEmail: email, password: password)
-        
+
         isReAuthenticatingUser = true
         defer { isReAuthenticatingUser = false }
         do {
             try await auth.currentUser?.reauthenticate(with: credential)
         } catch {
-            debugprint("Reauthentication error: \(error)")
+            debugprint("🛑 ERROR:  Reauthentication error: \(error)")
             self.error = error
             throw error
         }
     }
-    
+
     func changeUserPassword(newPassword: String) async throws {
         guard !newPassword.isEmpty else {
             throw AuthError.invalidInput
         }
-        
+
         isChangingPassword = true
         defer { isChangingPassword = false }
         do {
@@ -237,9 +239,9 @@ class CurrentUserService: ObservableObject, DebugPrintable {
         } catch {
             let nsError = error as NSError
             if nsError.code == AuthErrorCode.requiresRecentLogin.rawValue {
-                debugprint("Password cannot be changed because the user needs to re-authenticate.  Error: \(error)")
+                debugprint("⚠️ WARNING:  Password cannot be changed because the user needs to re-authenticate.  Error: \(error)")
             } else {
-                debugprint("Password Change error: \(error)")
+                debugprint("🛑 ERROR:  Password Change error: \(error)")
             }
             self.error = error
             throw error
@@ -314,7 +316,7 @@ extension CurrentUserService {
                 try await createUserAccount(UserAccountCandidate(uid: userId, displayName: email, photoUrl: ""))
                 UserDefaults.standard.removeObject(forKey: "emailForSignIn")
             } catch {
-                debugprint("(View) User \(userId) created but Clould error creating User Profile. Error: \(error)")
+                debugprint("🛑 ERROR:  (View) User \(userId) created but Clould error creating User Profile. Error: \(error)")
                 self.error = error
             }
         }

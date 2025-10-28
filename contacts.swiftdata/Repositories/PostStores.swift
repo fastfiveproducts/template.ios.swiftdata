@@ -26,7 +26,7 @@ final class PublicCommentStore: ListableStore<PublicComment> {
     // this is also how to 'get' the singleton store
     static let shared = PublicCommentStore()
     
-    // override SignInOutObserver func below to fetch data into the store immediatey after sign-in
+    // override SignInOutObserver func below to fetch data into the store immediately after sign-in
     override func postSignInSetup() {
         initialize()
         debugprint ("setup after user sign-in")
@@ -35,7 +35,6 @@ final class PublicCommentStore: ListableStore<PublicComment> {
     // override ListableStore func below to set how to fetch data into the store
     override var fetchFromService: () async throws -> [PublicComment] {
         {
-            // ***** Template functionality:  retrieve data from Firebase Data Connect
             try await PostsConnector().fetchPublicComments()
         }
     }
@@ -60,9 +59,9 @@ final class PrivateMessageStore: ListableStore<PrivateMessage> {
     // this is also how to 'get' the singleton store
     static let shared = PrivateMessageStore()
     
-    // override SignInOutObserver func below to fetch data into the store immediatey after sign-in
+    // override SignInOutObserver func below to fetch data into the store immediately after sign-in
     override func postSignInSetup() {
-        fetch()
+        initialize()
         debugprint ("setup after user sign-in")
     }
     

@@ -60,15 +60,6 @@ struct VStackBox<Content: View>: View {
 
 
 #if DEBUG
-#Preview ("List") {
-    VStackBox () {
-        List {
-            Text("Hello, World!")
-            Text("Hello, World!")
-            Text("Hello, World!")
-        }
-    }
-}
 #Preview ("fancy") {
     NavigationStack {
         VStackBox {
@@ -94,6 +85,15 @@ struct VStackBox<Content: View>: View {
         }
         .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
         .environment(\.font, Font.body)
+    }
+}
+#Preview ("List") {
+    VStackBox () {
+        List {
+            Text("Hello, World!")
+            Text("Hello, World!")
+            Text("Hello, World!")
+        }
     }
 }
 @ViewBuilder

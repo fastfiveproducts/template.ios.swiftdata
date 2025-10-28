@@ -28,7 +28,6 @@ final class AnnouncementStore: ListableStore<Announcement> {
     // override ListableStore func below to set how to fetch data into the store
     override var fetchFromService: () async throws -> [Announcement] {
         {
-            // ***** Template functionality:  retrieve data from Firestore
             try await FirestoreConnector().fetchAnnouncements()
         }
     }
@@ -40,6 +39,11 @@ extension AnnouncementStore {
     static func testLoaded() -> AnnouncementStore {
         let store = AnnouncementStore()
         store.list = .loaded(Announcement.testObjects)
+        return store
+    }
+    static func testTiny() -> AnnouncementStore {
+        let store = AnnouncementStore()
+        store.list = .loaded(Announcement.testTiny)
         return store
     }
 }

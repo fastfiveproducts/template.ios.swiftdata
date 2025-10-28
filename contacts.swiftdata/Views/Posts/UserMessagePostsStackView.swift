@@ -155,7 +155,7 @@ private extension UserMessagePostsStackView {
                 viewModel.createdPost = try await store.createPrivateMessage(from: viewModel.postCandidate)
                 debugprint(viewModel.createdPost.objectDescription)
             } catch {
-                debugprint("Cloud Error publishing Comment: \(error)")
+                debugprint("🛑 ERROR:  Cloud Error publishing Comment: \(error)")
                 viewModel.error = error
             }
         }

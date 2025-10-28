@@ -109,7 +109,7 @@ private extension ChangePasswordView {
                 do {
                     try await viewModel.changePasswordWithService(currentUserService)
                 } catch {
-                    debugprint("(View) Error requesting password change: \(error)")
+                    debugprint("🛑 ERROR:  (View) Error requesting password change: \(error)")
                     viewModel.error = error
                     throw error
                 }

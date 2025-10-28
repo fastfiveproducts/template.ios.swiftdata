@@ -56,7 +56,7 @@ struct PostsScrollView<T: Post>: View {
                     .padding()
 
             case .none:
-                Text("Nothing here")
+                Text("No Posts Yet.")
                     .padding(.top, 10)
 
             case .loaded:
