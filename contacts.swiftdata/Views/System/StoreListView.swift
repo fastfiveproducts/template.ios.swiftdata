@@ -160,22 +160,22 @@ struct StoreListView<T: Listable, Content: View>: View {
     }
 }
 #Preview ("Custom Content: complex") {
-    StoreListView(store: ListableStore<Announcement>.testLoaded(with: Announcement.testObjects)) {annoucement in
+    StoreListView(store: ListableStore<Announcement>.testLoaded(with: Announcement.testObjects)) {announcement in
         VStackBox(titleView: {
             VStack {
                 HStack {
-                    Text(annoucement.title)
+                    Text(announcement.title)
                         .font(.title3).fontWeight(.semibold)
                     Spacer()
                 }
                 HStack {
-                    Text("display unti: \(annoucement.displayEndDate)")
+                    Text("display unti: \(announcement.displayEndDate)")
                         .font(.caption)
                     Spacer()
                 }
             }
         }) {
-            Text(annoucement.content)
+            Text(announcement.content)
                 .font(.body)
                 .foregroundColor(.secondary)
         }

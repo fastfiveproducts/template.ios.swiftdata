@@ -116,7 +116,7 @@ private extension UserCommentPostsStackView {
                 viewModel.createdPost = try await store.createPublicComment(from: viewModel.postCandidate)
                 debugprint(viewModel.createdPost.objectDescription)
             } catch {
-                debugprint("Cloud Error publishing Comment: \(error)")
+                debugprint("🛑 ERROR:  Cloud Error publishing Comment: \(error)")
                 viewModel.error = error
             }
         }

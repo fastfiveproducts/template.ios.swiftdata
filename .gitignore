@@ -1,4 +1,4 @@
-f# macOS
+# macOS
 .DS_Store
 
 ## User settings
@@ -28,3 +28,9 @@ Package.resolved
 
 # Firebase Connection
 GoogleService-Info.plist
+
+# Firebase dataconnect generated files
+dataconnect-generated
+
+# Custom template-diff output
+template_diff.txt
