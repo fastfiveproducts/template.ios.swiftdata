@@ -31,7 +31,7 @@ struct LaunchView: View {
         ZStack {
             // Main app behind
             if let container = modelContainerManager.container {
-                MenuView(
+                MainMenuView(
                     currentUserService: currentUserService,
                     announcementStore: AnnouncementStore.shared,
                     publicCommentStore: PublicCommentStore.shared,

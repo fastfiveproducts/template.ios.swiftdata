@@ -1,5 +1,5 @@
 //
-//  MenuView.swift
+//  MainMenuView.swift
 //
 //  Template created by Pete Maiser, July 2024 through May 2025
 //  Renamed from HomeView by Pete Maiser, Fast Five Products LLC, on 10/23/25.
@@ -21,7 +21,7 @@
 import SwiftUI
 import SwiftData
 
-struct MenuView: View {
+struct MainMenuView: View {
     @ObservedObject var currentUserService: CurrentUserService
     @ObservedObject var announcementStore: AnnouncementStore
     @ObservedObject var publicCommentStore: PublicCommentStore
@@ -175,7 +175,7 @@ struct MenuView: View {
     let modelContainerManager = ModelContainerManager(currentUserService: currentUserService)
     modelContainerManager.injectPreviewContainer(container)
 
-    return MenuView(
+    return MainMenuView(
         currentUserService: currentUserService,
         announcementStore: AnnouncementStore.testLoaded(),
         publicCommentStore: PublicCommentStore.testLoaded(),
@@ -191,12 +191,45 @@ struct MenuView: View {
     let modelContainerManager = ModelContainerManager(currentUserService: currentUserService)
     modelContainerManager.injectPreviewContainer(container)
 
-    return MenuView(
+    return MainMenuView(
         currentUserService: currentUserService,
         announcementStore: AnnouncementStore.testTiny(),
         publicCommentStore: PublicCommentStore.testLoaded(),
         privateMessageStore: PrivateMessageStore.testLoaded()
     )
     .modelContainer(container)
+}
+
+// this helper is for child view previews
+struct MainViewPreviewWrapper<Content: View>: View {
+    let currentUserService: CurrentUserService
+    let content: Content
+
+    init(currentUserService: CurrentUserService,
+         @ViewBuilder content: () -> Content) {
+        self.currentUserService = currentUserService
+        self.content = content()
+    }
+    
+    var body: some View {
+        NavigationStack {
+            VStack(alignment: .leading, spacing: 24) {
+                content
+            }
+            .navigationTitle("MenuLabel")
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Menu {
+                        Button("Other Menu Items") { }
+                    } label: {
+                        Label("Menu", systemImage: "line.3.horizontal")
+                    }
+                }
+            }
+            .padding(.vertical)
+        }
+        .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
+        .environment(\.font, Font.body)
+    }
 }
 #endif

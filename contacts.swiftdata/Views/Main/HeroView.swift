@@ -22,17 +22,18 @@ import SwiftUI
 struct HeroView: View {
         
     var body: some View {
-        VStack(spacing: 40) {
+        VStack {
             Text("Template App")
                 .font(.title)
                 .fontWeight(.semibold)
                 .foregroundColor(ViewConfig.fgColor)
                 .minimumScaleFactor(0.6)
                 .lineLimit(1)
-                .padding(.horizontal)
+                .multilineTextAlignment(.center)
                 .accessibilityAddTraits(.isHeader)
-            Text("")
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+        .ignoresSafeArea()
     }
 }
 
