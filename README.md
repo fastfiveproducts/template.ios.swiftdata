@@ -4,7 +4,6 @@ The Fast Five Products (FFP) LLC iOS application template app — SwiftData vari
 
 - this template: https://github.com/fastfiveproducts/template.ios.swiftdata
 - the other variant (FileData): https://github.com/fastfiveproducts/template.ios.filedata
-- this README itself is versioned as Template v0.2.1
 - it is expected other files in this repository may be 'ahead' of this version number as additons and improvements are made
 
 ---
@@ -36,19 +35,20 @@ The Fast Five Products (FFP) LLC iOS application template app — SwiftData vari
 ## 🛠 Dependencies to Run App via Xcode
 
 1. Clone the FFP Firebase template and set up that project
+   - Generate the SDK ("Add SDK to app") per instructions in that README 
 2. Install Xcode (if not already)
 3. In Xcode:
    - Use "Add SDK to app" to add its generated code to the root of this project
    - Open the `.xcodeproj` file
    - Add the following Swift Packages:
-     - Default Connector from FFP Firebase template
+     - DefaultConnector from FFP Firebase template project, "dataconnect-generated" directory
      - FirebaseAppCheck
      - FirebaseAuth
      - FirebaseCore
      - FirebaseDatabase
      - FirebaseFirestore
-   - Add your secure `GoogleService-Info.plist` file to the `CloudSupport` group
-     - Find this in the Firebase console, in "Project Settings" of the template project
+   - Add your secure `GoogleService-Info.plist` file to the project files root directory
+     - Find this in the Firebase console, in "Project Settings" of the template project 
 
 ---
 

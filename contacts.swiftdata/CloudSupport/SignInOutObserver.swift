@@ -46,7 +46,7 @@ class SignInOutObserver: ObservableObject, DebugPrintable {
         signOutPublisher?.cancel()
     }
     
-    // conforming classes override this to perform functions immediatey after sign-in
+    // conforming classes override this to perform functions immediately after sign-in
     func postSignInSetup() { }
     
     // conforming classes override user-session dependent data after user sign-out

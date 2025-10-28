@@ -32,14 +32,14 @@ struct FirestoreConnector: DebugPrintable {
           .whereField("displayEndDate", isGreaterThanOrEqualTo: Timestamp(date: startOfDay))
 
         let snapshot = try await query.getDocuments()
-        debugprint("Fetched \(snapshot.documents.count) raw docs from the announcements_v01 collection")
+        // debugprint("fetched \(snapshot.documents.count) raw doc(s) from the announcements_v01 collection ☁️.")
 
         let data = snapshot.documents.compactMap { document -> Announcement? in
             do {
                 let decoded = try document.data(as: Announcement.self)
                 return decoded
             } catch {
-                debugprint("WARNING Failed to decode a raw doc from the announcements_v01 collection. Exceution will continue with reduced functionality.")
+                debugprint("⚠️ WARNING:  Failed to decode a raw doc from the announcements_v01 collection. Execution will continue with reduced functionality.")
                 return nil
             }
         }
