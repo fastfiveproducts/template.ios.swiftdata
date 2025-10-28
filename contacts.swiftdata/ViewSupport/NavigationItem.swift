@@ -51,7 +51,7 @@ enum NavigationItem: String, CaseIterable, Identifiable {
         case .comments: return (0,3)
         case .activity: return (1,0)
         case .settings: return (1,1)
-        case .profile: return (1,2)
+        case .profile: return (-1,0)    // hide
         }
     }
 

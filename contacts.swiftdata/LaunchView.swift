@@ -31,7 +31,7 @@ struct LaunchView: View {
         ZStack {
             // Main app behind
             if let container = modelContainerManager.container {
-                HomeView(
+                MenuView(
                     currentUserService: currentUserService,
                     announcementStore: AnnouncementStore.shared,
                     publicCommentStore: PublicCommentStore.shared,
@@ -53,19 +53,9 @@ struct LaunchView: View {
                 .animation(.easeInOut(duration: 1.0), value: showMain)
 
             // Text overlay (lingers a bit longer)
-            VStack(spacing: 40) {
-                Text("Template App")
-                    .font(.title)
-                    .fontWeight(.semibold)
-                    .minimumScaleFactor(0.6)
-                    .lineLimit(1)
-                    .foregroundColor(ViewConfig.fgColor)
-                    .padding(.horizontal)
-                    .accessibilityAddTraits(.isHeader)
-                    .opacity(showOverlay ? 1 : 0)
-                    .animation(.easeInOut(duration: 1.0), value: showOverlay)
-                Text("")
-            }
+            HeroView()
+                .opacity(showOverlay ? 1 : 0)
+                .animation(.easeInOut(duration: 1.0), value: showOverlay)
 
             // Insert the Loading Indicator on top, over-the-top if needed,
             // but only when doing showing the Overlay and showing the Main app
