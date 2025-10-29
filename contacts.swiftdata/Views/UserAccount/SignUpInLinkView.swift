@@ -24,6 +24,7 @@ struct SignUpInLinkView: View {
     @ObservedObject var currentUserService: CurrentUserService
     
     var inToolbar: Bool = false
+    var onNavigate: (() -> Void)? = nil
     
     var leadingText: String {
         if inToolbar, !currentUserService.isSignedIn {
@@ -57,6 +58,7 @@ struct SignUpInLinkView: View {
                 UserAccountView(
                     viewModel: UserAccountViewModel(),
                     currentUserService: currentUserService)
+                .onAppear { onNavigate?() } 
             } label: {
                 if inToolbar && currentUserService.isSignedIn {
                     Label("Account Profile", systemImage: "\(NavigationItem.profile.systemImage).fill")

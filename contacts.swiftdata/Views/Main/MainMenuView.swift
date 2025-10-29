@@ -27,6 +27,8 @@ struct MainMenuView: View {
     @ObservedObject var publicCommentStore: PublicCommentStore
     @ObservedObject var privateMessageStore: PrivateMessageStore
 
+    @Binding var showOverlay: Bool
+    
     @State private var showMenu = false
     @State private var selectedMenuItem: NavigationItem?
     
@@ -37,20 +39,23 @@ struct MainMenuView: View {
                     HomeView(currentUserService: currentUserService, announcementStore: announcementStore)
                 }
                 self.destinationView
+                    .onAppear { showOverlay = false }
             }
             .navigationTitle(selectedMenuItem?.label ?? "")
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     self.menuView
                 }
-                
                 if self.selectedMenuItem != .profile {
                     ToolbarItem(placement: .navigationBarTrailing) {
-                        SignUpInLinkView(currentUserService: currentUserService, inToolbar: true)
+                        SignUpInLinkView(
+                            currentUserService: currentUserService,
+                            inToolbar: true,
+                            onNavigate: { showOverlay = false }
+                        )
                     }
                 }
             }
-            .padding(.vertical)
         }
         .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
         .environment(\.font, Font.body)
@@ -179,9 +184,12 @@ struct MainMenuView: View {
         currentUserService: currentUserService,
         announcementStore: AnnouncementStore.testLoaded(),
         publicCommentStore: PublicCommentStore.testLoaded(),
-        privateMessageStore: PrivateMessageStore()              // loading empty because private messages not used yet
+        privateMessageStore: PrivateMessageStore(),             // loading empty because private messages not used yet
+        showOverlay: .constant(false)
     )
     .modelContainer(container)
+    .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
+    .environment(\.font, Font.body)
 }
 #Preview ("no-data and signed-out") {
     let currentUserService = CurrentUserTestService.sharedSignedOut
@@ -195,9 +203,12 @@ struct MainMenuView: View {
         currentUserService: currentUserService,
         announcementStore: AnnouncementStore.testTiny(),
         publicCommentStore: PublicCommentStore.testLoaded(),
-        privateMessageStore: PrivateMessageStore.testLoaded()
+        privateMessageStore: PrivateMessageStore.testLoaded(),
+        showOverlay: .constant(false)
     )
     .modelContainer(container)
+    .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
+    .environment(\.font, Font.body)
 }
 
 // this helper is for child view previews

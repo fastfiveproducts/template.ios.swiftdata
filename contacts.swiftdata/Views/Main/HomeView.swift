@@ -24,70 +24,32 @@ struct HomeView: View {
     @ObservedObject var currentUserService: CurrentUserService
     @ObservedObject var announcementStore: AnnouncementStore
     
-    @State private var heroBottomY: CGFloat = 0     // Tracks hero text bottom position
-    let tabBarSpace: CGFloat = 0                    // Leave space for Tab Bar (if applicable)
-    
     var body: some View {
-        GeometryReader { geo in
-            ZStack(alignment: .top) {
-                // MARK: Video Background
-                VideoBackgroundView()
-
-                // MARK: Hero Message
-                HeroView()
-                    .background(
-                        GeometryReader { proxy in
-                            Color.clear
-                                .onAppear {
-                                    updateHeroY(from: proxy, geo: geo)
-                                }
-                                .onChange(of: proxy.frame(in: .named("content")).maxY) { _, _ in
-                                    updateHeroY(from: proxy, geo: geo)
-                                }
-                        }
-                    )
-                
-                // MARK: Announcements
-                if announcementStore.list.count > 0 {
-                    VStack {
-                        Spacer()
-                            .frame(height: heroBottomY + 16)
-                        
-                        VStackBox() {
-                            ViewThatFits(in: .vertical) {
+        ZStack(alignment: .top) {
+            if announcementStore.list.count > 0 {
+                VStack {
+                    Spacer()
+                    VStackBox() {
+                        ViewThatFits(in: .vertical) {
+                            VStack(alignment: .leading, spacing: 8) {
+                                StoreListView(store: announcementStore)
+                                SignUpInLinkView(currentUserService: currentUserService)
+                            }
+                            ScrollView {
                                 VStack(alignment: .leading, spacing: 8) {
                                     StoreListView(store: announcementStore)
                                     SignUpInLinkView(currentUserService: currentUserService)
                                 }
-                                ScrollView {
-                                    VStack(alignment: .leading, spacing: 8) {
-                                        StoreListView(store: announcementStore)
-                                        SignUpInLinkView(currentUserService: currentUserService)
-                                    }
-                                    .padding(.bottom, 8)
-                                }
+                                .padding(.bottom, 8)
                             }
                         }
-                        .frame(maxHeight: max(0, geo.size.height - heroBottomY - tabBarSpace))
-                        .padding(.horizontal)
                     }
-                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
                 }
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+                .padding(.horizontal)
             }
-            .coordinateSpace(name: "content")
         }
         .padding(.vertical)
-        .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
-        .environment(\.font, Font.body)
-    }
-
-    private func updateHeroY(from proxy: GeometryProxy, geo: GeometryProxy) {
-        let y = proxy.frame(in: .named("content")).maxY
-        if y.isFinite && y > 0 {
-            heroBottomY = min(y, geo.size.height * 0.5)
-        } else {
-            heroBottomY = geo.size.height * 0.5
-        }
     }
 }
 
@@ -99,6 +61,8 @@ struct HomeView: View {
         currentUserService: cuts,
         announcementStore: AnnouncementStore.testLoaded()
     )
+    .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
+    .environment(\.font, Font.body)
 }
 #Preview ("test-data signed-in") {
     let cuts = CurrentUserTestService.sharedSignedIn

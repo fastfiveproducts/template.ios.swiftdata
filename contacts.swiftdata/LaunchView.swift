@@ -35,7 +35,8 @@ struct LaunchView: View {
                     currentUserService: currentUserService,
                     announcementStore: AnnouncementStore.shared,
                     publicCommentStore: PublicCommentStore.shared,
-                    privateMessageStore: PrivateMessageStore.shared
+                    privateMessageStore: PrivateMessageStore.shared,
+                    showOverlay: $showOverlay
                 )
                 .modelContainer(container)
                 .onAppear { showLoading = false }
@@ -54,8 +55,9 @@ struct LaunchView: View {
 
             // Text overlay (lingers a bit longer)
             HeroView()
+                .ignoresSafeArea()
                 .opacity(showOverlay ? 1 : 0)
-                .animation(.easeInOut(duration: 1.0), value: showOverlay)
+                .animation(showOverlay ? .easeIn(duration: 1.0) : .none, value: showOverlay)
 
             // Insert the Loading Indicator on top, over-the-top if needed,
             // but only when doing showing the Overlay and showing the Main app
@@ -83,9 +85,6 @@ struct LaunchView: View {
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
                 withAnimation(.easeIn(duration: 1.0)) {
                     showMain = true
-                }
-                withAnimation(.easeOut(duration: 1.0)) {
-                    showOverlay = false
                 }
             }
         }
