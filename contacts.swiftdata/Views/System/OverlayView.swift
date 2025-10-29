@@ -24,72 +24,93 @@ struct OverlayView: View {
 
     var body: some View {
         ZStack {
-            switch overlayManager.state {
-                
-            case .hidden:
-                EmptyView()
-                
-            case .splash:
-                ViewConfig.bgColor
-                    .ignoresSafeArea()
-                    .overlay(
-                        HeroView()
-                            .transition(.opacity)
-                    )
-                    .zIndex(10)
-                
-            case .custom:
-                if let custom = overlayManager.customView {
+            ForEach(overlayManager.overlays) { overlay in
+                switch overlay.state {
+                case .splash:
                     ViewConfig.bgColor
                         .ignoresSafeArea()
                         .overlay(
-                            custom.transition(.opacity)
+                            HeroView()
+                                .foregroundColor(ViewConfig.fgColor)
+                                .transition(.opacity)
                         )
-                        .zIndex(10)
+                        .zIndex(overlay.zIndex)
+                case .loading:
+                    Color.clear
+                        .ignoresSafeArea()
+                        .overlay(
+                            VStack {
+                                Text("Template App")
+                                    .font(.title)
+                                    .fontWeight(.semibold)
+                                    .foregroundColor(Color.clear)
+                                    .minimumScaleFactor(0.6)
+                                    .lineLimit(1)
+                                    .multilineTextAlignment(.center)
+                                HStack(spacing: 8) {
+                                    ProgressView()
+                                        .progressViewStyle(CircularProgressViewStyle(tint: ViewConfig.fgColor))
+                                    Text("Loading local data…")
+                                        .font(.title)
+                                        .fontWeight(.semibold)
+                                        .foregroundColor(ViewConfig.fgColor)
+                                }
+                                .minimumScaleFactor(0.6)
+                                .lineLimit(1)
+                                .padding(.horizontal)
+                            }
+                            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+                        )
+                        .zIndex(overlay.zIndex)
+                case .custom:
+                    if let custom = overlay.view {
+                        ViewConfig.bgColor
+                            .ignoresSafeArea()
+                            .overlay(custom.transition(.opacity))
+                            .zIndex(overlay.zIndex)
+                    }
+                case .hidden:
+                    EmptyView()
                 }
             }
         }
-        .animation(overlayManager.animation.swiftUIAnimation, value: overlayManager.state)
     }
 }
+
 
 @MainActor
 final class OverlayManager: ObservableObject {
     static let shared = OverlayManager()
-    
     private init() {}
 
-    @Published var state: OverlayState = .hidden
-    @Published var animation: OverlayAnimation = .none
-    
-    // Optional dynamic overlay content
-    @Published var customView: AnyView? = nil
+    @Published var overlays: [OverlayItem] = []
+
+    struct OverlayItem: Identifiable {
+        let id = UUID()
+        let state: OverlayState
+        let view: AnyView?
+        let animation: OverlayAnimation
+        let zIndex: Double
+    }
 
     enum OverlayState: Equatable {
         case splash
-        case hidden
+        case loading
         case custom
-        
-        var defaultAnimation: OverlayAnimation {
-            switch self {
-            case .splash: return .slow
-            case .hidden: return .none
-            case .custom: return .none
-            }
-        }
+        case hidden
     }
-    
+
     enum OverlayAnimation: Equatable {
         case none
         case fast
         case slow
         case slideUp
         case custom(Animation)
-        
+
         var swiftUIAnimation: Animation? {
             switch self {
             case .none: return nil
-            case .fast: return .easeInOut(duration: 0.5)
+            case .fast: return .easeInOut(duration: 0.3)
             case .slow: return .easeInOut(duration: 1.0)
             case .slideUp: return .spring(response: 0.6, dampingFraction: 0.8)
             case .custom(let anim): return anim
@@ -97,23 +118,38 @@ final class OverlayManager: ObservableObject {
         }
     }
 
-
-    func show(_ newState: OverlayState,
+    func show(_ state: OverlayState,
               animation: OverlayAnimation? = nil,
-              view: AnyView? = nil)
-    {
-        withAnimation(animation?.swiftUIAnimation ?? newState.defaultAnimation.swiftUIAnimation) {
-            self.state = newState
-            self.animation = animation ?? newState.defaultAnimation
-            self.customView = view
+              view: AnyView? = nil,
+              zIndex: Double = 10) {
+        let anim = animation ?? state.defaultAnimation
+        let newOverlay = OverlayItem(state: state,
+                                     view: view,
+                                     animation: anim,
+                                     zIndex: zIndex)
+        withAnimation(anim.swiftUIAnimation) {
+            overlays.append(newOverlay)
         }
     }
 
-    func hide(animation: OverlayAnimation? = nil)
-    {
-        withAnimation(animation?.swiftUIAnimation ?? OverlayState.hidden.defaultAnimation.swiftUIAnimation) {
-            state = .hidden
-            customView = nil
+    func hide(_ state: OverlayState? = nil) {
+        withAnimation(.easeOut(duration: 0.3)) {
+            if let state = state {
+                overlays.removeAll { $0.state == state }
+            } else {
+                overlays.removeAll()
+            }
+        }
+    }
+}
+
+private extension OverlayManager.OverlayState {
+    var defaultAnimation: OverlayManager.OverlayAnimation {
+        switch self {
+        case .splash: return .slow
+        case .loading: return .none
+        case .custom: return .fast
+        case .hidden: return .none
         }
     }
 }
@@ -122,18 +158,70 @@ final class OverlayManager: ObservableObject {
 #if DEBUG
 #Preview("Splash") {
     let manager = OverlayManager.shared
-    manager.state = .splash
+    manager.overlays = [
+        OverlayManager.OverlayItem(
+            state: .splash,
+            view: AnyView(HeroView()),
+            animation: .slow,
+            zIndex: 10
+        )
+    ]
     return OverlayView()
 }
+
+#Preview("Loading") {
+    let manager = OverlayManager.shared
+    manager.overlays = [
+        OverlayManager.OverlayItem(
+            state: .loading,
+            view: nil,
+            animation: .none,
+            zIndex: 15
+        )
+    ]
+    return OverlayView()
+}
+
+#Preview("Multiple") {
+    let manager = OverlayManager.shared
+    manager.overlays = [
+        OverlayManager.OverlayItem(
+            state: .splash,
+            view: AnyView(HeroView()),
+            animation: .slow,
+            zIndex: 10
+        ),
+        OverlayManager.OverlayItem(
+            state: .loading,
+            view: nil,
+            animation: .fast,
+            zIndex: 20
+        )
+    ]
+    return OverlayView()
+}
+
 #Preview("Custom") {
     let manager = OverlayManager.shared
-    manager.state = .custom
-    manager.customView = AnyView(Text("Hello World"))
+    manager.overlays = [
+        OverlayManager.OverlayItem(
+            state: .custom,
+            view: AnyView(
+                VStackBox {
+                    Text("Hello World!")
+                }
+            ),
+            animation: .slideUp,
+            zIndex: 25
+        )
+    ]
     return OverlayView()
 }
+
 #Preview("Hidden") {
     let manager = OverlayManager.shared
-    manager.state = .hidden
+    manager.overlays = []
     return OverlayView()
 }
 #endif
+
