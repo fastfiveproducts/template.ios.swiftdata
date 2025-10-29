@@ -24,30 +24,39 @@ struct HomeView: View {
     @ObservedObject var currentUserService: CurrentUserService
     @ObservedObject var announcementStore: AnnouncementStore
     
+    let topRatio: CGFloat = 0.5
+    
     var body: some View {
-        ZStack(alignment: .top) {
-            if announcementStore.list.count > 0 {
-                VStack {
-                    Spacer()
-                    VStackBox() {
-                        ViewThatFits(in: .vertical) {
-                            VStack(alignment: .leading, spacing: 8) {
-                                StoreListView(store: announcementStore)
-                                SignUpInLinkView(currentUserService: currentUserService)
-                            }
-                            ScrollView {
+        GeometryReader { geo in
+            ZStack(alignment: .top) {
+                if announcementStore.list.count > 0 {
+                    VStack {
+                        Spacer()
+                            .frame(height: geo.size.height * topRatio + 16)
+                        
+                        VStackBox {
+                            ViewThatFits(in: .vertical) {
                                 VStack(alignment: .leading, spacing: 8) {
                                     StoreListView(store: announcementStore)
                                     SignUpInLinkView(currentUserService: currentUserService)
                                 }
-                                .padding(.bottom, 8)
+                                ScrollView {
+                                    VStack(alignment: .leading, spacing: 8) {
+                                        StoreListView(store: announcementStore)
+                                        SignUpInLinkView(currentUserService: currentUserService)
+                                    }
+                                    .padding(.bottom, 8)
+                                }
                             }
                         }
+                        .frame(maxHeight: geo.size.height * (1 - topRatio))
+                        .padding(.horizontal)
+                        .padding(.bottom, geo.safeAreaInsets.bottom)
                     }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
                 }
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-                .padding(.horizontal)
             }
+            .ignoresSafeArea(edges: .bottom)
         }
         .padding(.vertical)
     }
@@ -57,38 +66,54 @@ struct HomeView: View {
 #if DEBUG
 #Preview ("View Only") {
     let cuts = CurrentUserTestService.sharedSignedIn
-    HomeView(
-        currentUserService: cuts,
-        announcementStore: AnnouncementStore.testLoaded()
-    )
+    ZStack {
+        HomeView(
+            currentUserService: cuts,
+            announcementStore: AnnouncementStore.testLoaded()
+        )
+        HeroView()
+            .ignoresSafeArea()
+    }
     .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
     .environment(\.font, Font.body)
 }
 #Preview ("test-data signed-in") {
     let cuts = CurrentUserTestService.sharedSignedIn
-    MainViewPreviewWrapper(currentUserService: cuts) {
-        HomeView(
-            currentUserService: cuts,
-            announcementStore: AnnouncementStore.testLoaded()
-        )
+    ZStack {
+        MainViewPreviewWrapper(currentUserService: cuts) {
+            HomeView(
+                currentUserService: cuts,
+                announcementStore: AnnouncementStore.testLoaded()
+            )
+        }
+        HeroView()
+            .ignoresSafeArea()
     }
 }
 #Preview ("tiny announcement signed-out") {
     let cuts = CurrentUserTestService.sharedSignedOut
-    MainViewPreviewWrapper(currentUserService: cuts) {
-        HomeView(
-            currentUserService: cuts,
-            announcementStore: AnnouncementStore.testTiny()
-        )
+    ZStack {
+        MainViewPreviewWrapper(currentUserService: cuts) {
+            HomeView(
+                currentUserService: cuts,
+                announcementStore: AnnouncementStore.testTiny()
+            )
+        }
+        HeroView()
+            .ignoresSafeArea()
     }
 }
 #Preview ("no announcements") {
     let cuts = CurrentUserTestService.sharedSignedIn
-    MainViewPreviewWrapper(currentUserService: cuts) {
-        HomeView(
-            currentUserService: cuts,
-            announcementStore: AnnouncementStore()
-        )
+    ZStack {
+        MainViewPreviewWrapper(currentUserService: cuts) {
+            HomeView(
+                currentUserService: cuts,
+                announcementStore: AnnouncementStore()
+            )
+        }
+        HeroView()
+            .ignoresSafeArea()
     }
 }
 #endif

@@ -227,7 +227,6 @@ struct MainViewPreviewWrapper<Content: View>: View {
             VStack(alignment: .leading, spacing: 24) {
                 content
             }
-            .navigationTitle("MenuLabel")
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Menu {
