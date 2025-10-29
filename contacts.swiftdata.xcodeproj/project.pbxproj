@@ -122,7 +122,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1640;
-				LastUpgradeCheck = 1640;
+				LastUpgradeCheck = 2600;
 				TargetAttributes = {
 					B5D0C78D2E2415FC00B31F19 = {
 						CreatedOnToolsVersion = 16.4;
@@ -139,8 +139,8 @@
 			mainGroup = B5D0C7852E2415FC00B31F19;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				B5C0BDE42E241F1000641B69 /* XCLocalSwiftPackageReference "dataconnect-generated/swift/DefaultConnector" */,
 				B5C0BDE72E241F6F00641B69 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				B58457672EA07D660093C071 /* XCLocalSwiftPackageReference "../template.firebase/dataconnect-generated/swift/DefaultConnector" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = B5D0C78F2E2415FC00B31F19 /* Products */;
@@ -237,6 +237,7 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -294,6 +295,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -321,7 +323,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.2.2;
+				MARKETING_VERSION = 0.2.3;
 				PRODUCT_BUNDLE_IDENTIFIER = llc.fastfiveproducts.template;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -352,7 +354,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.2.2;
+				MARKETING_VERSION = 0.2.3;
 				PRODUCT_BUNDLE_IDENTIFIER = llc.fastfiveproducts.template;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -385,9 +387,9 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		B5C0BDE42E241F1000641B69 /* XCLocalSwiftPackageReference "dataconnect-generated/swift/DefaultConnector" */ = {
+		B58457672EA07D660093C071 /* XCLocalSwiftPackageReference "../template.firebase/dataconnect-generated/swift/DefaultConnector" */ = {
 			isa = XCLocalSwiftPackageReference;
-			relativePath = "dataconnect-generated/swift/DefaultConnector";
+			relativePath = "../template.firebase/dataconnect-generated/swift/DefaultConnector";
 		};
 /* End XCLocalSwiftPackageReference section */
 
