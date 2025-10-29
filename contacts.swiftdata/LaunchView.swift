@@ -1,7 +1,7 @@
 //
 //  LaunchView.swift
 //
-//  Template created by Pete Maiser, July 2024 through October 2025
+//  Template file created by Pete Maiser, Fast Five Products LLC, in October 2025.
 //      Template v0.2.3 Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025 Fast Five Products LLC. All rights reserved.
