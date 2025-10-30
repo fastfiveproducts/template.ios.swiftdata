@@ -32,7 +32,7 @@ struct HomeView: View {
                 if announcementStore.list.count > 0 {
                     VStack {
                         Spacer()
-                            .frame(height: geo.size.height * topRatio + 16)
+                            .frame(height: geo.size.height * topRatio + 24)
                         
                         VStackBox {
                             ViewThatFits(in: .vertical) {
@@ -71,8 +71,8 @@ struct HomeView: View {
             currentUserService: cuts,
             announcementStore: AnnouncementStore.testLoaded()
         )
-        HeroView()
-            .ignoresSafeArea()
+        .onAppear{ OverlayManager.shared.show(.splash) }
+        OverlayView()
     }
     .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
     .environment(\.font, Font.body)
@@ -85,9 +85,9 @@ struct HomeView: View {
                 currentUserService: cuts,
                 announcementStore: AnnouncementStore.testLoaded()
             )
+            .onAppear{ OverlayManager.shared.show(.splash) }
         }
-        HeroView()
-            .ignoresSafeArea()
+        OverlayView()
     }
 }
 #Preview ("tiny announcement signed-out") {
@@ -98,9 +98,9 @@ struct HomeView: View {
                 currentUserService: cuts,
                 announcementStore: AnnouncementStore.testTiny()
             )
+            .onAppear{ OverlayManager.shared.show(.splash) }
         }
-        HeroView()
-            .ignoresSafeArea()
+        OverlayView()
     }
 }
 #Preview ("no announcements") {
@@ -111,9 +111,9 @@ struct HomeView: View {
                 currentUserService: cuts,
                 announcementStore: AnnouncementStore()
             )
+            .onAppear{ OverlayManager.shared.show(.splash) }
         }
-        HeroView()
-            .ignoresSafeArea()
+        OverlayView()
     }
 }
 #endif

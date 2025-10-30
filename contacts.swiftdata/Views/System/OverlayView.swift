@@ -30,8 +30,6 @@ struct OverlayView: View {
                     .overlay(overlayContent(for: overlay))
                     .font(.title)
                     .fontWeight(.semibold)
-                    .minimumScaleFactor(0.6)
-                    .lineLimit(1)
                     .padding(.horizontal)
                     .transition(.opacity)
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
@@ -48,6 +46,8 @@ struct OverlayView: View {
                 Text(ViewConfig.brandName)
                     .foregroundColor(ViewConfig.brandColor)
             }
+            .minimumScaleFactor(0.6)
+            .lineLimit(1)
         case .loading:
             VStack {
                 Text(ViewConfig.brandName)      // preserve layout between splash and loading with clear text
@@ -59,6 +59,8 @@ struct OverlayView: View {
                         .foregroundColor(ViewConfig.fgColor)
                 }
             }
+            .minimumScaleFactor(0.6)
+            .lineLimit(1)
         case .custom:
             if let custom = overlay.view { custom }
         case .hidden:
@@ -99,7 +101,7 @@ final class OverlayManager: ObservableObject {
         var swiftUIAnimation: Animation? {
             switch self {
             case .none: return nil
-            case .fast: return .easeInOut(duration: 0.3)
+            case .fast: return .easeInOut(duration: 0.5)
             case .slow: return .easeInOut(duration: 1.0)
             case .slideUp: return .spring(response: 0.6, dampingFraction: 0.8)
             case .custom(let anim): return anim
@@ -150,7 +152,7 @@ private extension OverlayManager.OverlayState {
     manager.overlays = [
         OverlayManager.OverlayItem(
             state: .splash,
-            view: AnyView(HeroView()),
+            view: nil,
             animation: .slow,
             zIndex: 10
         )

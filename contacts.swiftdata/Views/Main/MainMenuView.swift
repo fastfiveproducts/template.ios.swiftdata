@@ -26,8 +26,6 @@ struct MainMenuView: View {
     @ObservedObject var announcementStore: AnnouncementStore
     @ObservedObject var publicCommentStore: PublicCommentStore
     @ObservedObject var privateMessageStore: PrivateMessageStore
-
-    @Binding var showOverlay: Bool
     
     @State private var showMenu = false
     @State private var selectedMenuItem: NavigationItem?
@@ -37,9 +35,11 @@ struct MainMenuView: View {
             VStack(alignment: .leading, spacing: 24) {
                 if selectedMenuItem == nil {
                     HomeView(currentUserService: currentUserService, announcementStore: announcementStore)
+                        .onAppear{ OverlayManager.shared.show(.splash) }
+                } else {
+                    self.destinationView
+                        .onAppear { OverlayManager.shared.hide(.splash) }
                 }
-                self.destinationView
-                    .onAppear { showOverlay = false }
             }
             .navigationTitle(selectedMenuItem?.label ?? "")
             .toolbar {
@@ -51,8 +51,8 @@ struct MainMenuView: View {
                         SignUpInLinkView(
                             currentUserService: currentUserService,
                             inToolbar: true,
-                            onNavigate: { showOverlay = false }
                         )
+//                        .onAppear { OverlayManager.shared.hide(.splash) }
                     }
                 }
             }
@@ -184,8 +184,7 @@ struct MainMenuView: View {
         currentUserService: currentUserService,
         announcementStore: AnnouncementStore.testLoaded(),
         publicCommentStore: PublicCommentStore.testLoaded(),
-        privateMessageStore: PrivateMessageStore(),             // loading empty because private messages not used yet
-        showOverlay: .constant(false)
+        privateMessageStore: PrivateMessageStore()             // loading empty because private messages not used yet
     )
     .modelContainer(container)
     .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
@@ -203,8 +202,7 @@ struct MainMenuView: View {
         currentUserService: currentUserService,
         announcementStore: AnnouncementStore.testTiny(),
         publicCommentStore: PublicCommentStore.testLoaded(),
-        privateMessageStore: PrivateMessageStore.testLoaded(),
-        showOverlay: .constant(false)
+        privateMessageStore: PrivateMessageStore.testLoaded()
     )
     .modelContainer(container)
     .dynamicTypeSize(...ViewConfig.dynamicSizeMax)

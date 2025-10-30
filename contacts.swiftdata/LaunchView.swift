@@ -23,8 +23,6 @@ struct LaunchView: View {
     @ObservedObject var currentUserService: CurrentUserService
     @ObservedObject var modelContainerManager: ModelContainerManager
 
-    @State private var showLoading = false
-    @State private var showOverlay = false
     @State private var showMain = false
     
     var body: some View {
@@ -36,56 +34,36 @@ struct LaunchView: View {
                     announcementStore: AnnouncementStore.shared,
                     publicCommentStore: PublicCommentStore.shared,
                     privateMessageStore: PrivateMessageStore.shared,
-                    showOverlay: $showOverlay
                 )
                 .modelContainer(container)
-                .onAppear { showLoading = false }
             } else {
                 // Fallback while container loads
-                ViewConfig.bgColor
+                ViewConfig.brandColor
                     .ignoresSafeArea()
-                    .onAppear { showLoading = true }
             }
 
-            // Launch layer Overlay on top
-            ViewConfig.bgColor
+            // Launch Screen Background Overlay (fades away)
+            ViewConfig.brandColor
                 .ignoresSafeArea()
                 .opacity(showMain ? 0 : 1)
                 .animation(.easeInOut(duration: 1.0), value: showMain)
 
-            // Text overlay (lingers a bit longer)
-            HeroView()
-                .ignoresSafeArea()
-                .opacity(showOverlay ? 1 : 0)
-                .animation(showOverlay ? .easeIn(duration: 1.0) : .none, value: showOverlay)
-
-            // Insert the Loading Indicator on top, over-the-top if needed,
-            // but only when doing showing the Overlay and showing the Main app
-            if showLoading, showMain {
-                VStack(spacing: 40) {
-                    Text("")
-                    HStack(spacing: 8) {
-                        ProgressView()
-                            .progressViewStyle(CircularProgressViewStyle(tint: ViewConfig.fgColor))
-                        Text("Loading local data…")
-                            .font(.title)
-                            .fontWeight(.semibold)
-                            .foregroundColor(ViewConfig.fgColor)
-                    }
-                    .minimumScaleFactor(0.6)
-                    .lineLimit(1)
-                    .padding(.horizontal)
-                }
-                .transition(.opacity)
-                .animation(.easeInOut(duration: 0.25), value: showLoading)
-            }
+            // Global Overlays
+            OverlayView()
         }
         .onAppear {
-            showOverlay = true
+            if modelContainerManager.container == nil {
+                OverlayManager.shared.show(.loading)
+            }
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
                 withAnimation(.easeIn(duration: 1.0)) {
                     showMain = true
                 }
+            }
+        }
+        .onChange(of: modelContainerManager.container) { _, newValue in
+            if newValue != nil {
+                OverlayManager.shared.hide(.loading)
             }
         }
         .task {
