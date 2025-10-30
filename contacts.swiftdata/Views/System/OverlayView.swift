@@ -25,61 +25,47 @@ struct OverlayView: View {
     var body: some View {
         ZStack {
             ForEach(overlayManager.overlays) { overlay in
-                switch overlay.state {
-                case .splash:
-                    ViewConfig.bgColor
-                        .ignoresSafeArea()
-                        .overlay(
-                            VStack {
-                                Text("Template App")
-                                    .foregroundColor(ViewConfig.fgColor)
-                            }
-                            .font(.title)
-                            .fontWeight(.semibold)
-                            .minimumScaleFactor(0.6)
-                            .lineLimit(1)
-                            .padding(.horizontal)
-                            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
-                        )
-                        .zIndex(overlay.zIndex)
-                case .loading:
-                    Color.clear
-                        .ignoresSafeArea()
-                        .overlay(
-                            VStack {
-                                Text("Template App")
-                                    .foregroundColor(Color.clear)   // preserve layout between splash and loading
-
-                                HStack(spacing: 8) {
-                                    ProgressView()
-                                        .progressViewStyle(CircularProgressViewStyle(tint: ViewConfig.fgColor))
-                                    Text("Loading local data…")
-                                        .foregroundColor(ViewConfig.fgColor)
-                                }
-                            }
-                            .font(.title)
-                            .fontWeight(.semibold)
-                            .minimumScaleFactor(0.6)
-                            .lineLimit(1)
-                            .padding(.horizontal)
-                            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
-                        )
-                        .zIndex(overlay.zIndex)
-                case .custom:
-                    if let custom = overlay.view {
-                        ViewConfig.bgColor
-                            .ignoresSafeArea()
-                            .overlay(custom.transition(.opacity))
-                            .zIndex(overlay.zIndex)
-                    }
-                case .hidden:
-                    EmptyView()
-                }
+                Color.clear
+                    .ignoresSafeArea()
+                    .overlay(overlayContent(for: overlay))
+                    .font(.title)
+                    .fontWeight(.semibold)
+                    .minimumScaleFactor(0.6)
+                    .lineLimit(1)
+                    .padding(.horizontal)
+                    .transition(.opacity)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+                    .zIndex(overlay.zIndex)
             }
         }
     }
+    
+    @ViewBuilder
+    func overlayContent(for overlay: OverlayManager.OverlayItem) -> some View {
+        switch overlay.state {
+        case .splash:
+            VStack {
+                Text(ViewConfig.brandName)
+                    .foregroundColor(ViewConfig.brandColor)
+            }
+        case .loading:
+            VStack {
+                Text(ViewConfig.brandName)      // preserve layout between splash and loading with clear text
+                    .foregroundColor(.clear)
+                HStack(spacing: 8) {
+                    ProgressView()
+                        .progressViewStyle(CircularProgressViewStyle(tint: ViewConfig.fgColor))
+                    Text("Loading local data…")
+                        .foregroundColor(ViewConfig.fgColor)
+                }
+            }
+        case .custom:
+            if let custom = overlay.view { custom }
+        case .hidden:
+            EmptyView()
+        }
+    }
 }
-
 
 @MainActor
 final class OverlayManager: ObservableObject {
@@ -171,7 +157,6 @@ private extension OverlayManager.OverlayState {
     ]
     return OverlayView()
 }
-
 #Preview("Loading") {
     let manager = OverlayManager.shared
     manager.overlays = [
@@ -184,33 +169,31 @@ private extension OverlayManager.OverlayState {
     ]
     return OverlayView()
 }
-
 #Preview("Multiple") {
     let manager = OverlayManager.shared
     manager.overlays = [
         OverlayManager.OverlayItem(
             state: .splash,
-            view: AnyView(HeroView()),
+            view: nil,
             animation: .slow,
             zIndex: 10
         ),
         OverlayManager.OverlayItem(
             state: .loading,
             view: nil,
-            animation: .fast,
+            animation: .none,
             zIndex: 20
         )
     ]
     return OverlayView()
 }
-
 #Preview("Custom") {
     let manager = OverlayManager.shared
     manager.overlays = [
         OverlayManager.OverlayItem(
             state: .custom,
             view: AnyView(
-                VStackBox {
+                VStackBox(widthMode: .fitContent) {
                     Text("Hello World!")
                 }
             ),
@@ -220,11 +203,9 @@ private extension OverlayManager.OverlayState {
     ]
     return OverlayView()
 }
-
 #Preview("Hidden") {
     let manager = OverlayManager.shared
     manager.overlays = []
     return OverlayView()
 }
 #endif
-
