@@ -1,5 +1,4 @@
-//
-//  ActivityLogEntry.swift
+//  SettingsView.swift
 //
 //  Template file created by Elizabeth Maiser, Fast Five Products LLC, on 7/5/25.
 //      Template v0.2.0 — Fast Five Products LLC's public AGPL template.
@@ -18,25 +17,14 @@
 
 
 import Foundation
-import SwiftData
+import SwiftUI
 
-@Model
-final class ActivityLogEntry {
-    var event: String
-    var timestamp: Date
+class SettingsStore: ObservableObject {
+    @AppStorage("darkMode") var darkMode = false
+    @AppStorage("soundEffects") var soundEffects = true
     
-    init(_ event: String, timestamp: Date = Date()) {
-        self.event = event
-        self.timestamp = timestamp
+    func resetAllSettings() {
+        darkMode = false
+        soundEffects = true
     }
 }
-
-
-#if DEBUG
-extension ActivityLogEntry {
-    static let testObjects: [ActivityLogEntry] = [
-        ActivityLogEntry("test event"),
-        ActivityLogEntry("another test event")
-    ]
-}
-#endif

@@ -26,10 +26,11 @@ Package.pins
 Package.resolved
 .swiftpm
 
-
-# firebase connection
+# Firebase Connection
 GoogleService-Info.plist
 
-# firebase dataconnect generated files
+# Firebase dataconnect generated files
 dataconnect-generated
 
+# Custom template-diff output
+template_diff.txt

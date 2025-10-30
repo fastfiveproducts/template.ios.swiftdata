@@ -13,7 +13,9 @@ All Swift files should include a standard file header that provides authorship, 
 
 - **NEW files**: Use the current year.
 - **CHANGED files**: Append new years (e.g., `2025, 2026`) to reflect modification history.
-- **Template version**: Update the version number for any file added to or modified in the TEMPLATE project.  
+- **Template version**: Update the version number for any file added to or modified in the TEMPLATE project.
+
+Version numbers in the examples below are example-only and need to be updated appropirately
 
 ---
 
@@ -33,7 +35,7 @@ If the app is also open source, please see **Case 2** in the public [CONTRIBUTIN
 
 If the app is also open source, use the **Case 1a** header from the public [CONTRIBUTING.md](../CONTRIBUTING.md)  file - thus adding the exception to this new file - but remove this template version line:
 ```swift
-//  Template v0.2.0 — Fast Five Products LLC's public AGPL template.
+//      Template v0.2.0 — Fast Five Products LLC's public AGPL template.
 ```
 
 ---
@@ -43,10 +45,10 @@ If the app is also open source, use the **Case 1a** header from the public [CONT
 ```swift
 //
 //  [Filename].swift
-//  Originally created by [Template Developer Name], Fast Five Products LLC
-//  Modified by [App Developer Name], Fast Five Products LLC
 //
-//  Template v0.2.0 — Fast Five Products LLC's public AGPL template.
+//  Template file created by [Template Developer Name], Fast Five Products LLC, on M/D/YY.
+//  Modified by [App Developer Name], Fast Five Products LLC, on M/D/YY.
+//      Template v0.2.3 (modified) — Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025 Fast Five Products LLC. All rights reserved.
 //
@@ -67,7 +69,9 @@ If the app is also open source, use the **Case 1a** header from the public [CONT
 ```swift
 //
 //  [Filename].swift
-//  Created by [Developer Name], Fast Five Products LLC
+//
+//  Template file created by [Template Developer Name], Fast Five Products LLC, on M/D/YY.
+//      Template v0.2.4 — Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025 Fast Five Products LLC. All rights reserved.
 //
@@ -88,7 +92,9 @@ If the app is also open source, use the **Case 1a** header from the public [CONT
 ```swift
 //
 //  [Filename].swift
-//  Created by [Developer Name], Fast Five Products LLC
+//
+//  Created by [Developer Name], on M/D/YY.
+//  Fast Five Products LLC for [Client Name]
 //
 //  Copyright © 2025 Fast Five Products LLC and [Client Name]. All rights reserved.
 //

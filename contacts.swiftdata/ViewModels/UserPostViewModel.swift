@@ -2,7 +2,8 @@
 //  UserPostViewModel.swift
 //
 //  Template created by Pete Maiser, July 2024 through May 2025
-//      Template v0.1.2 (renamed) Fast Five Products LLC's public AGPL template.
+//  Modified by Pete Maiser, Fast Five Products LLC, on 10/23/25.
+//      Template v0.2.3 (updated) Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025 Fast Five Products LLC. All rights reserved.
 //
@@ -77,5 +78,5 @@ class UserPostViewModel<T: Post>: ObservableObject, DebugPrintable {
     
     // Create
     var postCandidate = PostCandidate.placeholder
-    var createdPost = T.placeholder
+    var createdPost = T.placeholder[0]
 }
