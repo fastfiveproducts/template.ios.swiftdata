@@ -111,11 +111,15 @@ enum VStackBoxWidthMode {
             Text("Hello, World!")
         }
     }
+    .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
+    .environment(\.font, Font.body)
 }
 #Preview ("Resize") {
     VStackBox(widthMode: .fitContent) {
         Text("Hello, World!")
     }
+    .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
+    .environment(\.font, Font.body)
 }
 @ViewBuilder
 func previewContent() -> some View {
