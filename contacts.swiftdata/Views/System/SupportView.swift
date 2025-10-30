@@ -1,5 +1,5 @@
 //
-//  HelpView.swift
+//  SupportView.swift
 //
 //  Template file created by Pete Maiser, Fast Five Products LLC, on 10/30/25.
 //      Template v0.2.4 Fast Five Products LLC's public AGPL template.
@@ -16,9 +16,10 @@
 //  For licensing inquiries, contact: licenses@fastfiveproducts.llc
 //
 
+
 import SwiftUI
 
-struct HelpView: View {
+struct SupportView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
@@ -40,7 +41,7 @@ struct HelpView: View {
                 
                 // MARK: - Sections
                 VStack(spacing: 16) {
-                    HelpSection(
+                    SupportSection(
                         icon: "sparkles",
                         title: "What This App Does",
                         text: """
@@ -48,7 +49,7 @@ struct HelpView: View {
                         """
                     )
                     
-                    HelpSection(
+                    SupportSection(
                         icon: "square.grid.2x2",
                         title: "Layout Overview",
                         text: """
@@ -56,7 +57,7 @@ struct HelpView: View {
                         """
                     )
                     
-                    HelpSection(
+                    SupportSection(
                         icon: "gearshape",
                         title: "Configuration",
                         text: """
@@ -64,7 +65,7 @@ struct HelpView: View {
                         """
                     )
                     
-                    HelpSection(
+                    SupportSection(
                         icon: "questionmark.circle",
                         title: "Next Steps",
                         text: """
@@ -90,13 +91,13 @@ struct HelpView: View {
             .padding(.vertical)
         }
         .background(ViewConfig.bgColor)
-        .navigationTitle("Help")
+        .navigationTitle(NavigationItem.support.label)
         .navigationBarTitleDisplayMode(.inline)
     }
 }
 
 // MARK: - Subview
-fileprivate struct HelpSection: View {
+fileprivate struct SupportSection: View {
     let icon: String
     let title: String
     let text: String
@@ -125,7 +126,7 @@ fileprivate struct HelpSection: View {
 
 #if DEBUG
 #Preview {
-    HelpView()
+    SupportView()
         .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
         .environment(\.font, Font.body)
 }

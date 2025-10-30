@@ -111,6 +111,9 @@ struct MainMenuView: View {
         case .activity:
             ActivityLogView()
             
+        case .support:
+            SupportView()
+            
         case .settings:
             SettingsView()
             

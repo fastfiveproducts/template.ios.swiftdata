@@ -3,7 +3,7 @@
 //
 //  Template created by Pete Maiser, July 2024 through May 2025
 //  Modified by Pete Maiser, Fast Five Products LLC, on 10/23/25.
-//      Template v0.2.3 (updated) Fast Five Products LLC's public AGPL template.
+//      Template v0.2.4 (updated) Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025 Fast Five Products LLC. All rights reserved.
 //
@@ -28,6 +28,7 @@ enum NavigationItem: String, CaseIterable, Identifiable {
          messages,
          activity,
          settings,
+         support,
          profile
     var id: String { rawValue }
 
@@ -39,6 +40,7 @@ enum NavigationItem: String, CaseIterable, Identifiable {
         case .messages: return "Private Messages"
         case .activity: return "Activity Log"
         case .settings: return "Settings"
+        case .support: return "Support"
         case .profile: return "User Profile"
         }
     }
@@ -51,6 +53,7 @@ enum NavigationItem: String, CaseIterable, Identifiable {
         case .comments: return (0,3)
         case .activity: return (1,0)
         case .settings: return (1,1)
+        case .support: return (1,2)
         case .profile: return (-1,0)    // hide
         }
     }
@@ -63,6 +66,7 @@ enum NavigationItem: String, CaseIterable, Identifiable {
         case .comments: return "text.bubble"
         case .activity: return "book.pages"
         case .settings: return "gearshape.fill"
+        case .support: return "questionmark.circle"
         case .profile: return "person.text.rectangle"
         }
     }
