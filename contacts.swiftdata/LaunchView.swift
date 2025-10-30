@@ -1,8 +1,8 @@
 //
 //  LaunchView.swift
 //
-//  Template created by Pete Maiser, July 2024 through October 2025
-//      Template v0.2.3 Fast Five Products LLC's public AGPL template.
+//  Template file created by Pete Maiser, Fast Five Products LLC, in October 2025.
+//      Template v0.2.4 (updated) Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025 Fast Five Products LLC. All rights reserved.
 //
@@ -23,8 +23,6 @@ struct LaunchView: View {
     @ObservedObject var currentUserService: CurrentUserService
     @ObservedObject var modelContainerManager: ModelContainerManager
 
-    @State private var showLoading = false
-    @State private var showOverlay = false
     @State private var showMain = false
     
     var body: some View {
@@ -35,58 +33,37 @@ struct LaunchView: View {
                     currentUserService: currentUserService,
                     announcementStore: AnnouncementStore.shared,
                     publicCommentStore: PublicCommentStore.shared,
-                    privateMessageStore: PrivateMessageStore.shared
+                    privateMessageStore: PrivateMessageStore.shared,
                 )
                 .modelContainer(container)
-                .onAppear { showLoading = false }
             } else {
                 // Fallback while container loads
-                ViewConfig.bgColor
+                ViewConfig.brandColor
                     .ignoresSafeArea()
-                    .onAppear { showLoading = true }
             }
 
-            // Launch layer Overlay on top
-            ViewConfig.bgColor
+            // Launch Screen Background Overlay (fades away)
+            ViewConfig.brandColor
                 .ignoresSafeArea()
                 .opacity(showMain ? 0 : 1)
-                .animation(.easeInOut(duration: 1.0), value: showMain)
+                .animation(.easeInOut(duration: 1.25), value: showMain)
 
-            // Text overlay (lingers a bit longer)
-            HeroView()
-                .opacity(showOverlay ? 1 : 0)
-                .animation(.easeInOut(duration: 1.0), value: showOverlay)
-
-            // Insert the Loading Indicator on top, over-the-top if needed,
-            // but only when doing showing the Overlay and showing the Main app
-            if showLoading, showMain {
-                VStack(spacing: 40) {
-                    Text("")
-                    HStack(spacing: 8) {
-                        ProgressView()
-                            .progressViewStyle(CircularProgressViewStyle(tint: ViewConfig.fgColor))
-                        Text("Loading local data…")
-                            .font(.title)
-                            .fontWeight(.semibold)
-                            .foregroundColor(ViewConfig.fgColor)
-                    }
-                    .minimumScaleFactor(0.6)
-                    .lineLimit(1)
-                    .padding(.horizontal)
-                }
-                .transition(.opacity)
-                .animation(.easeInOut(duration: 0.25), value: showLoading)
-            }
+            // Global Overlays
+            OverlayView()
         }
         .onAppear {
-            showOverlay = true
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-                withAnimation(.easeIn(duration: 1.0)) {
+            if modelContainerManager.container == nil {
+                OverlayManager.shared.show(.loading)
+            }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.25) {
+                withAnimation(.easeIn(duration: 1.25)) {
                     showMain = true
                 }
-                withAnimation(.easeOut(duration: 1.0)) {
-                    showOverlay = false
-                }
+            }
+        }
+        .onChange(of: modelContainerManager.container) { _, newValue in
+            if newValue != nil {
+                OverlayManager.shared.hide(.loading)
             }
         }
         .task {

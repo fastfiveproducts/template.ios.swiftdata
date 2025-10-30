@@ -3,7 +3,7 @@
 //
 //  Created by Pete Maiser, Fast Five Products LLC, on 7/15/25.
 //  Modified by Pete Maiser, Fast Five Products LLC, on 10/23/25.
-//      Template v0.2.3 (updated) Fast Five Products LLC's public AGPL template.
+//      Template v0.2.4 (updated) Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025 Fast Five Products LLC. All rights reserved.
 //
@@ -24,6 +24,7 @@ struct SignUpInLinkView: View {
     @ObservedObject var currentUserService: CurrentUserService
     
     var inToolbar: Bool = false
+    var onNavigate: (() -> Void)? = nil
     
     var leadingText: String {
         if inToolbar, !currentUserService.isSignedIn {
@@ -57,6 +58,7 @@ struct SignUpInLinkView: View {
                 UserAccountView(
                     viewModel: UserAccountViewModel(),
                     currentUserService: currentUserService)
+                .onAppear { onNavigate?() } 
             } label: {
                 if inToolbar && currentUserService.isSignedIn {
                     Label("Account Profile", systemImage: "\(NavigationItem.profile.systemImage).fill")

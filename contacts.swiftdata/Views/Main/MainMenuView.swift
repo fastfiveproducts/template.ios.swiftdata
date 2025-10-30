@@ -3,7 +3,7 @@
 //
 //  Template created by Pete Maiser, July 2024 through May 2025
 //  Renamed from HomeView by Pete Maiser, Fast Five Products LLC, on 10/23/25.
-//      Template v0.2.3 (renamed) Fast Five Products LLC's public AGPL template.
+//      Template v0.2.4 (updated) Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025 Fast Five Products LLC. All rights reserved.
 //
@@ -26,7 +26,7 @@ struct MainMenuView: View {
     @ObservedObject var announcementStore: AnnouncementStore
     @ObservedObject var publicCommentStore: PublicCommentStore
     @ObservedObject var privateMessageStore: PrivateMessageStore
-
+    
     @State private var showMenu = false
     @State private var selectedMenuItem: NavigationItem?
     
@@ -35,22 +35,27 @@ struct MainMenuView: View {
             VStack(alignment: .leading, spacing: 24) {
                 if selectedMenuItem == nil {
                     HomeView(currentUserService: currentUserService, announcementStore: announcementStore)
+                        .onAppear{ OverlayManager.shared.show(.splash) }
+                } else {
+                    self.destinationView
+                        .onAppear { OverlayManager.shared.hide(.splash) }
                 }
-                self.destinationView
             }
             .navigationTitle(selectedMenuItem?.label ?? "")
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     self.menuView
                 }
-                
                 if self.selectedMenuItem != .profile {
                     ToolbarItem(placement: .navigationBarTrailing) {
-                        SignUpInLinkView(currentUserService: currentUserService, inToolbar: true)
+                        SignUpInLinkView(
+                            currentUserService: currentUserService,
+                            inToolbar: true,
+                            onNavigate: { OverlayManager.shared.hide(.splash) }
+                        )
                     }
                 }
             }
-            .padding(.vertical)
         }
         .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
         .environment(\.font, Font.body)
@@ -179,9 +184,11 @@ struct MainMenuView: View {
         currentUserService: currentUserService,
         announcementStore: AnnouncementStore.testLoaded(),
         publicCommentStore: PublicCommentStore.testLoaded(),
-        privateMessageStore: PrivateMessageStore()              // loading empty because private messages not used yet
+        privateMessageStore: PrivateMessageStore()             // loading empty because private messages not used yet
     )
     .modelContainer(container)
+    .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
+    .environment(\.font, Font.body)
 }
 #Preview ("no-data and signed-out") {
     let currentUserService = CurrentUserTestService.sharedSignedOut
@@ -198,6 +205,8 @@ struct MainMenuView: View {
         privateMessageStore: PrivateMessageStore.testLoaded()
     )
     .modelContainer(container)
+    .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
+    .environment(\.font, Font.body)
 }
 
 // this helper is for child view previews
@@ -216,7 +225,6 @@ struct MainViewPreviewWrapper<Content: View>: View {
             VStack(alignment: .leading, spacing: 24) {
                 content
             }
-            .navigationTitle("MenuLabel")
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Menu {

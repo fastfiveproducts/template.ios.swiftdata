@@ -3,7 +3,7 @@
 //
 //  Template created by Pete Maiser, July 2024 through May 2025
 //  Modified by Pete Maiser, Fast Five Products LLC, on 10/23/25.
-//      Template v0.2.3 (updated) Fast Five Products LLC's public AGPL template.
+//      Template v0.2.4 (updated) Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025 Fast Five Products LLC. All rights reserved.
 //
@@ -26,10 +26,23 @@ import SwiftUI
 struct ViewConfig {
     static let dynamicSizeMax = DynamicTypeSize.xxxLarge
     
-    static let bgColor: Color =
-        Color(UIColor.systemBackground)
-    static let fgColor =
-        Color.accentColor
+    static let brandName = "Template App"
+    static let brandColor: Color = Color.accentColor
+    
+    static let bgColor: Color = Color(UIColor.systemBackground)
+    static let fgColor = Color.accentColor
+}
+
+extension ViewConfig {
+    struct SplashView: View {
+        var body: some View {
+            Text(ViewConfig.brandName)
+                .multilineTextAlignment(.center)
+                .minimumScaleFactor(0.6)
+                .lineLimit(1)
+                .padding(.horizontal)
+        }
+    }
 }
 
 extension Color {
@@ -52,4 +65,16 @@ extension Color {
 
 #if DEBUG
 var isPreview: Bool { return ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] == "1" }
+
+#Preview {
+    ViewConfig.SplashView()
+        .ignoresSafeArea()
+        .font(.title)
+        .fontWeight(.semibold)
+        .foregroundColor(ViewConfig.brandColor)
+        .transition(.opacity)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+        .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
+        .environment(\.font, Font.body)
+}
 #endif
