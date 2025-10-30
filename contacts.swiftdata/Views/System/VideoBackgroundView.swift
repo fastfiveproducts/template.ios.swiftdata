@@ -2,7 +2,7 @@
 //  VideoBackgroundView.swift
 //
 //  Template file created by Pete Maiser, Fast Five Products LLC, in October 2025.
-//      Template v0.2.3 Fast Five Products LLC's public AGPL template.
+//      Template v0.2.4 (updated) Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025 Fast Five Products LLC. All rights reserved.
 //
@@ -129,7 +129,8 @@ final class VideoBackgroundPlayer: ObservableObject, DebugPrintable {
 #Preview("Plain") {
     ZStack {
         VideoBackgroundView()
-        // HeroView()
+            .onAppear{ OverlayManager.shared.show(.splash) }
+        OverlayView()
     }
     .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
     .environment(\.font, Font.body)
@@ -137,7 +138,8 @@ final class VideoBackgroundPlayer: ObservableObject, DebugPrintable {
 #Preview("Tab Safe Area") {
     ZStack {
         VideoBackgroundView()
-        // HeroView()
+            .onAppear{ OverlayManager.shared.show(.splash) }
+        OverlayView()
     }
     .environment(\.tabSafeAreaBackground, true)
     .dynamicTypeSize(...ViewConfig.dynamicSizeMax)

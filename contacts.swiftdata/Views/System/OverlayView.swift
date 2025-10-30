@@ -28,7 +28,6 @@ struct OverlayView: View {
                 Color.clear
                     .ignoresSafeArea()
                     .overlay(overlayContent(for: overlay))
-                    .font(.title)
                     .fontWeight(.semibold)
                     .padding(.horizontal)
                     .transition(.opacity)
@@ -42,25 +41,28 @@ struct OverlayView: View {
     func overlayContent(for overlay: OverlayManager.OverlayItem) -> some View {
         switch overlay.state {
         case .splash:
-            VStack {
-                Text(ViewConfig.brandName)
-                    .foregroundColor(ViewConfig.brandColor)
-            }
-            .minimumScaleFactor(0.6)
-            .lineLimit(1)
+            ViewConfig.SplashView()
+                .font(.title)
+                .fontWeight(.semibold)
+                .foregroundColor(ViewConfig.brandColor)
         case .loading:
             VStack {
-                Text(ViewConfig.brandName)      // preserve layout between splash and loading with clear text
-                    .foregroundColor(.clear)
+                ViewConfig.SplashView()
+                    .font(.title)
+                    .fontWeight(.semibold)
+                    .foregroundColor(.clear)     // preserve layout between splash and loading with clear text
+                Text("\n")
                 HStack(spacing: 8) {
                     ProgressView()
                         .progressViewStyle(CircularProgressViewStyle(tint: ViewConfig.fgColor))
                     Text("Loading local data…")
                         .foregroundColor(ViewConfig.fgColor)
                 }
+                    .font(.title3)
+                    .fontWeight(.semibold)
+                    .minimumScaleFactor(0.6)
+                    .lineLimit(1)
             }
-            .minimumScaleFactor(0.6)
-            .lineLimit(1)
         case .custom:
             if let custom = overlay.view { custom }
         case .hidden:
@@ -112,7 +114,8 @@ final class OverlayManager: ObservableObject {
     func show(_ state: OverlayState,
               animation: OverlayAnimation? = nil,
               view: AnyView? = nil,
-              zIndex: Double = 10) {
+              zIndex: Double = 10
+    ) {
         let anim = animation ?? state.defaultAnimation
         let newOverlay = OverlayItem(state: state,
                                      view: view,
@@ -123,13 +126,16 @@ final class OverlayManager: ObservableObject {
         }
     }
 
-    func hide(_ state: OverlayState? = nil) {
-        withAnimation(.easeOut(duration: 0.3)) {
-            if let state = state {
+    func hide(_ state: OverlayState? = nil,
+              animation: OverlayAnimation? = nil
+    ) {
+        if let state = state {
+            let anim = animation ?? state.defaultAnimation
+            withAnimation(anim.swiftUIAnimation) {
                 overlays.removeAll { $0.state == state }
-            } else {
-                overlays.removeAll()
             }
+        } else {
+            overlays.removeAll()
         }
     }
 }
@@ -158,6 +164,8 @@ private extension OverlayManager.OverlayState {
         )
     ]
     return OverlayView()
+        .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
+        .environment(\.font, Font.body)
 }
 #Preview("Loading") {
     let manager = OverlayManager.shared
@@ -170,6 +178,8 @@ private extension OverlayManager.OverlayState {
         )
     ]
     return OverlayView()
+        .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
+        .environment(\.font, Font.body)
 }
 #Preview("Multiple") {
     let manager = OverlayManager.shared
@@ -188,6 +198,8 @@ private extension OverlayManager.OverlayState {
         )
     ]
     return OverlayView()
+        .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
+        .environment(\.font, Font.body)
 }
 #Preview("Custom") {
     let manager = OverlayManager.shared
@@ -204,10 +216,14 @@ private extension OverlayManager.OverlayState {
         )
     ]
     return OverlayView()
+        .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
+        .environment(\.font, Font.body)
 }
 #Preview("Hidden") {
     let manager = OverlayManager.shared
     manager.overlays = []
     return OverlayView()
+        .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
+        .environment(\.font, Font.body)
 }
 #endif

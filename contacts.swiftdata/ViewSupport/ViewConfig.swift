@@ -33,6 +33,18 @@ struct ViewConfig {
     static let fgColor = Color.accentColor
 }
 
+extension ViewConfig {
+    struct SplashView: View {
+        var body: some View {
+            Text(ViewConfig.brandName)
+                .multilineTextAlignment(.center)
+                .minimumScaleFactor(0.6)
+                .lineLimit(1)
+                .padding(.horizontal)
+        }
+    }
+}
+
 extension Color {
     init(hex: String) {
         let hex = hex.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
@@ -53,4 +65,16 @@ extension Color {
 
 #if DEBUG
 var isPreview: Bool { return ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] == "1" }
+
+#Preview {
+    ViewConfig.SplashView()
+        .ignoresSafeArea()
+        .font(.title)
+        .fontWeight(.semibold)
+        .foregroundColor(ViewConfig.brandColor)
+        .transition(.opacity)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+        .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
+        .environment(\.font, Font.body)
+}
 #endif
