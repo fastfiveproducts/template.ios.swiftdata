@@ -30,9 +30,16 @@ struct OverlayView: View {
                     ViewConfig.bgColor
                         .ignoresSafeArea()
                         .overlay(
-                            HeroView()
-                                .foregroundColor(ViewConfig.fgColor)
-                                .transition(.opacity)
+                            VStack {
+                                Text("Template App")
+                                    .foregroundColor(ViewConfig.fgColor)
+                            }
+                            .font(.title)
+                            .fontWeight(.semibold)
+                            .minimumScaleFactor(0.6)
+                            .lineLimit(1)
+                            .padding(.horizontal)
+                            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
                         )
                         .zIndex(overlay.zIndex)
                 case .loading:
@@ -41,24 +48,20 @@ struct OverlayView: View {
                         .overlay(
                             VStack {
                                 Text("Template App")
-                                    .font(.title)
-                                    .fontWeight(.semibold)
-                                    .foregroundColor(Color.clear)
-                                    .minimumScaleFactor(0.6)
-                                    .lineLimit(1)
-                                    .multilineTextAlignment(.center)
+                                    .foregroundColor(Color.clear)   // preserve layout between splash and loading
+
                                 HStack(spacing: 8) {
                                     ProgressView()
                                         .progressViewStyle(CircularProgressViewStyle(tint: ViewConfig.fgColor))
                                     Text("Loading local data…")
-                                        .font(.title)
-                                        .fontWeight(.semibold)
                                         .foregroundColor(ViewConfig.fgColor)
                                 }
-                                .minimumScaleFactor(0.6)
-                                .lineLimit(1)
-                                .padding(.horizontal)
                             }
+                            .font(.title)
+                            .fontWeight(.semibold)
+                            .minimumScaleFactor(0.6)
+                            .lineLimit(1)
+                            .padding(.horizontal)
                             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
                         )
                         .zIndex(overlay.zIndex)
