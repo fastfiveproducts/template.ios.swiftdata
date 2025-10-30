@@ -137,7 +137,7 @@ final class OverlayManager: ObservableObject {
 private extension OverlayManager.OverlayState {
     var defaultAnimation: OverlayManager.OverlayAnimation {
         switch self {
-        case .splash: return .slow
+        case .splash: return .none
         case .loading: return .none
         case .custom: return .fast
         case .hidden: return .none

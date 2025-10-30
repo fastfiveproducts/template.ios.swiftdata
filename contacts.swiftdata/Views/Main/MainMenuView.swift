@@ -51,8 +51,8 @@ struct MainMenuView: View {
                         SignUpInLinkView(
                             currentUserService: currentUserService,
                             inToolbar: true,
+                            onNavigate: { OverlayManager.shared.hide(.splash) }
                         )
-//                        .onAppear { OverlayManager.shared.hide(.splash) }
                     }
                 }
             }

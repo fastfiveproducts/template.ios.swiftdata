@@ -46,7 +46,7 @@ struct LaunchView: View {
             ViewConfig.brandColor
                 .ignoresSafeArea()
                 .opacity(showMain ? 0 : 1)
-                .animation(.easeInOut(duration: 1.0), value: showMain)
+                .animation(.easeInOut(duration: 1.25), value: showMain)
 
             // Global Overlays
             OverlayView()
@@ -55,8 +55,8 @@ struct LaunchView: View {
             if modelContainerManager.container == nil {
                 OverlayManager.shared.show(.loading)
             }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-                withAnimation(.easeIn(duration: 1.0)) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.25) {
+                withAnimation(.easeIn(duration: 1.25)) {
                     showMain = true
                 }
             }
