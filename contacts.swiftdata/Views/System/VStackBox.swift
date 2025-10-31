@@ -23,16 +23,27 @@ struct VStackBox<Content: View>: View {
     let titleView: AnyView
     let content: Content
     var widthMode: VStackBoxWidthMode = .expand
+    var backgroundColor: Color
        
-    // no title
-    init(widthMode: VStackBoxWidthMode = .expand, @ViewBuilder content: () -> Content) {
+    // MARK: - No Title
+    init(
+        widthMode: VStackBoxWidthMode = .expand,
+        backgroundColor: Color = Color(.systemGroupedBackground),
+        @ViewBuilder content: () -> Content
+    ) {
         self.titleView = AnyView(EmptyView())
         self.content = content()
         self.widthMode = widthMode
+        self.backgroundColor = backgroundColor
     }
 
-    // "title" as just text
-    init(title: String, widthMode: VStackBoxWidthMode = .expand, @ViewBuilder content: () -> Content) {
+    // MARK: - Title as String
+    init(
+        title: String,
+        widthMode: VStackBoxWidthMode = .expand,
+        backgroundColor: Color = Color(.systemGroupedBackground),
+        @ViewBuilder content: () -> Content
+    ) {
         self.titleView = AnyView(
             Text(title)
                 .font(.title2)
@@ -40,19 +51,23 @@ struct VStackBox<Content: View>: View {
         )
         self.content = content()
         self.widthMode = widthMode
+        self.backgroundColor = backgroundColor
     }
 
-    // accept an entire view as the title
+    // MARK: - Title as View
     init<Title: View>(
         widthMode: VStackBoxWidthMode = .expand,
+        backgroundColor: Color = Color(.systemGroupedBackground),
         @ViewBuilder titleView: () -> Title,
         @ViewBuilder content: () -> Content
     ) {
         self.titleView = AnyView(titleView())
         self.content = content()
         self.widthMode = widthMode
+        self.backgroundColor = backgroundColor
     }
     
+    // MARK: - Body
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             titleView
@@ -63,7 +78,7 @@ struct VStackBox<Content: View>: View {
             maxWidth: widthMode == .fitContent ? nil : .infinity,
             alignment: .leading
         )
-        .background(Color(.systemGroupedBackground))
+        .background(backgroundColor)
         .cornerRadius(12)
         .padding(.horizontal)
     }

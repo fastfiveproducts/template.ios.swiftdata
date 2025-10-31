@@ -26,6 +26,7 @@ import SwiftUI
 struct ViewConfig {
     static let dynamicSizeMax = DynamicTypeSize.xxxLarge
     
+    // App-Specific Strings
     static let brandName = "Template App"
     
     static let privacyText = "Privacy Policy"
@@ -34,14 +35,19 @@ struct ViewConfig {
     static let supportText = "\(brandName) Support"
     static let supportURL = URL(string: "https://www.fastfiveproducts.llc/")!
     
+    // Fixed Colors
     static let brandColor: Color =
         Color.accentColor
+    
     static let linkColor: Color =
         Color.accentColor
+    
     static let bgColor: Color =
          Color(UIColor.systemBackground)
+    
     static let fgColor =
          Color.accentColor
+    
 }
 
 extension ViewConfig {
@@ -52,6 +58,7 @@ extension ViewConfig {
                 .minimumScaleFactor(0.6)
                 .lineLimit(1)
                 .padding(.horizontal)
+
         }
     }
 }
@@ -76,6 +83,36 @@ extension Color {
 
 #if DEBUG
 var isPreview: Bool { return ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] == "1" }
+
+#Preview ("Colors") {
+    ScrollView {
+        VStackBox {
+            Text("brandColor").foregroundColor(ViewConfig.brandColor)
+            Text("linkColor").foregroundColor(ViewConfig.linkColor)
+        }
+        VStackBox (backgroundColor: ViewConfig.bgColor) {
+            Text("fgColor on bgColor").foregroundColor(ViewConfig.fgColor)
+        }
+        VStackBox (backgroundColor: Color(.gray)) {
+            ColorTest()
+        }
+        VStackBox (backgroundColor: Color(.black)) {
+            ColorTest()
+        }
+        VStackBox (backgroundColor: Color(.white)) {
+            ColorTest()
+        }
+    }
+    
+}
+fileprivate struct ColorTest: View {
+    var body: some View {
+        Text("brandColor").foregroundColor(ViewConfig.brandColor)
+        Text("linkColor").foregroundColor(ViewConfig.linkColor)
+        Text("bgColor").foregroundColor(ViewConfig.bgColor)
+        Text("fgColor").foregroundColor(ViewConfig.fgColor)
+    }
+}
 
 #Preview {
     ViewConfig.SplashView()
