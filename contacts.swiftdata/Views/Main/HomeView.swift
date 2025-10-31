@@ -38,12 +38,22 @@ struct HomeView: View {
                             ViewThatFits(in: .vertical) {
                                 VStack(alignment: .leading, spacing: 8) {
                                     StoreListView(store: announcementStore)
-                                    SignUpInLinkView(currentUserService: currentUserService)
+                                    SupportLinkView(currentUserService: currentUserService,
+                                                    onNavigate: { OverlayManager.shared.hide(.splash) }
+                                   )
+                                    SignUpInLinkView(currentUserService: currentUserService,
+                                                     onNavigate: { OverlayManager.shared.hide(.splash) }
+                                    )
                                 }
                                 ScrollView {
                                     VStack(alignment: .leading, spacing: 8) {
                                         StoreListView(store: announcementStore)
-                                        SignUpInLinkView(currentUserService: currentUserService)
+                                        SupportLinkView(currentUserService: currentUserService,
+                                                        onNavigate: { OverlayManager.shared.hide(.splash) }
+                                       )
+                                        SignUpInLinkView(currentUserService: currentUserService,
+                                                         onNavigate: { OverlayManager.shared.hide(.splash) }
+                                        )
                                     }
                                     .padding(.bottom, 8)
                                 }

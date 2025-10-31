@@ -27,10 +27,21 @@ struct ViewConfig {
     static let dynamicSizeMax = DynamicTypeSize.xxxLarge
     
     static let brandName = "Template App"
-    static let brandColor: Color = Color.accentColor
     
-    static let bgColor: Color = Color(UIColor.systemBackground)
-    static let fgColor = Color.accentColor
+    static let privacyText = "Privacy Policy"
+    static let privacyURL = URL(string: "https://www.fastfiveproducts.llc/")!
+
+    static let supportText = "\(brandName) Support"
+    static let supportURL = URL(string: "https://www.fastfiveproducts.llc/")!
+    
+    static let brandColor: Color =
+        Color.accentColor
+    static let linkColor: Color =
+        Color.accentColor
+    static let bgColor: Color =
+         Color(UIColor.systemBackground)
+    static let fgColor =
+         Color.accentColor
 }
 
 extension ViewConfig {

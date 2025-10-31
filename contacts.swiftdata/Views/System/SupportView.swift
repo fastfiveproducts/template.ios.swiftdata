@@ -23,67 +23,137 @@ struct SupportView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
-                
+
                 // MARK: - Title
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Getting Started with \(ViewConfig.brandName)")
                         .font(.largeTitle)
                         .fontWeight(.bold)
-                    
+                        .foregroundColor(ViewConfig.fgColor)
+
                     Text("A quick guide to help you explore and get comfortable with the app.")
                         .font(.subheadline)
-                        .foregroundStyle(.secondary)
+                        .foregroundColor(ViewConfig.fgColor)
                 }
                 .padding(.horizontal)
                 .padding(.top)
-                
-                Divider()
-                
-                // MARK: - Sections
-                VStack(spacing: 16) {
-                    SupportSection(
-                        icon: "sparkles",
-                        title: "What This App Does",
-                        text: """
-                        The Template App provides a clean starting point for building SwiftUI apps with shared services, data stores, and visual components.
-                        """
-                    )
-                    
-                    SupportSection(
-                        icon: "square.grid.2x2",
-                        title: "Layout Overview",
-                        text: """
-                        Most screens use a VStack-based layout for clarity and flexibility. You’ll see consistent section headers and spacing throughout.
-                        """
-                    )
-                    
-                    SupportSection(
-                        icon: "gearshape",
-                        title: "Configuration",
-                        text: """
-                        App-wide appearance and constants live in `ViewConfig`. You can easily customize brand colors, fonts, and sizes there.
-                        """
-                    )
-                    
-                    SupportSection(
-                        icon: "questionmark.circle",
-                        title: "Next Steps",
-                        text: """
-                        Try editing text, colors, or structure in one of the example views — changes update live in SwiftUI Previews. This makes it simple to learn and experiment.
-                        """
-                    )
+
+                Divider().opacity(0.3)
+
+                // MARK: - Overview
+                VStackBox(titleView: {
+                    Label("What This App Does", systemImage: "sparkles")
+                        .font(.headline)
+                        .foregroundColor(ViewConfig.brandColor)
+                }) {
+                    Text("""
+                    The Template App provides a clean starting point for building SwiftUI apps with shared services, data stores, and visual components.
+                    """)
+                    .font(.body)
+                    .foregroundStyle(.secondary)
                 }
-                .padding(.horizontal)
-                
+
+                // MARK: - Layout
+                VStackBox(titleView: {
+                    Label("Layout Overview", systemImage: "square.grid.2x2")
+                        .font(.headline)
+                        .foregroundColor(ViewConfig.brandColor)
+                }) {
+                    Text("""
+                    Most screens use a VStack-based layout for clarity and flexibility. You’ll see consistent section headers and spacing throughout.
+                    """)
+                    .font(.body)
+                    .foregroundStyle(.secondary)
+                }
+
+                // MARK: - Configuration
+                VStackBox(titleView: {
+                    Label("Configuration", systemImage: "gearshape.fill")
+                        .font(.headline)
+                        .foregroundColor(ViewConfig.brandColor)
+                }) {
+                    Text("""
+                    App-wide appearance and constants live in `ViewConfig`. You can easily customize brand colors, fonts, and layout sizes there. You can also define dynamic colors, links, and branding for your app’s environment.
+                    """)
+                    .font(.body)
+                    .foregroundStyle(.secondary)
+                }
+
+                // MARK: - FAQ
+                VStackBox(titleView: {
+                    Label("Frequently Asked Questions", systemImage: "questionmark.circle.fill")
+                        .font(.headline)
+                        .foregroundColor(ViewConfig.brandColor)
+                }) {
+                    VStack(alignment: .leading, spacing: 12) {
+                        Group {
+                            Text("**Q:** Where do I start customizing?")
+                                .font(.subheadline)
+                                .foregroundStyle(.secondary)
+
+                            Text("""
+                            **A:** Begin with `ViewConfig`. It defines your app’s name, theme color, background, and link information. From there, you can explore other example views to understand the structure.
+                            """)
+                            .font(.body)
+                            .foregroundStyle(.secondary)
+                        }
+
+                        Group {
+                            Text("**Q:** Is there example code I can safely modify?")
+                                .font(.subheadline)
+                                .foregroundStyle(.secondary)
+
+                            Text("""
+                            **A:** Yes. Every view in this template is written to be self-contained and easy to modify. You can duplicate any view or component (like `VStackBox`) and rename it for your own use.
+                            """)
+                            .font(.body)
+                            .foregroundStyle(.secondary)
+                        }
+
+                        Group {
+                            Text("**Q:** Sample - what is your privacy policy?")
+                                .font(.subheadline)
+                                .foregroundStyle(.secondary)
+
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text("**A:** Visit our:")
+                                    .font(.body)
+                                    .foregroundStyle(.secondary)
+
+                                Link(ViewConfig.privacyText, destination: ViewConfig.privacyURL)
+                                    .font(.body)
+                                    .underline()
+                                    .padding(.bottom, 6)
+                            }
+                        }
+                    }
+                }
+
                 Spacer(minLength: 40)
-                
+
                 // MARK: - Footer
                 VStack(alignment: .center, spacing: 8) {
                     Text("Need more help?")
                         .font(.headline)
-                    Text("Visit the documentation or reach out to your development team.")
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
+                        .foregroundColor(ViewConfig.fgColor)
+
+                    HStack(spacing: 4) {
+                        Text("Visit")
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                        Link(destination: ViewConfig.supportURL) {
+                            Text(ViewConfig.supportText)
+                                .font(.subheadline)
+                                .fontWeight(.semibold)
+                                .foregroundColor(.blue)
+                        }
+                    }
+                    .padding(.horizontal, 6)
+                    .padding(.vertical, 2)
+                    .background(
+                        RoundedRectangle(cornerRadius: 4)
+                            .fill(Color(uiColor: .systemBackground).opacity(0.9))
+                    )
                 }
                 .frame(maxWidth: .infinity)
                 .padding(.bottom, 40)
@@ -93,33 +163,6 @@ struct SupportView: View {
         .background(ViewConfig.bgColor)
         .navigationTitle(NavigationItem.support.label)
         .navigationBarTitleDisplayMode(.inline)
-    }
-}
-
-// MARK: - Subview
-fileprivate struct SupportSection: View {
-    let icon: String
-    let title: String
-    let text: String
-    
-    var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Label {
-                Text(title)
-                    .font(.headline)
-            } icon: {
-                Image(systemName: icon)
-                    .foregroundColor(ViewConfig.brandColor)
-            }
-            
-            Text(text)
-                .font(.body)
-                .foregroundStyle(.secondary)
-        }
-        .padding()
-        .background(Color(.secondarySystemGroupedBackground))
-        .cornerRadius(12)
-        .shadow(color: .black.opacity(0.05), radius: 2, x: 0, y: 1)
     }
 }
 
