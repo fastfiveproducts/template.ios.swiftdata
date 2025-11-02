@@ -42,14 +42,14 @@ struct LaunchView: View {
                     .ignoresSafeArea()
             }
 
-            // Launch Screen Background Overlay (fades away)
+            // Global Overlays
+            OverlayView()
+            
+            // Launch Screen Curtain Overlay (fades away)
             ViewConfig.brandColor
                 .ignoresSafeArea()
                 .opacity(showMain ? 0 : 1)
-                .animation(.easeInOut(duration: 1.25), value: showMain)
-
-            // Global Overlays
-            OverlayView()
+                .animation(.easeInOut(duration: 1.0), value: showMain)
         }
         .onAppear {
             if modelContainerManager.container == nil {

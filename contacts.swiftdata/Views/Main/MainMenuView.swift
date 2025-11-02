@@ -35,7 +35,7 @@ struct MainMenuView: View {
             VStack(alignment: .leading, spacing: 24) {
                 if selectedMenuItem == nil {
                     HomeView(currentUserService: currentUserService, announcementStore: announcementStore)
-                        .onAppear{ OverlayManager.shared.show(.splash) }
+                        .onAppear{ OverlayManager.shared.show(.splash, animation: OverlayAnimation.fast) }
                 } else {
                     self.destinationView
                         .onAppear { OverlayManager.shared.hide(.splash) }

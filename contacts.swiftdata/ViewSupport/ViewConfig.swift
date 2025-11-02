@@ -37,13 +37,13 @@ struct ViewConfig {
     
     // Fixed Colors
     static let brandColor: Color =
-        Color.accentColor
+        Color(UIColor.systemBackground)
     
     static let linkColor: Color =
         Color.accentColor
     
     static let bgColor: Color =
-         Color(UIColor.systemBackground)
+        brandColor
     
     static let fgColor =
          Color.accentColor
@@ -59,6 +59,29 @@ extension ViewConfig {
                 .lineLimit(1)
                 .padding(.horizontal)
 
+        }
+    }
+}
+
+extension OverlayState {
+    var defaultAnimation: OverlayAnimation {
+        switch self {
+        case .splash: return .none
+        case .loading: return .none
+        case .custom: return .slow
+        case .hidden: return .none
+        }
+    }
+}
+
+extension OverlayAnimation {
+    var swiftUIAnimation: Animation? {
+        switch self {
+        case .none: return nil
+        case .fast: return .easeInOut(duration: 0.5)
+        case .slow: return .easeInOut(duration: 2.0)
+        case .slideUp: return .spring(response: 0.6, dampingFraction: 0.8)
+        case .custom(let anim): return anim
         }
     }
 }
@@ -114,15 +137,18 @@ fileprivate struct ColorTest: View {
     }
 }
 
-#Preview {
-    ViewConfig.SplashView()
-        .ignoresSafeArea()
-        .font(.title)
-        .fontWeight(.semibold)
-        .foregroundColor(ViewConfig.brandColor)
-        .transition(.opacity)
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
-        .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
-        .environment(\.font, Font.body)
+#Preview ("Splash") {
+    ZStack {
+        ViewConfig.brandColor.ignoresSafeArea()
+        ViewConfig.SplashView()
+            .ignoresSafeArea()
+            .font(.title)
+            .fontWeight(.semibold)
+            .foregroundColor(ViewConfig.fgColor)
+            .transition(.opacity)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+            .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
+            .environment(\.font, Font.body)
+    }
 }
 #endif
