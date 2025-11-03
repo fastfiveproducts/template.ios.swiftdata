@@ -42,6 +42,10 @@ struct ViewConfig {
     static let fadeMainViewInterval: TimeInterval = 1.25
     static let delayLoadingMessageInterval: TimeInterval = 1.25
     
+    // Home Screen
+    static let topHalfSpaceRatio: CGFloat = 0.6     // Top ratio when splitting screen top-to-bottom
+    static let bottomTabBarSpace: CGFloat = 48      // Leave space for Tab Bar (if applicable)
+    
     // Fixed Colors
     static let brandColor: Color =
         Color(.opaqueSeparator)

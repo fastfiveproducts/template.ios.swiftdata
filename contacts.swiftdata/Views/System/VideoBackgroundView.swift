@@ -33,19 +33,25 @@ private struct tabSafeAreaBackgroundKey: EnvironmentKey {
 
 struct ConditionalVideoBackgroundView: View {
     var body: some View {
-        GeometryReader { geo in
-            let isLandscape = geo.size.width > geo.size.height
-            let isPad = UIDevice.current.userInterfaceIdiom == .pad
-
-            Group {
-                if !isPad || !isLandscape {
-                    VideoBackgroundView()
-                } else {
-                    ViewConfig.bgColor.ignoresSafeArea()
-                }
-            }
-            .ignoresSafeArea()
+        guard !ViewConfig.backgroundVideoName.isEmpty else {
+            return AnyView(EmptyView())
         }
+        
+        return AnyView(
+            GeometryReader { geo in
+                let isLandscape = geo.size.width > geo.size.height
+                let isPad = UIDevice.current.userInterfaceIdiom == .pad
+                
+                Group {
+                    if !isPad || !isLandscape {
+                        VideoBackgroundView()
+                    } else {
+                        ViewConfig.bgColor.ignoresSafeArea()
+                    }
+                }
+                .ignoresSafeArea()
+            }
+        )
     }
 }
 

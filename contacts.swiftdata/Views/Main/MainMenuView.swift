@@ -22,6 +22,8 @@ import SwiftUI
 import SwiftData
 
 struct MainMenuView: View {
+    @Environment(\.scenePhase) private var scenePhase
+    
     @ObservedObject var currentUserService: CurrentUserService
     @ObservedObject var announcementStore: AnnouncementStore
     @ObservedObject var publicCommentStore: PublicCommentStore
@@ -56,10 +58,19 @@ struct MainMenuView: View {
                 }
             }
         }
+        .onChange(of: scenePhase) {
+            if scenePhase == .active {
+                VideoBackgroundPlayer.shared.queuePlayer.play()
+            } else {
+                VideoBackgroundPlayer.shared.queuePlayer.pause()
+            }
+        }
         .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
         .environment(\.font, Font.body)
     }
-    
+}
+
+extension MainMenuView {
     @ViewBuilder
     var destinationView: some View {
         switch self.selectedMenuItem {

@@ -23,24 +23,26 @@ import SwiftUI
 struct HomeView: View {
     @ObservedObject var currentUserService: CurrentUserService
     @ObservedObject var announcementStore: AnnouncementStore
-    
-    let topRatio: CGFloat = 0.5
-    
+      
     var body: some View {
         GeometryReader { geo in
             ZStack(alignment: .top) {
+                // MARK: Background
+                ConditionalVideoBackgroundView()
+
+                // MARK: Announcements
                 if announcementStore.list.count > 0 {
                     VStack {
                         Spacer()
-                            .frame(height: geo.size.height * topRatio + 24)
-                        
-                        VStackBox {
+                            .frame(height: geo.size.height * ViewConfig.topHalfSpaceRatio + 20)
+
+                        VStackBox() {
                             ViewThatFits(in: .vertical) {
                                 VStack(alignment: .leading, spacing: 8) {
                                     StoreListView(store: announcementStore)
                                     SupportLinkView(currentUserService: currentUserService,
                                                     onNavigate: { OverlayManager.shared.hide(.splash) }
-                                   )
+                                    )
                                     SignUpInLinkView(currentUserService: currentUserService,
                                                      onNavigate: { OverlayManager.shared.hide(.splash) }
                                     )
@@ -50,7 +52,7 @@ struct HomeView: View {
                                         StoreListView(store: announcementStore)
                                         SupportLinkView(currentUserService: currentUserService,
                                                         onNavigate: { OverlayManager.shared.hide(.splash) }
-                                       )
+                                        )
                                         SignUpInLinkView(currentUserService: currentUserService,
                                                          onNavigate: { OverlayManager.shared.hide(.splash) }
                                         )
@@ -59,14 +61,13 @@ struct HomeView: View {
                                 }
                             }
                         }
-                        .frame(maxHeight: geo.size.height * (1 - topRatio))
+                        .frame(maxHeight: geo.size.height * (1 - ViewConfig.topHalfSpaceRatio) - ViewConfig.bottomTabBarSpace)
                         .padding(.horizontal)
                         .padding(.bottom, geo.safeAreaInsets.bottom)
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
                 }
             }
-            .ignoresSafeArea(edges: .bottom)
         }
         .padding(.vertical)
         .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
