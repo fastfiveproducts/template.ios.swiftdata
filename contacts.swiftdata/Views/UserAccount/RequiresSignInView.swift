@@ -49,29 +49,24 @@ struct RequiresSignInView<Content: View>: View {
 
 
 #if DEBUG
-import SwiftData
 #Preview ("test-data signed-in") {
-    let config = ModelConfiguration(isStoredInMemoryOnly: true)
-    let container = try! ModelContainer(for: Contact.self, configurations: config)
-
-    for task in Contact.testObjects {
-        container.mainContext.insert(task)
-    }
-
     let currentUserService = CurrentUserTestService.sharedSignedIn
-    return RequiresSignInView(currentUserService: currentUserService) {
-        ContactListView(currentUserService: currentUserService)
-            .modelContainer(container)
+    RequiresSignInView(currentUserService: currentUserService) {
+        CommentPostsStackView(
+            currentUserService: currentUserService,
+            store: PublicCommentStore.testLoaded()
+        )
     }
     .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
     .environment(\.font, Font.body)
 }
 #Preview ("no-data and signed-out") {
-    let container = try! ModelContainer()
     let currentUserService = CurrentUserTestService.sharedSignedOut
-    return RequiresSignInView(currentUserService: currentUserService) {
-        ContactListView(currentUserService: currentUserService)
-            .modelContainer(container)
+    RequiresSignInView(currentUserService: currentUserService) {
+        CommentPostsStackView(
+            currentUserService: currentUserService,
+            store: PublicCommentStore()
+        )
     }
     .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
     .environment(\.font, Font.body)

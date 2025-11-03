@@ -19,7 +19,6 @@
 
 
 import SwiftUI
-import SwiftData
 
 struct MainMenuView: View {
     @Environment(\.scenePhase) private var scenePhase
@@ -43,34 +42,39 @@ struct MainMenuView: View {
                 }
             }
             .navigationTitle(selectedMenuItem?.label ?? "")
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    self.menuView
-                }
-                if self.selectedMenuItem != .profile {
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        SignUpInLinkView(
-                            currentUserService: currentUserService,
-                            inToolbar: true,
-                            onNavigate: { OverlayManager.shared.hide(.splash) }
-                        )
-                    }
-                }
-            }
+            .toolbar { mainToolbar }
         }
-        .onChange(of: scenePhase) {
-            if scenePhase == .active {
-                VideoBackgroundPlayer.shared.queuePlayer.play()
-            } else {
-                VideoBackgroundPlayer.shared.queuePlayer.pause()
-            }
-        }
+//        .onChange(of: scenePhase) {
+//            if scenePhase == .active {
+//                VideoBackgroundPlayer.shared.queuePlayer.play()
+//            } else {
+//                VideoBackgroundPlayer.shared.queuePlayer.pause()
+//            }
+//        }
         .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
         .environment(\.font, Font.body)
     }
 }
 
 extension MainMenuView {
+    @ToolbarContentBuilder
+    var mainToolbar: some ToolbarContent {
+        ToolbarItem(placement: .navigationBarLeading) {
+            self.menuView
+        }
+        if self.selectedMenuItem != .profile {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                SignUpInLinkView(
+                    currentUserService: currentUserService,
+                    inToolbar: true,
+                    onNavigate: { OverlayManager.shared.hide(.splash) }
+                )
+            }
+        }
+    }
+}
+
+extension MainMenuView {    
     @ViewBuilder
     var destinationView: some View {
         switch self.selectedMenuItem {
