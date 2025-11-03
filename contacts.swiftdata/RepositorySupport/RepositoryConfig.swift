@@ -21,8 +21,9 @@ import Foundation
 import SwiftData
 
 struct RepositoryConfig {
+    
     // Define schema for the container.
-    // Other SwiftData-compatible models can be added here
+    // Other SwiftData-compatible models can be added here:
     static let modelContainerSchema = Schema(
         [Contact.self,
          ActivityLogEntry.self,
@@ -30,3 +31,23 @@ struct RepositoryConfig {
         ]
     )
 }
+
+
+#if DEBUG
+extension RepositoryConfig {
+    // Enable Test Data
+    @MainActor static func injectPreviewData(into container: ModelContainer) {
+        let context = container.mainContext
+
+        for contact in Contact.testObjects  {
+            context.insert(contact)
+        }
+        
+        for object in ActivityLogEntry.testObjects {
+            context.insert(object)
+        }
+        
+        try? context.save()
+    }
+}
+#endif

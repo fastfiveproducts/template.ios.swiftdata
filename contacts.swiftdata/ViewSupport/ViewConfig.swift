@@ -38,6 +38,10 @@ struct ViewConfig {
     static let backgroundVideoName = ""
     static let backgroundVideoExtension = "mp4"
     
+    // Launch Screen
+    static let fadeMainViewInterval: TimeInterval = 1.25
+    static let delayLoadingMessageInterval: TimeInterval = 1.25
+    
     // Fixed Colors
     static let brandColor: Color =
         Color(.opaqueSeparator)

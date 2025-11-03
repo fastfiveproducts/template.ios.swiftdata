@@ -24,8 +24,6 @@ struct LaunchView: View {
     @ObservedObject var modelContainerManager: ModelContainerManager
 
     @State private var showMain = false
-    let fadeInterval: TimeInterval = 1.25
-    let delayLoadingMessageInterval: TimeInterval = 1.25
     
     var body: some View {
         ZStack {
@@ -61,38 +59,23 @@ struct LaunchView: View {
             PrivateMessageStore.shared.initialize()
         }
         
-        // Show Splash on Appear; set Clocks
+        // Show Splash on Appear; set clock for loading-check
         .onAppear {
             OverlayManager.shared.show(.splash)
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + delayLoadingMessageInterval) {
-                // if still loading at this time...tell the user about it
+
+            // if still loading after some time has passed, tell the user about it
+            DispatchQueue.main.asyncAfter(deadline: .now() + ViewConfig.delayLoadingMessageInterval) {
                 if modelContainerManager.container == nil {
                     OverlayManager.shared.show(.loading)
                 }
             }
-
-            // Setup a timing sequence for Previews
-            #if DEBUG
-            if isPreview {
-                DispatchQueue.main.asyncAfter(deadline: .now() + delayLoadingMessageInterval) {
-                    OverlayManager.shared.show(.loading)
-                }
-                DispatchQueue.main.asyncAfter(deadline: .now() + delayLoadingMessageInterval*2) {
-                    OverlayManager.shared.hide(.loading)
-                    withAnimation(.easeIn(duration: fadeInterval)) {
-                        showMain = true
-                    }
-                }
-            }
-            #endif
         }
         
         // Fade-in Main when Loaded
         .onChange(of: modelContainerManager.container) { _, newValue in
             if newValue != nil {
                 OverlayManager.shared.hide(.loading)
-                withAnimation(.easeIn(duration: fadeInterval)) {
+                withAnimation(.easeIn(duration: ViewConfig.fadeMainViewInterval)) {
                     showMain = true
                 }
             }
@@ -102,29 +85,19 @@ struct LaunchView: View {
 
 
 #if DEBUG
-import SwiftData
-#Preview ("test-data max") {
-    let currentUserService = CurrentUserTestService.sharedSignedIn
-    
-    let schema = RepositoryConfig.modelContainerSchema
-    let config = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
-    let container = try! ModelContainer(for: schema, configurations: [config])
-
-    for object in ActivityLogEntry.testObjects {
-        container.mainContext.insert(object)
-    }
-    
-    for object in Contact.testObjects {
-        container.mainContext.insert(object)
-    }
-
+#Preview ("test-data signed-in") {
+    let currentUserService: CurrentUserService = CurrentUserTestService.sharedSignedIn
     let modelContainerManager = ModelContainerManager(currentUserService: currentUserService)
-    modelContainerManager.injectPreviewContainer(container)
 
-    return LaunchView(
+    LaunchView(
         currentUserService: currentUserService,
         modelContainerManager: modelContainerManager
     )
-    .modelContainer(container)
+    .onAppear {
+        DispatchQueue.main.asyncAfter(deadline: .now() + ViewConfig.delayLoadingMessageInterval*2) {
+            let container = modelContainerManager.makePreviewContainer()
+            modelContainerManager.injectPreviewContainer(container)
+        }
+    }
 }
 #endif
