@@ -40,7 +40,7 @@ struct ViewConfig {
     
     // Fixed Colors
     static let brandColor: Color =
-        Color(.secondaryLabel)
+        Color(.opaqueSeparator)
     
     static let linkColor: Color =
         Color.accentColor

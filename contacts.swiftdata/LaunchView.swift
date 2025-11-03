@@ -24,59 +24,79 @@ struct LaunchView: View {
     @ObservedObject var modelContainerManager: ModelContainerManager
 
     @State private var showMain = false
+    let fadeInterval: TimeInterval = 1.25
+    let delayLoadingMessageInterval: TimeInterval = 1.25
     
     var body: some View {
         ZStack {
-            // Main app behind
-            if let container = modelContainerManager.container {
-                MainMenuView(
-                    currentUserService: currentUserService,
-                    announcementStore: AnnouncementStore.shared,
-                    publicCommentStore: PublicCommentStore.shared,
-                    privateMessageStore: PrivateMessageStore.shared,
-                )
-                .modelContainer(container)
-            } else {
-                // Fallback while container loads
-                ViewConfig.brandColor
-                    .ignoresSafeArea()
-            }
+            // Brand Color behind
+            ViewConfig.brandColor.ignoresSafeArea()
+                .zIndex(10)
+                        
+            // Main App
+            MainMenuView(
+                currentUserService: currentUserService,
+                announcementStore: AnnouncementStore.shared,
+                publicCommentStore: PublicCommentStore.shared,
+                privateMessageStore: PrivateMessageStore.shared,
+                
+            )
+            .modelContainer(modelContainerManager.container ?? ModelContainerManager.emptyContainer)
+            .opacity(showMain ? 1 : 0)
+            .zIndex(20)
 
             // Global Overlays
             OverlayView()
-                .zIndex(10)
-            
-            // Launch Screen Curtain Overlay (fades away)
-            ViewConfig.brandColor
-                .ignoresSafeArea()
-                .opacity(showMain ? 0 : 1)
-                .animation(.easeInOut(duration: 1.0), value: showMain)
-                .zIndex(20)
+                .zIndex(30)
         }
+        .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
+        .environment(\.font, Font.body)
+        
+        // Initialize Cloud Repositories
+        .task {
+            RestrictedWordStore.shared.enableRestrictedWordCheck()
+            HelpTextStore.shared.initialize()
+            AnnouncementStore.shared.initialize()
+            PublicCommentStore.shared.initialize()
+            PrivateMessageStore.shared.initialize()
+        }
+        
+        // Show Splash on Appear; set Clocks
         .onAppear {
-            if modelContainerManager.container == nil {
-                OverlayManager.shared.show(.loading)
+            OverlayManager.shared.show(.splash)
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + delayLoadingMessageInterval) {
+                // if still loading at this time...tell the user about it
+                if modelContainerManager.container == nil {
+                    OverlayManager.shared.show(.loading)
+                }
             }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.25) {
-                withAnimation(.easeIn(duration: 1.25)) {
+
+            // Setup a timing sequence for Previews
+            #if DEBUG
+            if isPreview {
+                DispatchQueue.main.asyncAfter(deadline: .now() + delayLoadingMessageInterval) {
+                    OverlayManager.shared.show(.loading)
+                }
+                DispatchQueue.main.asyncAfter(deadline: .now() + delayLoadingMessageInterval*2) {
+                    OverlayManager.shared.hide(.loading)
+                    withAnimation(.easeIn(duration: fadeInterval)) {
+                        showMain = true
+                    }
+                }
+            }
+            #endif
+        }
+        
+        // Fade-in Main when Loaded
+        .onChange(of: modelContainerManager.container) { _, newValue in
+            if newValue != nil {
+                OverlayManager.shared.hide(.loading)
+                withAnimation(.easeIn(duration: fadeInterval)) {
                     showMain = true
                 }
             }
         }
-        .onChange(of: modelContainerManager.container) { _, newValue in
-            if newValue != nil {
-                OverlayManager.shared.hide(.loading)
-            }
-        }
-        .task {
-            AnnouncementStore.shared.initialize()
-            PublicCommentStore.shared.initialize()
-            PrivateMessageStore.shared.initialize()
-            HelpTextStore.shared.initialize()
-            RestrictedWordStore.shared.enableRestrictedWordCheck()
-        }
-        .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
-        .environment(\.font, Font.body)
     }
 }
 
