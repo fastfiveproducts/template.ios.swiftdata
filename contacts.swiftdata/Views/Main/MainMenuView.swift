@@ -38,7 +38,6 @@ struct MainMenuView: View {
                         .onAppear{ OverlayManager.shared.show(.splash, animation: OverlayAnimation.fast) }
                 } else {
                     self.destinationView
-                        .onAppear { OverlayManager.shared.hide(.splash) }
                 }
             }
             .navigationTitle(selectedMenuItem?.label ?? "")
@@ -64,6 +63,16 @@ struct MainMenuView: View {
     @ViewBuilder
     var destinationView: some View {
         switch self.selectedMenuItem {
+        case .home:
+            HomeView(currentUserService: currentUserService, announcementStore: announcementStore)
+                .onAppear{ OverlayManager.shared.show(.splash, animation: OverlayAnimation.fast) }
+            
+        case .contacts:
+            RequiresSignInView(currentUserService: currentUserService) {
+                ContactListView(currentUserService: currentUserService)
+            }
+            .onAppear { OverlayManager.shared.hide(.splash) }
+            
         case .announcements:
             VStackBox {
                 StoreListView(store: announcementStore)
@@ -72,78 +81,75 @@ struct MainMenuView: View {
                 }
             }
             Spacer()
-            
-        case .contacts:
-            ContactListView(currentUserService: currentUserService)
+                .onAppear { OverlayManager.shared.hide(.splash) }
                         
         case .profile:
             UserAccountView(
                 viewModel: UserAccountViewModel(),
-                currentUserService: currentUserService)
+                currentUserService: currentUserService
+            )
+            .onAppear { OverlayManager.shared.hide(.splash) }
             
         case .messages:
-            if currentUserService.isSignedIn {
+            RequiresSignInView(currentUserService: currentUserService) {
                 UserMessagePostsStackView(
                     viewModel: UserPostViewModel<PrivateMessage>(),
                     currentUserService: currentUserService,
                     store: privateMessageStore)
-            } else {
-                VStackBox {
-                    Text("Not Signed In!")
-                    SignUpInLinkView(currentUserService: currentUserService)
-                }
-                Spacer()
             }
+            .onAppear { OverlayManager.shared.hide(.splash) }
             
         case .comments:
-            if currentUserService.isSignedIn {
+            RequiresSignInView(currentUserService: currentUserService) {
                 CommentPostsStackView(
                     currentUserService: currentUserService,
                     store: publicCommentStore)
-            } else {
-                VStackBox {
-                    Text("Not Signed In!")
-                    SignUpInLinkView(currentUserService: currentUserService)
-                }
-                Spacer()
             }
+            .onAppear { OverlayManager.shared.hide(.splash) }
             
         case .activity:
             ActivityLogView()
+                .onAppear { OverlayManager.shared.hide(.splash) }
             
         case .support:
             SupportView()
+                .onAppear { OverlayManager.shared.hide(.splash) }
             
         case .settings:
             SettingsView()
+                .onAppear { OverlayManager.shared.hide(.splash) }
             
         case .none:
             EmptyView()
+                .onAppear { OverlayManager.shared.hide(.splash) }
         }
-        
     }
 
     @ViewBuilder
     var menuView: some View {
         Menu {
-            ForEach(NavigationItem.allCases
-                .filter { $0.sortOrder.0 == 0 }
-                .sorted(by: { $0.sortOrder.1 < $1.sortOrder.1 })) { item in
-                    Button {
-                        selectedMenuItem = item
-                    } label: {
-                        menuLabel(item)
-                    }
+            // group NavigationItems by their first sortOrder component, then sort them
+            let groupedItems = Dictionary(grouping: NavigationItem.allCases.filter { $0.sortOrder.0 >= 0 }) {
+                $0.sortOrder.0
             }
-            Divider()
-            ForEach(NavigationItem.allCases
-                .filter { $0.sortOrder.0 == 1 }
-                .sorted(by: { $0.sortOrder.1 < $1.sortOrder.1 })) { item in
+            let sortedGroupKeys = groupedItems.keys.sorted()
+
+            // iterate through each group
+            ForEach(Array(sortedGroupKeys.enumerated()), id: \.element) { index, groupKey in
+                let items = groupedItems[groupKey]!.sorted { $0.sortOrder.1 < $1.sortOrder.1 }
+
+                // then iterate through item in the group
+                ForEach(items) { item in
                     Button {
                         selectedMenuItem = item
                     } label: {
                         menuLabel(item)
                     }
+                }
+
+                if index < sortedGroupKeys.count - 1 {
+                    Divider()
+                }
             }
         } label: {
             Label("Menu", systemImage: "line.3.horizontal")
