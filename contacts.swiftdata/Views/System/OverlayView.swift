@@ -19,6 +19,21 @@
 
 import SwiftUI
 
+enum OverlayState: Equatable {
+    case splash
+    case loading
+    case custom
+    case hidden
+}
+
+enum OverlayAnimation: Equatable {
+    case none
+    case fast
+    case slow
+    case slideUp
+    case custom(Animation)
+}
+
 struct OverlayView: View {
     @ObservedObject var overlayManager = OverlayManager.shared
 
@@ -28,30 +43,31 @@ struct OverlayView: View {
                 Color.clear
                     .ignoresSafeArea()
                     .overlay(overlayContent(for: overlay))
-                    .fontWeight(.semibold)
-                    .padding(.horizontal)
                     .transition(.opacity)
-                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
                     .zIndex(overlay.zIndex)
             }
         }
+        .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
+        .environment(\.font, Font.body)
     }
     
     @ViewBuilder
     func overlayContent(for overlay: OverlayManager.OverlayItem) -> some View {
         switch overlay.state {
         case .splash:
-            ViewConfig.SplashView()
+            SplashView()
                 .font(.title)
                 .fontWeight(.semibold)
-                .foregroundColor(ViewConfig.brandColor)
+                .foregroundColor(ViewConfig.fgColor)
         case .loading:
             VStack {
-                ViewConfig.SplashView()
+                ViewConfig.SpashTextView()
                     .font(.title)
                     .fontWeight(.semibold)
                     .foregroundColor(.clear)     // preserve layout between splash and loading with clear text
                 Text("\n")
+                    .font(.title)
+                    .fontWeight(.semibold)
                 HStack(spacing: 8) {
                     ProgressView()
                         .progressViewStyle(CircularProgressViewStyle(tint: ViewConfig.fgColor))
@@ -71,6 +87,18 @@ struct OverlayView: View {
     }
 }
 
+struct SplashView: View {
+    var body: some View {
+        GeometryReader { geo in
+            ViewConfig.SpashTextView()
+                .padding(.horizontal)
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+                .ignoresSafeArea()
+                .id(geo.size)   // forces rebuid when size changes
+        }
+    }
+}
+
 @MainActor
 final class OverlayManager: ObservableObject {
     static let shared = OverlayManager()
@@ -84,31 +112,6 @@ final class OverlayManager: ObservableObject {
         let view: AnyView?
         let animation: OverlayAnimation
         let zIndex: Double
-    }
-
-    enum OverlayState: Equatable {
-        case splash
-        case loading
-        case custom
-        case hidden
-    }
-
-    enum OverlayAnimation: Equatable {
-        case none
-        case fast
-        case slow
-        case slideUp
-        case custom(Animation)
-
-        var swiftUIAnimation: Animation? {
-            switch self {
-            case .none: return nil
-            case .fast: return .easeInOut(duration: 0.5)
-            case .slow: return .easeInOut(duration: 1.0)
-            case .slideUp: return .spring(response: 0.6, dampingFraction: 0.8)
-            case .custom(let anim): return anim
-            }
-        }
     }
 
     func show(_ state: OverlayState,
@@ -140,17 +143,6 @@ final class OverlayManager: ObservableObject {
     }
 }
 
-private extension OverlayManager.OverlayState {
-    var defaultAnimation: OverlayManager.OverlayAnimation {
-        switch self {
-        case .splash: return .none
-        case .loading: return .none
-        case .custom: return .fast
-        case .hidden: return .none
-        }
-    }
-}
-
 
 #if DEBUG
 #Preview("Splash") {
@@ -163,9 +155,10 @@ private extension OverlayManager.OverlayState {
             zIndex: 10
         )
     ]
-    return OverlayView()
-        .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
-        .environment(\.font, Font.body)
+    return ZStack {
+        ViewConfig.brandColor.ignoresSafeArea()
+        OverlayView()
+    }
 }
 #Preview("Loading") {
     let manager = OverlayManager.shared
@@ -177,9 +170,10 @@ private extension OverlayManager.OverlayState {
             zIndex: 15
         )
     ]
-    return OverlayView()
-        .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
-        .environment(\.font, Font.body)
+    return ZStack {
+        ViewConfig.brandColor.ignoresSafeArea()
+        OverlayView()
+    }
 }
 #Preview("Multiple") {
     let manager = OverlayManager.shared
@@ -197,9 +191,10 @@ private extension OverlayManager.OverlayState {
             zIndex: 20
         )
     ]
-    return OverlayView()
-        .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
-        .environment(\.font, Font.body)
+    return ZStack {
+        ViewConfig.brandColor.ignoresSafeArea()
+        OverlayView()
+    }
 }
 #Preview("Custom") {
     let manager = OverlayManager.shared
@@ -215,15 +210,14 @@ private extension OverlayManager.OverlayState {
             zIndex: 25
         )
     ]
-    return OverlayView()
-        .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
-        .environment(\.font, Font.body)
+    return ZStack {
+        ViewConfig.brandColor.ignoresSafeArea()
+        OverlayView()
+    }
 }
 #Preview("Hidden") {
     let manager = OverlayManager.shared
     manager.overlays = []
     return OverlayView()
-        .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
-        .environment(\.font, Font.body)
 }
 #endif

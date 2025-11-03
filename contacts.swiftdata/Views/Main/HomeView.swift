@@ -38,12 +38,22 @@ struct HomeView: View {
                             ViewThatFits(in: .vertical) {
                                 VStack(alignment: .leading, spacing: 8) {
                                     StoreListView(store: announcementStore)
-                                    SignUpInLinkView(currentUserService: currentUserService)
+                                    SupportLinkView(currentUserService: currentUserService,
+                                                    onNavigate: { OverlayManager.shared.hide(.splash) }
+                                   )
+                                    SignUpInLinkView(currentUserService: currentUserService,
+                                                     onNavigate: { OverlayManager.shared.hide(.splash) }
+                                    )
                                 }
                                 ScrollView {
                                     VStack(alignment: .leading, spacing: 8) {
                                         StoreListView(store: announcementStore)
-                                        SignUpInLinkView(currentUserService: currentUserService)
+                                        SupportLinkView(currentUserService: currentUserService,
+                                                        onNavigate: { OverlayManager.shared.hide(.splash) }
+                                       )
+                                        SignUpInLinkView(currentUserService: currentUserService,
+                                                         onNavigate: { OverlayManager.shared.hide(.splash) }
+                                        )
                                     }
                                     .padding(.bottom, 8)
                                 }
@@ -59,6 +69,8 @@ struct HomeView: View {
             .ignoresSafeArea(edges: .bottom)
         }
         .padding(.vertical)
+        .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
+        .environment(\.font, Font.body)
     }
 }
 
@@ -74,8 +86,6 @@ struct HomeView: View {
         .onAppear{ OverlayManager.shared.show(.splash) }
         OverlayView()
     }
-    .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
-    .environment(\.font, Font.body)
 }
 #Preview ("test-data signed-in") {
     let cuts = CurrentUserTestService.sharedSignedIn

@@ -35,7 +35,7 @@ struct MainMenuView: View {
             VStack(alignment: .leading, spacing: 24) {
                 if selectedMenuItem == nil {
                     HomeView(currentUserService: currentUserService, announcementStore: announcementStore)
-                        .onAppear{ OverlayManager.shared.show(.splash) }
+                        .onAppear{ OverlayManager.shared.show(.splash, animation: OverlayAnimation.fast) }
                 } else {
                     self.destinationView
                         .onAppear { OverlayManager.shared.hide(.splash) }
@@ -111,6 +111,9 @@ struct MainMenuView: View {
         case .activity:
             ActivityLogView()
             
+        case .support:
+            SupportView()
+            
         case .settings:
             SettingsView()
             
@@ -162,10 +165,7 @@ struct MainMenuView: View {
 #Preview ("test-data signed-in") {
     let currentUserService = CurrentUserTestService.sharedSignedIn
     
-    let schema = Schema([
-        Contact.self,
-        ActivityLogEntry.self
-    ])
+    let schema = RepositoryConfig.modelContainerSchema
     let config = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
     let container = try! ModelContainer(for: schema, configurations: [config])
 

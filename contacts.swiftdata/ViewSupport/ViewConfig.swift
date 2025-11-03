@@ -26,21 +26,65 @@ import SwiftUI
 struct ViewConfig {
     static let dynamicSizeMax = DynamicTypeSize.xxxLarge
     
+    // App-Specific Strings
     static let brandName = "Template App"
-    static let brandColor: Color = Color.accentColor
     
-    static let bgColor: Color = Color(UIColor.systemBackground)
-    static let fgColor = Color.accentColor
+    static let privacyText = "Privacy Policy"
+    static let privacyURL = URL(string: "https://www.fastfiveproducts.llc/")!
+
+    static let supportText = "\(brandName) Support"
+    static let supportURL = URL(string: "https://www.fastfiveproducts.llc/")!
+    
+    static let backgroundVideoName = ""
+    static let backgroundVideoExtension = "mp4"
+    
+    // Fixed Colors
+    static let brandColor: Color =
+        Color(.secondaryLabel)
+    
+    static let linkColor: Color =
+        Color.accentColor
+    
+    static let bgColor: Color =
+        Color(UIColor.systemBackground)
+    
+    static let fgColor =
+        Color(.label)
+    
 }
 
 extension ViewConfig {
-    struct SplashView: View {
+    struct SpashTextView: View {
         var body: some View {
-            Text(ViewConfig.brandName)
+            let lineOne = ViewConfig.brandName
+            let lineTwo = ""
+            Text(lineOne + lineTwo)
                 .multilineTextAlignment(.center)
                 .minimumScaleFactor(0.6)
-                .lineLimit(1)
-                .padding(.horizontal)
+                .lineLimit(nil)
+        }
+    }
+}
+
+extension OverlayState {
+    var defaultAnimation: OverlayAnimation {
+        switch self {
+        case .splash: return .none
+        case .loading: return .none
+        case .custom: return .slow
+        case .hidden: return .none
+        }
+    }
+}
+
+extension OverlayAnimation {
+    var swiftUIAnimation: Animation? {
+        switch self {
+        case .none: return nil
+        case .fast: return .easeInOut(duration: 0.5)
+        case .slow: return .easeInOut(duration: 2.0)
+        case .slideUp: return .spring(response: 0.6, dampingFraction: 0.8)
+        case .custom(let anim): return anim
         }
     }
 }
@@ -66,15 +110,47 @@ extension Color {
 #if DEBUG
 var isPreview: Bool { return ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] == "1" }
 
-#Preview {
-    ViewConfig.SplashView()
-        .ignoresSafeArea()
-        .font(.title)
-        .fontWeight(.semibold)
-        .foregroundColor(ViewConfig.brandColor)
-        .transition(.opacity)
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
-        .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
-        .environment(\.font, Font.body)
+#Preview ("Colors") {
+    ScrollView {
+        VStackBox {
+            Text("brandColor").foregroundColor(ViewConfig.brandColor)
+            Text("linkColor").foregroundColor(ViewConfig.linkColor)
+        }
+        VStackBox (backgroundColor: ViewConfig.bgColor) {
+            Text("fgColor on bgColor").foregroundColor(ViewConfig.fgColor)
+        }
+        VStackBox (backgroundColor: Color(.gray)) {
+            ColorTest()
+        }
+        VStackBox (backgroundColor: Color(.black)) {
+            ColorTest()
+        }
+        VStackBox (backgroundColor: Color(.white)) {
+            ColorTest()
+        }
+    }
+    .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
+    .environment(\.font, Font.body)
+}
+
+#Preview ("Splash Text") {
+    ZStack {
+        ViewConfig.brandColor.ignoresSafeArea()
+        ViewConfig.SpashTextView()
+            .font(.title)
+            .fontWeight(.semibold)
+            .foregroundColor(ViewConfig.fgColor)
+            .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
+            .environment(\.font, Font.body)
+    }
+}
+
+fileprivate struct ColorTest: View {
+    var body: some View {
+        Text("brandColor").foregroundColor(ViewConfig.brandColor)
+        Text("linkColor").foregroundColor(ViewConfig.linkColor)
+        Text("bgColor").foregroundColor(ViewConfig.bgColor)
+        Text("fgColor").foregroundColor(ViewConfig.fgColor)
+    }
 }
 #endif
