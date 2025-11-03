@@ -44,12 +44,14 @@ struct LaunchView: View {
 
             // Global Overlays
             OverlayView()
+                .zIndex(10)
             
             // Launch Screen Curtain Overlay (fades away)
             ViewConfig.brandColor
                 .ignoresSafeArea()
                 .opacity(showMain ? 0 : 1)
                 .animation(.easeInOut(duration: 1.0), value: showMain)
+                .zIndex(20)
         }
         .onAppear {
             if modelContainerManager.container == nil {
@@ -84,10 +86,7 @@ import SwiftData
 #Preview ("test-data max") {
     let currentUserService = CurrentUserTestService.sharedSignedIn
     
-    let schema = Schema([
-        Contact.self,
-        ActivityLogEntry.self
-    ])
+    let schema = RepositoryConfig.modelContainerSchema
     let config = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
     let container = try! ModelContainer(for: schema, configurations: [config])
 

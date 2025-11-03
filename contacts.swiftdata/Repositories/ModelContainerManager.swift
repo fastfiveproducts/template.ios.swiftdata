@@ -2,7 +2,7 @@
 //  ModelContainerManager.swift
 //
 //  Template file created by Pete Maiser, Fast Five Products LLC, in October 2025.
-//      Template v0.2.3 Fast Five Products LLC's public AGPL template.
+//      Template v0.2.4 (updated) Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025 Fast Five Products LLC. All rights reserved.
 //
@@ -58,23 +58,15 @@ final class ModelContainerManager: ObservableObject, DebugPrintable {
     // Open (or rebuild) the container for the given user ID
     func loadContainer(for userId: String?) {
         do {
-            // Define schema for the container.
-            // Other SwiftData-compatible models can be added here
-            let schema = Schema(
-                [ActivityLogEntry.self,
-                 Contact.self,
-                 /*, otherLocalData.self, draftData.self, ... */]
-            )
-            
+            // Define schema for the container from the static value set in configuration
+            let schema = RepositoryConfig.modelContainerSchema
             let config = ModelConfiguration(
                 "LocalModelContainer",
                 schema: schema,
                 url: makeURL(for: userId),
                 allowsSave: true
             )
-            
             container = try ModelContainer(for: schema, configurations: [config])
-
             debugprint("loaded container for \(userId ?? "guest") ✅.")
         } catch {
             fatalError("Error:  🛑 Could not create ModelContainer: \(error)")
@@ -94,6 +86,11 @@ final class ModelContainerManager: ObservableObject, DebugPrintable {
     private func makeURL(for userId: String?) -> URL {
         let owner = userId.map { "user_\($0)" } ?? "guest"
         return baseDirectory.appendingPathComponent("\(owner)_streems.sqlite")
+    }
+    static var emptyContainer: ModelContainer {
+        let schema = Schema([])
+        let config = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
+        return try! ModelContainer(for: schema, configurations: [config])
     }
 }
 

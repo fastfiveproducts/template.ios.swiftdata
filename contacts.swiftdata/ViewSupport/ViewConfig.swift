@@ -35,30 +35,33 @@ struct ViewConfig {
     static let supportText = "\(brandName) Support"
     static let supportURL = URL(string: "https://www.fastfiveproducts.llc/")!
     
+    static let backgroundVideoName = ""
+    static let backgroundVideoExtension = "mp4"
+    
     // Fixed Colors
     static let brandColor: Color =
-        Color(UIColor.systemBackground)
+        Color(.secondaryLabel)
     
     static let linkColor: Color =
         Color.accentColor
     
     static let bgColor: Color =
-        brandColor
+        Color(UIColor.systemBackground)
     
     static let fgColor =
-         Color.accentColor
+        Color(.label)
     
 }
 
 extension ViewConfig {
-    struct SplashView: View {
+    struct SpashTextView: View {
         var body: some View {
-            Text(ViewConfig.brandName)
+            let lineOne = ViewConfig.brandName
+            let lineTwo = ""
+            Text(lineOne + lineTwo)
                 .multilineTextAlignment(.center)
                 .minimumScaleFactor(0.6)
-                .lineLimit(1)
-                .padding(.horizontal)
-
+                .lineLimit(nil)
         }
     }
 }
@@ -126,29 +129,28 @@ var isPreview: Bool { return ProcessInfo.processInfo.environment["XCODE_RUNNING_
             ColorTest()
         }
     }
-    
+    .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
+    .environment(\.font, Font.body)
 }
+
+#Preview ("Splash Text") {
+    ZStack {
+        ViewConfig.brandColor.ignoresSafeArea()
+        ViewConfig.SpashTextView()
+            .font(.title)
+            .fontWeight(.semibold)
+            .foregroundColor(ViewConfig.fgColor)
+            .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
+            .environment(\.font, Font.body)
+    }
+}
+
 fileprivate struct ColorTest: View {
     var body: some View {
         Text("brandColor").foregroundColor(ViewConfig.brandColor)
         Text("linkColor").foregroundColor(ViewConfig.linkColor)
         Text("bgColor").foregroundColor(ViewConfig.bgColor)
         Text("fgColor").foregroundColor(ViewConfig.fgColor)
-    }
-}
-
-#Preview ("Splash") {
-    ZStack {
-        ViewConfig.brandColor.ignoresSafeArea()
-        ViewConfig.SplashView()
-            .ignoresSafeArea()
-            .font(.title)
-            .fontWeight(.semibold)
-            .foregroundColor(ViewConfig.fgColor)
-            .transition(.opacity)
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
-            .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
-            .environment(\.font, Font.body)
     }
 }
 #endif

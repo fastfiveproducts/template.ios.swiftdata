@@ -165,10 +165,7 @@ struct MainMenuView: View {
 #Preview ("test-data signed-in") {
     let currentUserService = CurrentUserTestService.sharedSignedIn
     
-    let schema = Schema([
-        Contact.self,
-        ActivityLogEntry.self
-    ])
+    let schema = RepositoryConfig.modelContainerSchema
     let config = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
     let container = try! ModelContainer(for: schema, configurations: [config])
 

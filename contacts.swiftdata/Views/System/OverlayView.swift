@@ -43,9 +43,7 @@ struct OverlayView: View {
                 Color.clear
                     .ignoresSafeArea()
                     .overlay(overlayContent(for: overlay))
-                    .fontWeight(.semibold)
                     .transition(.opacity)
-                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
                     .zIndex(overlay.zIndex)
             }
         }
@@ -57,17 +55,19 @@ struct OverlayView: View {
     func overlayContent(for overlay: OverlayManager.OverlayItem) -> some View {
         switch overlay.state {
         case .splash:
-            ViewConfig.SplashView()
+            SplashView()
                 .font(.title)
                 .fontWeight(.semibold)
                 .foregroundColor(ViewConfig.fgColor)
         case .loading:
             VStack {
-                ViewConfig.SplashView()
+                ViewConfig.SpashTextView()
                     .font(.title)
                     .fontWeight(.semibold)
                     .foregroundColor(.clear)     // preserve layout between splash and loading with clear text
                 Text("\n")
+                    .font(.title)
+                    .fontWeight(.semibold)
                 HStack(spacing: 8) {
                     ProgressView()
                         .progressViewStyle(CircularProgressViewStyle(tint: ViewConfig.fgColor))
@@ -83,6 +83,18 @@ struct OverlayView: View {
             if let custom = overlay.view { custom }
         case .hidden:
             EmptyView()
+        }
+    }
+}
+
+struct SplashView: View {
+    var body: some View {
+        GeometryReader { geo in
+            ViewConfig.SpashTextView()
+                .padding(.horizontal)
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+                .ignoresSafeArea()
+                .id(geo.size)   // forces rebuid when size changes
         }
     }
 }
