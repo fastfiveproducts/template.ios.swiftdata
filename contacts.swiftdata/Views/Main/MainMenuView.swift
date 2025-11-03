@@ -169,26 +169,15 @@ struct MainMenuView: View {
 
 #if DEBUG
 #Preview ("test-data signed-in") {
-    let currentUserService = CurrentUserTestService.sharedSignedIn
-    
-    let schema = RepositoryConfig.modelContainerSchema
-    let config = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
-    let container = try! ModelContainer(for: schema, configurations: [config])
-
-    for object in ActivityLogEntry.testObjects {
-        container.mainContext.insert(object)
-    }
-    
-    for object in Contact.testObjects {
-        container.mainContext.insert(object)
-    }
-
+    let currentUserService: CurrentUserService = CurrentUserTestService.sharedSignedIn
     let modelContainerManager = ModelContainerManager(currentUserService: currentUserService)
+    let container = modelContainerManager.makePreviewContainer()
     modelContainerManager.injectPreviewContainer(container)
 
     return MainMenuView(
         currentUserService: currentUserService,
         announcementStore: AnnouncementStore.testLoaded(),
+//        announcementStore: AnnouncementStore.testTiny(),
         publicCommentStore: PublicCommentStore.testLoaded(),
         privateMessageStore: PrivateMessageStore()             // loading empty because private messages not used yet
     )
@@ -197,20 +186,13 @@ struct MainMenuView: View {
     .environment(\.font, Font.body)
 }
 #Preview ("no-data and signed-out") {
-    let currentUserService = CurrentUserTestService.sharedSignedOut
-    
-    let container = try! ModelContainer()
-    
-    let modelContainerManager = ModelContainerManager(currentUserService: currentUserService)
-    modelContainerManager.injectPreviewContainer(container)
-
     return MainMenuView(
-        currentUserService: currentUserService,
-        announcementStore: AnnouncementStore.testTiny(),
-        publicCommentStore: PublicCommentStore.testLoaded(),
-        privateMessageStore: PrivateMessageStore.testLoaded()
+        currentUserService: CurrentUserTestService.sharedSignedOut,
+        announcementStore: AnnouncementStore(),
+        publicCommentStore: PublicCommentStore(),
+        privateMessageStore: PrivateMessageStore()
     )
-    .modelContainer(container)
+    .modelContainer(ModelContainerManager.emptyContainer)
     .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
     .environment(\.font, Font.body)
 }
