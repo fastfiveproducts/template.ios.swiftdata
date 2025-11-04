@@ -62,6 +62,45 @@ extension MainMenuView {
         ToolbarItem(placement: .navigationBarLeading) {
             self.menuView
         }
+        
+        if publicCommentStore.list.count > 0,
+           currentUserService.isSignedIn,
+           self.selectedMenuItem != .comments
+        {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                NavigationLink(destination:
+                    CommentPostsStackView(
+                        currentUserService: currentUserService,
+                        store: publicCommentStore
+                    ).onAppear { OverlayManager.shared.hide(.splash) })
+                {
+                    Label("Comments", systemImage: "bubble.left.and.bubble.right")
+                        .foregroundColor(.primary)
+                }
+                .buttonStyle(BorderlessButtonStyle())
+                
+            }
+        }
+        
+        if privateMessageStore.list.count > 0,
+           currentUserService.isSignedIn,
+           self.selectedMenuItem != .messages
+        {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                NavigationLink(destination:
+                    UserMessagePostsStackView(
+                        viewModel: UserPostViewModel<PrivateMessage>(),
+                        currentUserService: currentUserService,
+                        store: privateMessageStore
+                    ).onAppear { OverlayManager.shared.hide(.splash) })
+                {
+                    Label("Messages", systemImage: "envelope")
+                        .foregroundColor(.primary)
+                }
+                .buttonStyle(BorderlessButtonStyle())
+            }
+        }
+        
         if self.selectedMenuItem != .profile {
             ToolbarItem(placement: .navigationBarTrailing) {
                 SignUpInLinkView(
@@ -74,7 +113,47 @@ extension MainMenuView {
     }
 }
 
-extension MainMenuView {    
+extension MainMenuView {
+    @ViewBuilder
+    var menuView: some View {
+        Menu {
+            // group NavigationItems by their first sortOrder component, then sort them
+            let groupedItems = Dictionary(grouping: NavigationItem.allCases.filter { $0.sortOrder.0 >= 0 }) {
+                $0.sortOrder.0
+            }
+            let sortedGroupKeys = groupedItems.keys.sorted()
+
+            // iterate through each group
+            ForEach(Array(sortedGroupKeys.enumerated()), id: \.element) { index, groupKey in
+                let items = groupedItems[groupKey]!.sorted { $0.sortOrder.1 < $1.sortOrder.1 }
+
+                // then iterate through item in the group
+                ForEach(items) { item in
+                    Button {
+                        selectedMenuItem = item
+                    } label: {
+                        menuLabel(item)
+                    }
+                }
+
+                if index < sortedGroupKeys.count - 1 {
+                    Divider()
+                }
+            }
+        } label: {
+            Label("Menu", systemImage: "line.3.horizontal")
+        }
+    }
+    
+    @ViewBuilder
+    func menuLabel(_ item: NavigationItem) -> some View {
+        if item == .profile {
+            Label(item.label, systemImage: currentUserService.isSignedIn ? "\(item.systemImage).fill" : item.systemImage)
+        } else {
+            Label(item.label, systemImage: item.systemImage)
+        }
+    }
+    
     @ViewBuilder
     var destinationView: some View {
         switch self.selectedMenuItem {
@@ -137,46 +216,6 @@ extension MainMenuView {
         case .none:
             EmptyView()
                 .onAppear { OverlayManager.shared.hide(.splash) }
-        }
-    }
-
-    @ViewBuilder
-    var menuView: some View {
-        Menu {
-            // group NavigationItems by their first sortOrder component, then sort them
-            let groupedItems = Dictionary(grouping: NavigationItem.allCases.filter { $0.sortOrder.0 >= 0 }) {
-                $0.sortOrder.0
-            }
-            let sortedGroupKeys = groupedItems.keys.sorted()
-
-            // iterate through each group
-            ForEach(Array(sortedGroupKeys.enumerated()), id: \.element) { index, groupKey in
-                let items = groupedItems[groupKey]!.sorted { $0.sortOrder.1 < $1.sortOrder.1 }
-
-                // then iterate through item in the group
-                ForEach(items) { item in
-                    Button {
-                        selectedMenuItem = item
-                    } label: {
-                        menuLabel(item)
-                    }
-                }
-
-                if index < sortedGroupKeys.count - 1 {
-                    Divider()
-                }
-            }
-        } label: {
-            Label("Menu", systemImage: "line.3.horizontal")
-        }
-    }
-    
-    @ViewBuilder
-    func menuLabel(_ item: NavigationItem) -> some View {
-        if item == .profile {
-            Label(item.label, systemImage: currentUserService.isSignedIn ? "\(item.systemImage).fill" : item.systemImage)
-        } else {
-            Label(item.label, systemImage: item.systemImage)
         }
     }
 }
