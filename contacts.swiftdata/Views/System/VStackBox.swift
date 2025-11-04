@@ -24,48 +24,40 @@ struct VStackBox<Content: View>: View {
     let content: Content
     var widthMode: VStackBoxWidthMode = .expand
     var backgroundColor: Color
-    var fitIn: Axis.Set? = nil
-//    var maxHeight: CGFloat? = nil
-    
-    // MARK: - Init (no title)
+       
+    // MARK: - No Title
     init(
         widthMode: VStackBoxWidthMode = .expand,
         backgroundColor: Color = Color(.systemGroupedBackground),
-        fitIn: Axis.Set? = nil,
-        maxHeight: CGFloat? = nil,
         @ViewBuilder content: () -> Content
     ) {
         self.titleView = AnyView(EmptyView())
         self.content = content()
         self.widthMode = widthMode
         self.backgroundColor = backgroundColor
-        self.fitIn = fitIn
-//        self.maxHeight = maxHeight
     }
 
-    // MARK: - Init (title text)
+    // MARK: - Title as String
     init(
         title: String,
         widthMode: VStackBoxWidthMode = .expand,
         backgroundColor: Color = Color(.systemGroupedBackground),
-        fitIn: Axis.Set? = nil,
-//        maxHeight: CGFloat? = nil,
         @ViewBuilder content: () -> Content
     ) {
-        self.titleView = AnyView(Text(title).font(.title2).fontWeight(.semibold))
+        self.titleView = AnyView(
+            Text(title)
+                .font(.title2)
+                .fontWeight(.semibold)
+        )
         self.content = content()
         self.widthMode = widthMode
         self.backgroundColor = backgroundColor
-        self.fitIn = fitIn
-//        self.maxHeight = maxHeight
     }
 
-    // MARK: - Init (title view)
+    // MARK: - Title as View
     init<Title: View>(
         widthMode: VStackBoxWidthMode = .expand,
         backgroundColor: Color = Color(.systemGroupedBackground),
-        fitIn: Axis.Set? = nil,
-//        maxHeight: CGFloat? = nil,
         @ViewBuilder titleView: () -> Title,
         @ViewBuilder content: () -> Content
     ) {
@@ -73,33 +65,10 @@ struct VStackBox<Content: View>: View {
         self.content = content()
         self.widthMode = widthMode
         self.backgroundColor = backgroundColor
-        self.fitIn = fitIn
-//        self.maxHeight = maxHeight
     }
-
+    
     // MARK: - Body
     var body: some View {
-        GeometryReader { geo in
-            if let fitAxis = fitIn {
-                ViewThatFits(in: fitAxis) {
-                    baseStack
-                    ScrollView(fitAxis) {
-                        GeometryReader { geo in
-                            baseStack
-                                .padding(.bottom, 8)
-//                                .frame(maxHeight: maxHeight ?? .infinity)
-                        }
-                    }
-                }
-                .frame(maxHeight: geo.size.height)
-            } else {
-                baseStack
-            }
-        }
-    }
-
-    // MARK: - Base Stack
-    private var baseStack: some View {
         VStack(alignment: .leading, spacing: 8) {
             titleView
             content
@@ -160,7 +129,7 @@ enum VStackBoxWidthMode {
     .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
     .environment(\.font, Font.body)
 }
-#Preview ("Resize Width") {
+#Preview ("Resize") {
     VStackBox(widthMode: .fitContent) {
         Text("Hello, World!")
     }
