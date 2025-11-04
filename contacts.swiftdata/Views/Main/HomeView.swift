@@ -29,44 +29,44 @@ struct HomeView: View {
             ZStack(alignment: .top) {
                 // MARK: Background
                 ConditionalVideoBackgroundView()
-
+                
                 // MARK: Announcements
-                if announcementStore.list.count > 0 {
-                    VStack {
-                        Spacer()
-                            .frame(height: geo.size.height * ViewConfig.topHalfSpaceRatio + 20)
-
-                        VStackBox() {
-                            ViewThatFits(in: .vertical) {
+                VStack {
+                    Spacer()
+                        .frame(height: geo.size.height * ViewConfig.topHalfSpaceRatio + 20)
+                    
+                    VStackBox() {
+                        ViewThatFits(in: .vertical) {
+                            VStack(alignment: .leading, spacing: 8) {
+                                announcementStore.list.count > 0 ? StoreListView(store: announcementStore) : nil
+                                SupportLinkView(currentUserService: currentUserService,
+                                                showDivider: announcementStore.list.count > 0 ? true : false,
+                                                onNavigate: { OverlayManager.shared.hide(.splash) }
+                                )
+                                SignUpInLinkView(currentUserService: currentUserService,
+                                                 onNavigate: { OverlayManager.shared.hide(.splash) }
+                                )
+                            }
+                            ScrollView {
                                 VStack(alignment: .leading, spacing: 8) {
-                                    StoreListView(store: announcementStore)
+                                    announcementStore.list.count > 0 ? StoreListView(store: announcementStore) : nil
                                     SupportLinkView(currentUserService: currentUserService,
+                                                    showDivider: announcementStore.list.count > 0 ? true : false,
                                                     onNavigate: { OverlayManager.shared.hide(.splash) }
                                     )
                                     SignUpInLinkView(currentUserService: currentUserService,
                                                      onNavigate: { OverlayManager.shared.hide(.splash) }
                                     )
                                 }
-                                ScrollView {
-                                    VStack(alignment: .leading, spacing: 8) {
-                                        StoreListView(store: announcementStore)
-                                        SupportLinkView(currentUserService: currentUserService,
-                                                        onNavigate: { OverlayManager.shared.hide(.splash) }
-                                        )
-                                        SignUpInLinkView(currentUserService: currentUserService,
-                                                         onNavigate: { OverlayManager.shared.hide(.splash) }
-                                        )
-                                    }
-                                    .padding(.bottom, 8)
-                                }
+                                .padding(.bottom, 8)
                             }
                         }
-                        .frame(maxHeight: geo.size.height * (1 - ViewConfig.topHalfSpaceRatio) - ViewConfig.bottomTabBarSpace)
-                        .padding(.horizontal)
-                        .padding(.bottom, geo.safeAreaInsets.bottom)
                     }
-                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+                    .frame(maxHeight: geo.size.height * (1 - ViewConfig.topHalfSpaceRatio) - ViewConfig.bottomTabBarSpace)
+                    .padding(.horizontal)
+                    .padding(.bottom, geo.safeAreaInsets.bottom)
                 }
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
             }
         }
         .padding(.vertical)

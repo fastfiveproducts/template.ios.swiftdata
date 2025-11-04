@@ -24,6 +24,7 @@ struct SignUpInLinkView: View {
     @ObservedObject var currentUserService: CurrentUserService
     
     var inToolbar: Bool = false
+    var showDivider: Bool = true
     var onNavigate: (() -> Void)? = nil
     
     var leadingText: String {
@@ -50,9 +51,7 @@ struct SignUpInLinkView: View {
     var body: some View {
         if inToolbar || !currentUserService.isSignedIn {
             
-            if !inToolbar && !currentUserService.isSignedIn {
-                Divider()
-            }
+            if !inToolbar, !currentUserService.isSignedIn, showDivider { Divider() }
             
             NavigationLink {
                 UserAccountView(

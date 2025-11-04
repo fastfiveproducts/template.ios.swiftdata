@@ -71,6 +71,8 @@
 		B59779DB2EB93B9B00712D85 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = B59779992EB93B9B00712D85 /* GoogleService-Info.plist */; };
 		B59779DC2EB93B9B00712D85 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B597799A2EB93B9B00712D85 /* LaunchScreen.storyboard */; };
 		B59779DD2EB93B9B00712D85 /* template_diff.zsh in Resources */ = {isa = PBXBuildFile; fileRef = B597799C2EB93B9B00712D85 /* template_diff.zsh */; };
+		B59779DF2EB98A9900712D85 /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59779DE2EB98A9900712D85 /* MainTabView.swift */; };
+		B59779E12EB98F5A00712D85 /* MainViewPreviewWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59779E02EB98F5A00712D85 /* MainViewPreviewWrapper.swift */; };
 		B5C0BD622E24187300641B69 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = B5C0BD602E24187300641B69 /* LICENSE */; };
 		B5C0BD632E24187300641B69 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = B5C0BD612E24187300641B69 /* README.md */; };
 		B5C0BD652E2418F100641B69 /* LICENSE-EXCEPTIONS.md in Resources */ = {isa = PBXBuildFile; fileRef = B5C0BD642E2418E200641B69 /* LICENSE-EXCEPTIONS.md */; };
@@ -148,6 +150,8 @@
 		B597799B2EB93B9B00712D85 /* LaunchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchView.swift; sourceTree = "<group>"; };
 		B597799C2EB93B9B00712D85 /* template_diff.zsh */ = {isa = PBXFileReference; lastKnownFileType = text; path = template_diff.zsh; sourceTree = "<group>"; };
 		B597799D2EB93B9B00712D85 /* templateApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = templateApp.swift; sourceTree = "<group>"; };
+		B59779DE2EB98A9900712D85 /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
+		B59779E02EB98F5A00712D85 /* MainViewPreviewWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewPreviewWrapper.swift; sourceTree = "<group>"; };
 		B5C0BD602E24187300641B69 /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		B5C0BD612E24187300641B69 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		B5C0BD642E2418E200641B69 /* LICENSE-EXCEPTIONS.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = "LICENSE-EXCEPTIONS.md"; sourceTree = "<group>"; };
@@ -277,6 +281,8 @@
 			children = (
 				B59779762EB93B9B00712D85 /* HomeView.swift */,
 				B59779772EB93B9B00712D85 /* MainMenuView.swift */,
+				B59779DE2EB98A9900712D85 /* MainTabView.swift */,
+				B59779E02EB98F5A00712D85 /* MainViewPreviewWrapper.swift */,
 			);
 			path = Main;
 			sourceTree = "<group>";
@@ -488,6 +494,7 @@
 				B59779A32EB93B9B00712D85 /* RestrictedWordConnector.swift in Sources */,
 				B59779A42EB93B9B00712D85 /* CloudErrorCodes.swift in Sources */,
 				B59779A52EB93B9B00712D85 /* SignInOutObserver.swift in Sources */,
+				B59779E12EB98F5A00712D85 /* MainViewPreviewWrapper.swift in Sources */,
 				B59779A62EB93B9B00712D85 /* ActivityLogEntry.swift in Sources */,
 				B59779A72EB93B9B00712D85 /* Announcement.swift in Sources */,
 				B59779A82EB93B9B00712D85 /* Contact.swift in Sources */,
@@ -540,6 +547,7 @@
 				B59779D72EB93B9B00712D85 /* ViewConfig.swift in Sources */,
 				B59779D82EB93B9B00712D85 /* LaunchView.swift in Sources */,
 				B59779D92EB93B9B00712D85 /* templateApp.swift in Sources */,
+				B59779DF2EB98A9900712D85 /* MainTabView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -250,36 +250,4 @@ extension MainMenuView {
     .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
     .environment(\.font, Font.body)
 }
-
-// this helper is for child view previews
-struct MainViewPreviewWrapper<Content: View>: View {
-    let currentUserService: CurrentUserService
-    let content: Content
-
-    init(currentUserService: CurrentUserService,
-         @ViewBuilder content: () -> Content) {
-        self.currentUserService = currentUserService
-        self.content = content()
-    }
-    
-    var body: some View {
-        NavigationStack {
-            VStack(alignment: .leading, spacing: 24) {
-                content
-            }
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Menu {
-                        Button("Other Menu Items") { }
-                    } label: {
-                        Label("Menu", systemImage: "line.3.horizontal")
-                    }
-                }
-            }
-            .padding(.vertical)
-        }
-        .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
-        .environment(\.font, Font.body)
-    }
-}
 #endif

@@ -118,6 +118,12 @@ extension Color {
 #if DEBUG
 var isPreview: Bool { return ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] == "1" }
 
+extension ViewConfig {
+    // set the style for previews (MainViewPreviewWrapper)
+//    static let mainViewStyle: MainViewStyle = .menu
+    static let mainViewStyle: MainViewStyle = .tab
+}
+
 #Preview ("Colors") {
     ScrollView {
         VStackBox {
