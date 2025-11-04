@@ -24,17 +24,20 @@ struct VStackBox<Content: View>: View {
     let content: Content
     var widthMode: VStackBoxWidthMode = .expand
     var backgroundColor: Color
-       
+    var fitIn: Axis.Set? = nil
+    
     // MARK: - No Title
     init(
         widthMode: VStackBoxWidthMode = .expand,
         backgroundColor: Color = Color(.systemGroupedBackground),
+        fitIn: Axis.Set? = nil,
         @ViewBuilder content: () -> Content
     ) {
         self.titleView = AnyView(EmptyView())
         self.content = content()
         self.widthMode = widthMode
         self.backgroundColor = backgroundColor
+        self.fitIn = fitIn
     }
 
     // MARK: - Title as String
@@ -42,6 +45,7 @@ struct VStackBox<Content: View>: View {
         title: String,
         widthMode: VStackBoxWidthMode = .expand,
         backgroundColor: Color = Color(.systemGroupedBackground),
+        fitIn: Axis.Set? = nil,
         @ViewBuilder content: () -> Content
     ) {
         self.titleView = AnyView(
@@ -52,12 +56,14 @@ struct VStackBox<Content: View>: View {
         self.content = content()
         self.widthMode = widthMode
         self.backgroundColor = backgroundColor
+        self.fitIn = fitIn
     }
 
     // MARK: - Title as View
     init<Title: View>(
         widthMode: VStackBoxWidthMode = .expand,
         backgroundColor: Color = Color(.systemGroupedBackground),
+        fitIn: Axis.Set? = nil,
         @ViewBuilder titleView: () -> Title,
         @ViewBuilder content: () -> Content
     ) {
@@ -65,10 +71,28 @@ struct VStackBox<Content: View>: View {
         self.content = content()
         self.widthMode = widthMode
         self.backgroundColor = backgroundColor
+        self.fitIn = fitIn
     }
-    
+
     // MARK: - Body
     var body: some View {
+        Group {
+            if let fitAxis = fitIn {
+                ViewThatFits(in: fitAxis) {
+                    baseStack
+                    ScrollView(fitAxis) {
+                        baseStack
+                            .padding(.bottom, 8)
+                    }
+                }
+            } else {
+                baseStack
+            }
+        }
+    }
+
+    // MARK: - Base Stack
+    private var baseStack: some View {
         VStack(alignment: .leading, spacing: 8) {
             titleView
             content
@@ -129,7 +153,7 @@ enum VStackBoxWidthMode {
     .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
     .environment(\.font, Font.body)
 }
-#Preview ("Resize") {
+#Preview ("Resize Width") {
     VStackBox(widthMode: .fitContent) {
         Text("Hello, World!")
     }

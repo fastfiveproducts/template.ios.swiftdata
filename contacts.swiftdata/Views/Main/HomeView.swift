@@ -35,32 +35,15 @@ struct HomeView: View {
                     Spacer()
                         .frame(height: geo.size.height * ViewConfig.topHalfSpaceRatio + 20)
                     
-                    VStackBox() {
-                        ViewThatFits(in: .vertical) {
-                            VStack(alignment: .leading, spacing: 8) {
-                                announcementStore.list.count > 0 ? StoreListView(store: announcementStore) : nil
-                                SupportLinkView(currentUserService: currentUserService,
-                                                showDivider: announcementStore.list.count > 0 ? true : false,
-                                                onNavigate: { OverlayManager.shared.hide(.splash) }
-                                )
-                                SignUpInLinkView(currentUserService: currentUserService,
-                                                 onNavigate: { OverlayManager.shared.hide(.splash) }
-                                )
-                            }
-                            ScrollView {
-                                VStack(alignment: .leading, spacing: 8) {
-                                    announcementStore.list.count > 0 ? StoreListView(store: announcementStore) : nil
-                                    SupportLinkView(currentUserService: currentUserService,
-                                                    showDivider: announcementStore.list.count > 0 ? true : false,
-                                                    onNavigate: { OverlayManager.shared.hide(.splash) }
-                                    )
-                                    SignUpInLinkView(currentUserService: currentUserService,
-                                                     onNavigate: { OverlayManager.shared.hide(.splash) }
-                                    )
-                                }
-                                .padding(.bottom, 8)
-                            }
-                        }
+                    VStackBox(fitIn: .vertical) {
+                        announcementStore.list.count > 0 ? StoreListView(store: announcementStore) : nil
+                        SupportLinkView(currentUserService: currentUserService,
+                                        showDivider: announcementStore.list.count > 0 ? true : false,
+                                        onNavigate: { OverlayManager.shared.hide(.splash) }
+                        )
+                        SignUpInLinkView(currentUserService: currentUserService,
+                                         onNavigate: { OverlayManager.shared.hide(.splash) }
+                        )
                     }
                     .frame(maxHeight: geo.size.height * (1 - ViewConfig.topHalfSpaceRatio) - ViewConfig.bottomTabBarSpace)
                     .padding(.horizontal)
