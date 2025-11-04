@@ -43,7 +43,6 @@ struct RequiresSignInView<Content: View>: View {
                 Spacer()
             }
         }
-        .onAppear { OverlayManager.shared.hide(.splash) }
     }
 }
 
