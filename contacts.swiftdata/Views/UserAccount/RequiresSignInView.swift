@@ -34,13 +34,14 @@ struct RequiresSignInView<Content: View>: View {
     var body: some View {
         Group {
             if currentUserService.isSignedIn {
-                content()
+                AnyView(content())
             } else {
-                VStackBox {
-                    Text("Not Signed In!")
-                    SignUpInLinkView(currentUserService: currentUserService)
-                }
-                Spacer()
+                AnyView(
+                    VStackBox {
+                        Text("Not Signed In!")
+                        SignUpInLinkView(currentUserService: currentUserService)
+                    }
+                )
             }
         }
     }

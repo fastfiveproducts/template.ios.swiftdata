@@ -28,29 +28,37 @@ struct MainTabView: View {
     @ObservedObject var publicCommentStore: PublicCommentStore
     @ObservedObject var privateMessageStore: PrivateMessageStore
     
+    @State private var selectedTabItem: NavigationItem = .home
+    
     var body: some View {
         NavigationStack {
-            TabView {
+            TabView(selection: $selectedTabItem) {
                 HomeView(
                     currentUserService: currentUserService,
                     announcementStore: announcementStore
                 )
                 .onAppear{ OverlayManager.shared.show(.splash, animation: OverlayAnimation.fast) }
                 .tabItem { NavigationItem.home.labelView }
+                .tag(NavigationItem.home)
                 
                 RequiresSignInView(currentUserService: currentUserService) {
                     ContactListView(currentUserService: currentUserService)
                 }
-                .onAppear { OverlayManager.shared.hide(.splash) }
                 .tabItem { NavigationItem.contacts.labelView }
+                .tag(NavigationItem.contacts)
                 
                 ActivityLogView()
-                    .onAppear { OverlayManager.shared.hide(.splash) }
                     .tabItem { NavigationItem.activity.labelView }
+                    .tag(NavigationItem.activity)
                 
                 SettingsView()
-                    .onAppear { OverlayManager.shared.hide(.splash) }
                     .tabItem { NavigationItem.settings.labelView }
+                    .tag(NavigationItem.settings)
+            }
+            .onChange(of: selectedTabItem) {
+                if selectedTabItem != .home {
+                    OverlayManager.shared.hide(.splash)
+                }
             }
             .environment(\.tabSafeAreaBackground, true)
             .navigationTitle(ViewConfig.brandName)

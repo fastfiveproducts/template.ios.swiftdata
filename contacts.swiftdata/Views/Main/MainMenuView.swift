@@ -165,6 +165,8 @@ extension MainMenuView {
             RequiresSignInView(currentUserService: currentUserService) {
                 ContactListView(currentUserService: currentUserService)
             }
+            .padding(.vertical)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
             .onAppear { OverlayManager.shared.hide(.splash) }
             
         case .announcements:
@@ -174,8 +176,9 @@ extension MainMenuView {
                     SignUpInLinkView(currentUserService: currentUserService)
                 }
             }
-            Spacer()
-                .onAppear { OverlayManager.shared.hide(.splash) }
+            .padding(.vertical)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+            .onAppear { OverlayManager.shared.hide(.splash) }
                         
         case .profile:
             UserAccountView(
