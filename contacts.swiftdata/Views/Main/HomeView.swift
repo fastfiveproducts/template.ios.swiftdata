@@ -25,17 +25,20 @@ struct HomeView: View {
     @ObservedObject var announcementStore: AnnouncementStore
       
     var body: some View {
-        GeometryReader { geo in
-            ZStack(alignment: .top) {
-                // MARK: Background
-                ConditionalVideoBackgroundView()
-                
-                // MARK: Announcements
+        ZStack(alignment: .top) {
+            // MARK: Background
+            ConditionalVideoBackgroundView()
+            
+            // MARK: Announcements
+            GeometryReader { geo in
                 VStack {
                     Spacer()
                         .frame(height: geo.size.height * ViewConfig.topHalfSpaceRatio + 20)
                     
-                    VStackBox(fitIn: .vertical) {
+                    VStackBox(
+                        fitIn: .vertical,
+//                        maxHeight: geo.size.height * (1 - ViewConfig.topHalfSpaceRatio) - ViewConfig.bottomTabBarSpace
+                    ) {
                         announcementStore.list.count > 0 ? StoreListView(store: announcementStore) : nil
                         SupportLinkView(currentUserService: currentUserService,
                                         showDivider: announcementStore.list.count > 0 ? true : false,
@@ -45,17 +48,17 @@ struct HomeView: View {
                                          onNavigate: { OverlayManager.shared.hide(.splash) }
                         )
                     }
-                    .frame(maxHeight: geo.size.height * (1 - ViewConfig.topHalfSpaceRatio) - ViewConfig.bottomTabBarSpace)
                     .padding(.horizontal)
                     .padding(.bottom, geo.safeAreaInsets.bottom)
                 }
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
             }
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         .padding(.vertical)
         .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
         .environment(\.font, Font.body)
     }
+    
 }
 
 

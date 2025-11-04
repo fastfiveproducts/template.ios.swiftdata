@@ -25,12 +25,14 @@ struct VStackBox<Content: View>: View {
     var widthMode: VStackBoxWidthMode = .expand
     var backgroundColor: Color
     var fitIn: Axis.Set? = nil
+//    var maxHeight: CGFloat? = nil
     
-    // MARK: - No Title
+    // MARK: - Init (no title)
     init(
         widthMode: VStackBoxWidthMode = .expand,
         backgroundColor: Color = Color(.systemGroupedBackground),
         fitIn: Axis.Set? = nil,
+        maxHeight: CGFloat? = nil,
         @ViewBuilder content: () -> Content
     ) {
         self.titleView = AnyView(EmptyView())
@@ -38,32 +40,32 @@ struct VStackBox<Content: View>: View {
         self.widthMode = widthMode
         self.backgroundColor = backgroundColor
         self.fitIn = fitIn
+//        self.maxHeight = maxHeight
     }
 
-    // MARK: - Title as String
+    // MARK: - Init (title text)
     init(
         title: String,
         widthMode: VStackBoxWidthMode = .expand,
         backgroundColor: Color = Color(.systemGroupedBackground),
         fitIn: Axis.Set? = nil,
+//        maxHeight: CGFloat? = nil,
         @ViewBuilder content: () -> Content
     ) {
-        self.titleView = AnyView(
-            Text(title)
-                .font(.title2)
-                .fontWeight(.semibold)
-        )
+        self.titleView = AnyView(Text(title).font(.title2).fontWeight(.semibold))
         self.content = content()
         self.widthMode = widthMode
         self.backgroundColor = backgroundColor
         self.fitIn = fitIn
+//        self.maxHeight = maxHeight
     }
 
-    // MARK: - Title as View
+    // MARK: - Init (title view)
     init<Title: View>(
         widthMode: VStackBoxWidthMode = .expand,
         backgroundColor: Color = Color(.systemGroupedBackground),
         fitIn: Axis.Set? = nil,
+//        maxHeight: CGFloat? = nil,
         @ViewBuilder titleView: () -> Title,
         @ViewBuilder content: () -> Content
     ) {
@@ -72,19 +74,24 @@ struct VStackBox<Content: View>: View {
         self.widthMode = widthMode
         self.backgroundColor = backgroundColor
         self.fitIn = fitIn
+//        self.maxHeight = maxHeight
     }
 
     // MARK: - Body
     var body: some View {
-        Group {
+        GeometryReader { geo in
             if let fitAxis = fitIn {
                 ViewThatFits(in: fitAxis) {
                     baseStack
                     ScrollView(fitAxis) {
-                        baseStack
-                            .padding(.bottom, 8)
+                        GeometryReader { geo in
+                            baseStack
+                                .padding(.bottom, 8)
+//                                .frame(maxHeight: maxHeight ?? .infinity)
+                        }
                     }
                 }
+                .frame(maxHeight: geo.size.height)
             } else {
                 baseStack
             }
