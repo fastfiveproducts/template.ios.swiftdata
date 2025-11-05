@@ -62,7 +62,7 @@ struct HomeView: View {
                             }
                         }
                     }
-                    .frame(maxHeight: geo.size.height * (1 - ViewConfig.topHalfSpaceRatio) - ViewConfig.bottomTabBarSpace)
+                    .frame(maxHeight: max(0, geo.size.height * (1 - ViewConfig.topHalfSpaceRatio) - ViewConfig.bottomTabBarSpace))
                     .padding(.horizontal)
                     .padding(.bottom, geo.safeAreaInsets.bottom)
                 }
