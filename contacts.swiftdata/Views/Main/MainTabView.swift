@@ -28,6 +28,7 @@ struct MainTabView: View {
     @ObservedObject var publicCommentStore: PublicCommentStore
     @ObservedObject var privateMessageStore: PrivateMessageStore
     
+    
     @State private var selectedTabItem: NavigationItem = .home
     
     var body: some View {

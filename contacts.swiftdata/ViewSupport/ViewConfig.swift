@@ -120,8 +120,8 @@ var isPreview: Bool { return ProcessInfo.processInfo.environment["XCODE_RUNNING_
 
 extension ViewConfig {
     // set the style for previews (MainViewPreviewWrapper)
-//    static let mainViewStyle: MainViewStyle = .menu
-    static let mainViewStyle: MainViewStyle = .tab
+    static let mainViewStyle: MainViewStyle = .menu
+//    static let mainViewStyle: MainViewStyle = .tab
 }
 
 #Preview ("Colors") {

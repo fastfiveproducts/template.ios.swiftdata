@@ -28,10 +28,7 @@ struct SignUpInLinkView: View {
     var onNavigate: (() -> Void)? = nil
     
     var leadingText: String {
-        if inToolbar, !currentUserService.isSignedIn {
-            if #available(iOS 26, *) { return "" }
-            else { return "Sign In →" }
-        } else if inToolbar, currentUserService.isSignedIn {
+        if inToolbar, currentUserService.isSignedIn {
             return ""
         } else if !inToolbar, !currentUserService.isSignedIn {
             return "Tap Here or"

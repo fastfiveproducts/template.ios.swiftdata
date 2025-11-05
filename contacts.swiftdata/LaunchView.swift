@@ -33,6 +33,7 @@ struct LaunchView: View {
                         
             // Main App
             MainMenuView(
+//            MainTabView(
                 currentUserService: currentUserService,
                 announcementStore: AnnouncementStore.shared,
                 publicCommentStore: PublicCommentStore.shared,
