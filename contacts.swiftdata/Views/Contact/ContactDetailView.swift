@@ -18,7 +18,6 @@
 
 
 import SwiftUI
-import SwiftData
 
 struct ContactDetailView: View {
     @Bindable var contact: Contact

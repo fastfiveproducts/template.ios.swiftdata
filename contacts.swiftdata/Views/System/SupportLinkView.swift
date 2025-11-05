@@ -1,9 +1,9 @@
 //
-//  SignUpInLinkView.swift
+//  SupportLinkView.swift
+//  Streems
 //
-//  Created by Pete Maiser, Fast Five Products LLC, on 7/15/25.
-//  Modified by Pete Maiser, Fast Five Products LLC, on 10/23/25.
-//      Template v0.2.4 (updated) Fast Five Products LLC's public AGPL template.
+//  Template file created by Pete Maiser, Fast Five Products LLC, on 10/31/25.
+//      Template v0.2.4 Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025 Fast Five Products LLC. All rights reserved.
 //
@@ -20,7 +20,7 @@
 
 import SwiftUI
 
-struct SignUpInLinkView: View {
+struct SupportLinkView: View {
     @ObservedObject var currentUserService: CurrentUserService
     
     var inToolbar: Bool = false
@@ -28,42 +28,38 @@ struct SignUpInLinkView: View {
     var onNavigate: (() -> Void)? = nil
     
     var leadingText: String {
-        if inToolbar, currentUserService.isSignedIn {
+        if inToolbar {
             return ""
-        } else if !inToolbar, !currentUserService.isSignedIn {
-            return "Tap Here or"
+        } else if !currentUserService.isSignedIn {
+            return "Getting Started Tutorial"
         } else {
-            return ""
+            return "Tap Here for Support"
         }
     }
     
     var trailingText: String {
-        if !inToolbar {
-            return "to Sign-In!"
+        if inToolbar {
+            return ""
         } else {
             return ""
         }
     }
     
     var body: some View {
-        if inToolbar || !currentUserService.isSignedIn {
-            
-            if !inToolbar, !currentUserService.isSignedIn, showDivider { Divider() }
+        if inToolbar {
             
             NavigationLink {
-                UserAccountView(
-                    viewModel: UserAccountViewModel(),
-                    currentUserService: currentUserService)
-                .onAppear { onNavigate?() } 
+                SupportView()
+                    .onAppear { onNavigate?() }
             } label: {
                 if inToolbar && currentUserService.isSignedIn {
-                    Label("Account Profile", systemImage: "\(NavigationItem.profile.systemImage).fill")
+                    Label("Account Profile", systemImage: "\(NavigationItem.support.systemImage).fill")
                 } else {
                     HStack {
                         Text(leadingText)
                         Image(systemName: currentUserService.isSignedIn
-                              ? "\(NavigationItem.profile.systemImage).fill"
-                              : NavigationItem.profile.systemImage)
+                              ? "\(NavigationItem.support.systemImage).fill"
+                              : NavigationItem.support.systemImage)
                         Text(trailingText)
                     }
                     .foregroundColor(ViewConfig.linkColor)
@@ -72,9 +68,29 @@ struct SignUpInLinkView: View {
             .buttonStyle(BorderlessButtonStyle())
             
         } else {
-            EmptyView( )
+            
+            if showDivider { Divider() }
+            
+            NavigationLink {
+                SupportView()
+                    .onAppear { onNavigate?() } 
+            } label: {
+                if inToolbar && currentUserService.isSignedIn {
+                    Label("Account Profile", systemImage: "\(NavigationItem.support.systemImage).fill")
+                } else {
+                    HStack {
+                        Text(leadingText)
+                        Image(systemName: currentUserService.isSignedIn
+                              ? "\(NavigationItem.support.systemImage).fill"
+                              : NavigationItem.support.systemImage)
+                        Text(trailingText)
+                    }
+                    .foregroundColor(ViewConfig.linkColor)
+                }
+            }
+            .buttonStyle(BorderlessButtonStyle())
+            
         }
-        
     }
 }
 
@@ -86,13 +102,13 @@ struct SignUpInLinkView: View {
         VStack(alignment: .leading, spacing: 24) {
             VStackBox(title: "Preview Helper (Signed-In)") {
                 Text("ToolbarItem above-right filled;")
-                Text("NO link appears below this text")
-                SignUpInLinkView(currentUserService: currentUserService)
+                Text("and see the link below this text")
+                SupportLinkView(currentUserService: currentUserService)
             }
         }
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
-                SignUpInLinkView(currentUserService: currentUserService, inToolbar: true)
+                SupportLinkView(currentUserService: currentUserService, inToolbar: true)
             }
         }
         Spacer()
@@ -106,13 +122,13 @@ struct SignUpInLinkView: View {
         VStack(alignment: .leading, spacing: 24) {
             VStackBox(title: "Preview Helper (Signed-Out)") {
                 Text("ToolbarItem NOT filled;")
-                Text("there IS a link below this text")
-                SignUpInLinkView(currentUserService: currentUserService)
+                Text("and see the link below this text")
+                SupportLinkView(currentUserService: currentUserService)
             }
         }
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
-                SignUpInLinkView(currentUserService: currentUserService, inToolbar: true)
+                SupportLinkView(currentUserService: currentUserService, inToolbar: true)
             }
         }
         Spacer()
