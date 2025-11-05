@@ -57,5 +57,7 @@ struct SettingsView: View {
 #if DEBUG
 #Preview {
     SettingsView(showTitle: true)
+        .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
+        .environment(\.font, Font.body)
 }
 #endif

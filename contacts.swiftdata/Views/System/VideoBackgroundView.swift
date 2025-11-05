@@ -1,8 +1,8 @@
 //
 //  VideoBackgroundView.swift
 //
-//  Template created by Pete Maiser, July 2024 through October 2025
-//      Template v0.2.3 Fast Five Products LLC's public AGPL template.
+//  Template file created by Pete Maiser, Fast Five Products LLC, in October 2025.
+//      Template v0.2.4 (updated) Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025 Fast Five Products LLC. All rights reserved.
 //
@@ -29,6 +29,30 @@ extension EnvironmentValues {
 
 private struct tabSafeAreaBackgroundKey: EnvironmentKey {
     static let defaultValue = false
+}
+
+struct ConditionalVideoBackgroundView: View {
+    var body: some View {
+        guard !ViewConfig.backgroundVideoName.isEmpty else {
+            return AnyView(EmptyView())
+        }
+        
+        return AnyView(
+            GeometryReader { geo in
+                let isLandscape = geo.size.width > geo.size.height
+                let isPad = UIDevice.current.userInterfaceIdiom == .pad
+                
+                Group {
+                    if !isPad || !isLandscape {
+                        VideoBackgroundView()
+                    } else {
+                        ViewConfig.bgColor.ignoresSafeArea()
+                    }
+                }
+                .ignoresSafeArea()
+            }
+        )
+    }
 }
 
 struct VideoBackgroundView: UIViewRepresentable {
@@ -68,7 +92,9 @@ struct VideoBackgroundView: UIViewRepresentable {
         return view
     }
 
-    func updateUIView(_ uiView: UIView, context: Context) { }
+    func updateUIView(_ uiView: UIView, context: Context) {
+        shared.queuePlayer.playImmediately(atRate: 1.0)
+    }
 }
 
 final class VideoBackgroundPlayer: ObservableObject, DebugPrintable {
@@ -77,11 +103,6 @@ final class VideoBackgroundPlayer: ObservableObject, DebugPrintable {
     // this is also how to 'get' the singleton store
     static let shared = VideoBackgroundPlayer()
 
-    // MARK: - Configuration
-    private let videoName = "StreemsBackground"
-    private let videoExtension = "mp4"
-
-    // MARK: - Player components
     let queuePlayer: AVQueuePlayer
     private var playerLooper: AVPlayerLooper?
 
@@ -95,7 +116,7 @@ final class VideoBackgroundPlayer: ObservableObject, DebugPrintable {
         }
 
         // Try to load the video
-        if let url = Bundle.main.url(forResource: videoName, withExtension: videoExtension) {
+        if let url = Bundle.main.url(forResource: ViewConfig.backgroundVideoName, withExtension: ViewConfig.backgroundVideoExtension) {
             let item = AVPlayerItem(url: url)
             let queue = AVQueuePlayer(items: [item])
             let looper = AVPlayerLooper(player: queue, templateItem: item)
@@ -106,7 +127,7 @@ final class VideoBackgroundPlayer: ObservableObject, DebugPrintable {
             self.playerLooper = looper
         } else {
             // Fallback if video file missing
-            debugPrint("⚠️ Missing \(videoName).\(videoExtension); using fallback empty composition.")
+            debugPrint("⚠️ Missing \(ViewConfig.backgroundVideoName).\(ViewConfig.backgroundVideoExtension); using fallback empty composition.")
 
             let queue = AVQueuePlayer()
             queue.isMuted = true
@@ -129,7 +150,8 @@ final class VideoBackgroundPlayer: ObservableObject, DebugPrintable {
 #Preview("Plain") {
     ZStack {
         VideoBackgroundView()
-        // HeroView()
+            .onAppear{ OverlayManager.shared.show(.splash) }
+        OverlayView()
     }
     .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
     .environment(\.font, Font.body)
@@ -137,11 +159,11 @@ final class VideoBackgroundPlayer: ObservableObject, DebugPrintable {
 #Preview("Tab Safe Area") {
     ZStack {
         VideoBackgroundView()
-        // HeroView()
+            .onAppear{ OverlayManager.shared.show(.splash) }
+        OverlayView()
     }
     .environment(\.tabSafeAreaBackground, true)
     .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
     .environment(\.font, Font.body)
 }
 #endif
-

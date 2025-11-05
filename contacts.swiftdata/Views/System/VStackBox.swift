@@ -2,7 +2,7 @@
 //  VStackBox.swift
 //
 //  Template created by Pete Maiser, July 2024 through May 2025
-//      Template v0.1.4 (updated) Fast Five Products LLC's public AGPL template.
+//      Template v0.2.4 (updated) Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025 Fast Five Products LLC. All rights reserved.
 //
@@ -22,40 +22,71 @@ import SwiftUI
 struct VStackBox<Content: View>: View {
     let titleView: AnyView
     let content: Content
-    
-    // no title
-    init(@ViewBuilder content: () -> Content) {
+    var widthMode: VStackBoxWidthMode = .expand
+    var backgroundColor: Color
+       
+    // MARK: - No Title
+    init(
+        widthMode: VStackBoxWidthMode = .expand,
+        backgroundColor: Color = Color(.systemGroupedBackground),
+        @ViewBuilder content: () -> Content
+    ) {
         self.titleView = AnyView(EmptyView())
         self.content = content()
+        self.widthMode = widthMode
+        self.backgroundColor = backgroundColor
     }
-    
-    // "title" as just text
-    init(title: String, @ViewBuilder content: () -> Content) {
+
+    // MARK: - Title as String
+    init(
+        title: String,
+        widthMode: VStackBoxWidthMode = .expand,
+        backgroundColor: Color = Color(.systemGroupedBackground),
+        @ViewBuilder content: () -> Content
+    ) {
         self.titleView = AnyView(
             Text(title)
                 .font(.title2)
                 .fontWeight(.semibold)
         )
         self.content = content()
+        self.widthMode = widthMode
+        self.backgroundColor = backgroundColor
     }
 
-    // accept an entire view as the title
-    init<Title: View>(@ViewBuilder titleView: () -> Title, @ViewBuilder content: () -> Content) {
+    // MARK: - Title as View
+    init<Title: View>(
+        widthMode: VStackBoxWidthMode = .expand,
+        backgroundColor: Color = Color(.systemGroupedBackground),
+        @ViewBuilder titleView: () -> Title,
+        @ViewBuilder content: () -> Content
+    ) {
         self.titleView = AnyView(titleView())
         self.content = content()
+        self.widthMode = widthMode
+        self.backgroundColor = backgroundColor
     }
     
+    // MARK: - Body
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             titleView
             content
         }
         .padding()
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color(.systemGroupedBackground))
+        .frame(
+            maxWidth: widthMode == .fitContent ? nil : .infinity,
+            alignment: .leading
+        )
+        .background(backgroundColor)
         .cornerRadius(12)
         .padding(.horizontal)
     }
+}
+
+enum VStackBoxWidthMode {
+    case expand        // fills width
+    case fitContent    // resizes to content
 }
 
 
@@ -95,16 +126,25 @@ struct VStackBox<Content: View>: View {
             Text("Hello, World!")
         }
     }
+    .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
+    .environment(\.font, Font.body)
+}
+#Preview ("Resize") {
+    VStackBox(widthMode: .fitContent) {
+        Text("Hello, World!")
+    }
+    .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
+    .environment(\.font, Font.body)
 }
 @ViewBuilder
 func previewContent() -> some View {
     Text("Hello World!")
     NavigationLink {
         VStackBox() {
-            Text("Hello World!")
+            Text("Simple Example: Hello World!")
         }
     } label: {
-        Text("No Title Example")
+        Text("Click for Simple Example")
             .foregroundColor(.accentColor)
     }
 }

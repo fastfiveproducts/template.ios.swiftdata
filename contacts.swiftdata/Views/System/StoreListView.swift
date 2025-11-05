@@ -158,6 +158,8 @@ struct StoreListView<T: Listable, Content: View>: View {
             Text(object.content)
         }
     }
+    .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
+    .environment(\.font, Font.body)
 }
 #Preview ("Custom Content: complex") {
     StoreListView(store: ListableStore<Announcement>.testLoaded(with: Announcement.testObjects)) {announcement in
@@ -180,5 +182,7 @@ struct StoreListView<T: Listable, Content: View>: View {
                 .foregroundColor(.secondary)
         }
     }
+    .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
+    .environment(\.font, Font.body)
 }
 #endif
