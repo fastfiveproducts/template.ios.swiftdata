@@ -24,6 +24,7 @@ struct SupportLinkView: View {
     @ObservedObject var currentUserService: CurrentUserService
     
     var inToolbar: Bool = false
+    var showDivider: Bool = true
     var onNavigate: (() -> Void)? = nil
     
     var leadingText: String {
@@ -68,7 +69,7 @@ struct SupportLinkView: View {
             
         } else {
             
-            Divider()
+            if showDivider { Divider() }
             
             NavigationLink {
                 SupportView()

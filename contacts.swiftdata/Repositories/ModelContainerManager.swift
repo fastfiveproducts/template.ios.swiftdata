@@ -155,7 +155,12 @@ extension ModelContainerManager {
 
 #if DEBUG
 extension ModelContainerManager {
-    // Force-sets the container for previews and testing only.
+    func makePreviewContainer() -> ModelContainer {
+        let config = ModelConfiguration(isStoredInMemoryOnly: true)
+        let container = try! ModelContainer(for: RepositoryConfig.modelContainerSchema, configurations: config)
+        RepositoryConfig.injectPreviewData(into: container)
+        return container
+    }
     func injectPreviewContainer(_ container: ModelContainer) {
         self.container = container
     }

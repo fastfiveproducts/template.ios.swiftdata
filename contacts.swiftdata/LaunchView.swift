@@ -27,84 +27,78 @@ struct LaunchView: View {
     
     var body: some View {
         ZStack {
-            // Main app behind
-            if let container = modelContainerManager.container {
-                MainMenuView(
-                    currentUserService: currentUserService,
-                    announcementStore: AnnouncementStore.shared,
-                    publicCommentStore: PublicCommentStore.shared,
-                    privateMessageStore: PrivateMessageStore.shared,
-                )
-                .modelContainer(container)
-            } else {
-                // Fallback while container loads
-                ViewConfig.brandColor
-                    .ignoresSafeArea()
-            }
+            // Brand Color behind
+            ViewConfig.brandColor.ignoresSafeArea()
+                .zIndex(10)
+                        
+            // Main App
+            MainMenuView(
+//            MainTabView(
+                currentUserService: currentUserService,
+                announcementStore: AnnouncementStore.shared,
+                publicCommentStore: PublicCommentStore.shared,
+                privateMessageStore: PrivateMessageStore.shared,
+                
+            )
+            .modelContainer(modelContainerManager.container ?? ModelContainerManager.emptyContainer)
+            .opacity(showMain ? 1 : 0)
+            .zIndex(20)
 
             // Global Overlays
             OverlayView()
-                .zIndex(10)
-            
-            // Launch Screen Curtain Overlay (fades away)
-            ViewConfig.brandColor
-                .ignoresSafeArea()
-                .opacity(showMain ? 0 : 1)
-                .animation(.easeInOut(duration: 1.0), value: showMain)
-                .zIndex(20)
+                .zIndex(30)
         }
+        .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
+        .environment(\.font, Font.body)
+        
+        // Initialize Cloud Repositories
+        .task {
+            RestrictedWordStore.shared.enableRestrictedWordCheck()
+            HelpTextStore.shared.initialize()
+            AnnouncementStore.shared.initialize()
+            PublicCommentStore.shared.initialize()
+            PrivateMessageStore.shared.initialize()
+        }
+        
+        // Show Splash on Appear; set clock for loading-check
         .onAppear {
-            if modelContainerManager.container == nil {
-                OverlayManager.shared.show(.loading)
+            OverlayManager.shared.show(.splash)
+
+            // if still loading after some time has passed, tell the user about it
+            DispatchQueue.main.asyncAfter(deadline: .now() + ViewConfig.delayLoadingMessageInterval) {
+                if modelContainerManager.container == nil {
+                    OverlayManager.shared.show(.loading)
+                }
             }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.25) {
-                withAnimation(.easeIn(duration: 1.25)) {
+        }
+        
+        // Fade-in Main when Loaded
+        .onChange(of: modelContainerManager.container) { _, newValue in
+            if newValue != nil {
+                OverlayManager.shared.hide(.loading)
+                withAnimation(.easeIn(duration: ViewConfig.fadeMainViewInterval)) {
                     showMain = true
                 }
             }
         }
-        .onChange(of: modelContainerManager.container) { _, newValue in
-            if newValue != nil {
-                OverlayManager.shared.hide(.loading)
-            }
-        }
-        .task {
-            AnnouncementStore.shared.initialize()
-            PublicCommentStore.shared.initialize()
-            PrivateMessageStore.shared.initialize()
-            HelpTextStore.shared.initialize()
-            RestrictedWordStore.shared.enableRestrictedWordCheck()
-        }
-        .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
-        .environment(\.font, Font.body)
     }
 }
 
 
 #if DEBUG
-import SwiftData
-#Preview ("test-data max") {
-    let currentUserService = CurrentUserTestService.sharedSignedIn
-    
-    let schema = RepositoryConfig.modelContainerSchema
-    let config = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
-    let container = try! ModelContainer(for: schema, configurations: [config])
-
-    for object in ActivityLogEntry.testObjects {
-        container.mainContext.insert(object)
-    }
-    
-    for object in Contact.testObjects {
-        container.mainContext.insert(object)
-    }
-
+#Preview ("test-data signed-in") {
+    let currentUserService: CurrentUserService = CurrentUserTestService.sharedSignedIn
     let modelContainerManager = ModelContainerManager(currentUserService: currentUserService)
-    modelContainerManager.injectPreviewContainer(container)
 
-    return LaunchView(
+    LaunchView(
         currentUserService: currentUserService,
         modelContainerManager: modelContainerManager
     )
-    .modelContainer(container)
+    .onAppear {
+        DispatchQueue.main.asyncAfter(deadline: .now() + ViewConfig.delayLoadingMessageInterval*2) {
+            let container = modelContainerManager.makePreviewContainer()
+            modelContainerManager.injectPreviewContainer(container)
+        }
+    }
 }
 #endif

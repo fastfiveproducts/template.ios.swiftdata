@@ -24,13 +24,11 @@ struct SignUpInLinkView: View {
     @ObservedObject var currentUserService: CurrentUserService
     
     var inToolbar: Bool = false
+    var showDivider: Bool = true
     var onNavigate: (() -> Void)? = nil
     
     var leadingText: String {
-        if inToolbar, !currentUserService.isSignedIn {
-            if #available(iOS 26, *) { return "" }
-            else { return "Sign In →" }
-        } else if inToolbar, currentUserService.isSignedIn {
+        if inToolbar, currentUserService.isSignedIn {
             return ""
         } else if !inToolbar, !currentUserService.isSignedIn {
             return "Tap Here or"
@@ -50,9 +48,7 @@ struct SignUpInLinkView: View {
     var body: some View {
         if inToolbar || !currentUserService.isSignedIn {
             
-            if !inToolbar && !currentUserService.isSignedIn {
-                Divider()
-            }
+            if !inToolbar, !currentUserService.isSignedIn, showDivider { Divider() }
             
             NavigationLink {
                 UserAccountView(

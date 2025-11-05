@@ -38,9 +38,17 @@ struct ViewConfig {
     static let backgroundVideoName = ""
     static let backgroundVideoExtension = "mp4"
     
+    // Launch Screen
+    static let fadeMainViewInterval: TimeInterval = 1.25
+    static let delayLoadingMessageInterval: TimeInterval = 1.25
+    
+    // Home Screen
+    static let topHalfSpaceRatio: CGFloat = 0.6     // Top ratio when splitting screen top-to-bottom
+    static let bottomTabBarSpace: CGFloat = 48      // Leave space for Tab Bar (if applicable)
+    
     // Fixed Colors
     static let brandColor: Color =
-        Color(.secondaryLabel)
+        Color(.opaqueSeparator)
     
     static let linkColor: Color =
         Color.accentColor
@@ -109,6 +117,12 @@ extension Color {
 
 #if DEBUG
 var isPreview: Bool { return ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] == "1" }
+
+extension ViewConfig {
+    // set the style for previews (MainViewPreviewWrapper)
+    static let mainViewStyle: MainViewStyle = .menu
+//    static let mainViewStyle: MainViewStyle = .tab
+}
 
 #Preview ("Colors") {
     ScrollView {

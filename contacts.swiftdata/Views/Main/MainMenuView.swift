@@ -19,9 +19,10 @@
 
 
 import SwiftUI
-import SwiftData
 
 struct MainMenuView: View {
+    @Environment(\.scenePhase) private var scenePhase
+    
     @ObservedObject var currentUserService: CurrentUserService
     @ObservedObject var announcementStore: AnnouncementStore
     @ObservedObject var publicCommentStore: PublicCommentStore
@@ -38,112 +39,106 @@ struct MainMenuView: View {
                         .onAppear{ OverlayManager.shared.show(.splash, animation: OverlayAnimation.fast) }
                 } else {
                     self.destinationView
-                        .onAppear { OverlayManager.shared.hide(.splash) }
                 }
             }
             .navigationTitle(selectedMenuItem?.label ?? "")
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    self.menuView
-                }
-                if self.selectedMenuItem != .profile {
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        SignUpInLinkView(
-                            currentUserService: currentUserService,
-                            inToolbar: true,
-                            onNavigate: { OverlayManager.shared.hide(.splash) }
-                        )
-                    }
-                }
-            }
+            .toolbar { mainToolbar }
         }
+//        .onChange(of: scenePhase) {
+//            if scenePhase == .active {
+//                VideoBackgroundPlayer.shared.queuePlayer.play()
+//            } else {
+//                VideoBackgroundPlayer.shared.queuePlayer.pause()
+//            }
+//        }
         .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
         .environment(\.font, Font.body)
     }
-    
-    @ViewBuilder
-    var destinationView: some View {
-        switch self.selectedMenuItem {
-        case .announcements:
-            VStackBox {
-                StoreListView(store: announcementStore)
-                if !currentUserService.isSignedIn {
-                    SignUpInLinkView(currentUserService: currentUserService)
-                }
-            }
-            Spacer()
-            
-        case .contacts:
-            ContactListView(currentUserService: currentUserService)
-                        
-        case .profile:
-            UserAccountView(
-                viewModel: UserAccountViewModel(),
-                currentUserService: currentUserService)
-            
-        case .messages:
-            if currentUserService.isSignedIn {
-                UserMessagePostsStackView(
-                    viewModel: UserPostViewModel<PrivateMessage>(),
-                    currentUserService: currentUserService,
-                    store: privateMessageStore)
-            } else {
-                VStackBox {
-                    Text("Not Signed In!")
-                    SignUpInLinkView(currentUserService: currentUserService)
-                }
-                Spacer()
-            }
-            
-        case .comments:
-            if currentUserService.isSignedIn {
-                CommentPostsStackView(
-                    currentUserService: currentUserService,
-                    store: publicCommentStore)
-            } else {
-                VStackBox {
-                    Text("Not Signed In!")
-                    SignUpInLinkView(currentUserService: currentUserService)
-                }
-                Spacer()
-            }
-            
-        case .activity:
-            ActivityLogView()
-            
-        case .support:
-            SupportView()
-            
-        case .settings:
-            SettingsView()
-            
-        case .none:
-            EmptyView()
+}
+
+extension MainMenuView {
+    @ToolbarContentBuilder
+    var mainToolbar: some ToolbarContent {
+        ToolbarItem(placement: .navigationBarLeading) {
+            self.menuView
         }
         
+        if publicCommentStore.list.count > 0,
+           currentUserService.isSignedIn,
+           self.selectedMenuItem != .comments
+        {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                NavigationLink(destination:
+                    CommentPostsStackView(
+                        currentUserService: currentUserService,
+                        store: publicCommentStore
+                    ).onAppear { OverlayManager.shared.hide(.splash) })
+                {
+                    Label("Comments", systemImage: "bubble.left.and.bubble.right")
+                        .foregroundColor(.primary)
+                }
+                .buttonStyle(BorderlessButtonStyle())
+                
+            }
+        }
+        
+        if privateMessageStore.list.count > 0,
+           currentUserService.isSignedIn,
+           self.selectedMenuItem != .messages
+        {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                NavigationLink(destination:
+                    UserMessagePostsStackView(
+                        viewModel: UserPostViewModel<PrivateMessage>(),
+                        currentUserService: currentUserService,
+                        store: privateMessageStore
+                    ).onAppear { OverlayManager.shared.hide(.splash) })
+                {
+                    Label("Messages", systemImage: "envelope")
+                        .foregroundColor(.primary)
+                }
+                .buttonStyle(BorderlessButtonStyle())
+            }
+        }
+        
+        if self.selectedMenuItem != .profile {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                SignUpInLinkView(
+                    currentUserService: currentUserService,
+                    inToolbar: true,
+                    onNavigate: { OverlayManager.shared.hide(.splash) }
+                )
+            }
+        }
     }
+}
 
+extension MainMenuView {
     @ViewBuilder
     var menuView: some View {
         Menu {
-            ForEach(NavigationItem.allCases
-                .filter { $0.sortOrder.0 == 0 }
-                .sorted(by: { $0.sortOrder.1 < $1.sortOrder.1 })) { item in
-                    Button {
-                        selectedMenuItem = item
-                    } label: {
-                        menuLabel(item)
-                    }
+            // group NavigationItems by their first sortOrder component, then sort them
+            let groupedItems = Dictionary(grouping: NavigationItem.allCases.filter { $0.sortOrder.0 >= 0 }) {
+                $0.sortOrder.0
             }
-            Divider()
-            ForEach(NavigationItem.allCases
-                .filter { $0.sortOrder.0 == 1 }
-                .sorted(by: { $0.sortOrder.1 < $1.sortOrder.1 })) { item in
+            let sortedGroupKeys = groupedItems.keys.sorted()
+
+            // iterate through each group
+            ForEach(Array(sortedGroupKeys.enumerated()), id: \.element) { index, groupKey in
+                let items = groupedItems[groupKey]!.sorted { $0.sortOrder.1 < $1.sortOrder.1 }
+
+                // then iterate through item in the group
+                ForEach(items) { item in
                     Button {
                         selectedMenuItem = item
                     } label: {
                         menuLabel(item)
                     }
+                }
+
+                if index < sortedGroupKeys.count - 1 {
+                    Divider()
+                }
             }
         } label: {
             Label("Menu", systemImage: "line.3.horizontal")
@@ -158,31 +153,88 @@ struct MainMenuView: View {
             Label(item.label, systemImage: item.systemImage)
         }
     }
+    
+    @ViewBuilder
+    var destinationView: some View {
+        switch self.selectedMenuItem {
+        case .home:
+            HomeView(currentUserService: currentUserService, announcementStore: announcementStore)
+                .onAppear{ OverlayManager.shared.show(.splash, animation: OverlayAnimation.fast) }
+            
+        case .contacts:
+            RequiresSignInView(currentUserService: currentUserService) {
+                ContactListView(currentUserService: currentUserService)
+            }
+            .padding(.vertical)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+            .onAppear { OverlayManager.shared.hide(.splash) }
+            
+        case .announcements:
+            VStackBox {
+                StoreListView(store: announcementStore)
+                if !currentUserService.isSignedIn {
+                    SignUpInLinkView(currentUserService: currentUserService)
+                }
+            }
+            .padding(.vertical)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+            .onAppear { OverlayManager.shared.hide(.splash) }
+                        
+        case .profile:
+            UserAccountView(
+                viewModel: UserAccountViewModel(),
+                currentUserService: currentUserService
+            )
+            .onAppear { OverlayManager.shared.hide(.splash) }
+            
+        case .messages:
+            RequiresSignInView(currentUserService: currentUserService) {
+                UserMessagePostsStackView(
+                    viewModel: UserPostViewModel<PrivateMessage>(),
+                    currentUserService: currentUserService,
+                    store: privateMessageStore)
+            }
+            .onAppear { OverlayManager.shared.hide(.splash) }
+            
+        case .comments:
+            RequiresSignInView(currentUserService: currentUserService) {
+                CommentPostsStackView(
+                    currentUserService: currentUserService,
+                    store: publicCommentStore)
+            }
+            .onAppear { OverlayManager.shared.hide(.splash) }
+            
+        case .activity:
+            ActivityLogView()
+                .onAppear { OverlayManager.shared.hide(.splash) }
+            
+        case .support:
+            SupportView()
+                .onAppear { OverlayManager.shared.hide(.splash) }
+            
+        case .settings:
+            SettingsView()
+                .onAppear { OverlayManager.shared.hide(.splash) }
+            
+        case .none:
+            EmptyView()
+                .onAppear { OverlayManager.shared.hide(.splash) }
+        }
+    }
 }
 
 
 #if DEBUG
 #Preview ("test-data signed-in") {
-    let currentUserService = CurrentUserTestService.sharedSignedIn
-    
-    let schema = RepositoryConfig.modelContainerSchema
-    let config = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
-    let container = try! ModelContainer(for: schema, configurations: [config])
-
-    for object in ActivityLogEntry.testObjects {
-        container.mainContext.insert(object)
-    }
-    
-    for object in Contact.testObjects {
-        container.mainContext.insert(object)
-    }
-
+    let currentUserService: CurrentUserService = CurrentUserTestService.sharedSignedIn
     let modelContainerManager = ModelContainerManager(currentUserService: currentUserService)
+    let container = modelContainerManager.makePreviewContainer()
     modelContainerManager.injectPreviewContainer(container)
 
     return MainMenuView(
         currentUserService: currentUserService,
         announcementStore: AnnouncementStore.testLoaded(),
+//        announcementStore: AnnouncementStore.testTiny(),
         publicCommentStore: PublicCommentStore.testLoaded(),
         privateMessageStore: PrivateMessageStore()             // loading empty because private messages not used yet
     )
@@ -191,53 +243,14 @@ struct MainMenuView: View {
     .environment(\.font, Font.body)
 }
 #Preview ("no-data and signed-out") {
-    let currentUserService = CurrentUserTestService.sharedSignedOut
-    
-    let container = try! ModelContainer()
-    
-    let modelContainerManager = ModelContainerManager(currentUserService: currentUserService)
-    modelContainerManager.injectPreviewContainer(container)
-
     return MainMenuView(
-        currentUserService: currentUserService,
-        announcementStore: AnnouncementStore.testTiny(),
-        publicCommentStore: PublicCommentStore.testLoaded(),
-        privateMessageStore: PrivateMessageStore.testLoaded()
+        currentUserService: CurrentUserTestService.sharedSignedOut,
+        announcementStore: AnnouncementStore(),
+        publicCommentStore: PublicCommentStore(),
+        privateMessageStore: PrivateMessageStore()
     )
-    .modelContainer(container)
+    .modelContainer(ModelContainerManager.emptyContainer)
     .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
     .environment(\.font, Font.body)
-}
-
-// this helper is for child view previews
-struct MainViewPreviewWrapper<Content: View>: View {
-    let currentUserService: CurrentUserService
-    let content: Content
-
-    init(currentUserService: CurrentUserService,
-         @ViewBuilder content: () -> Content) {
-        self.currentUserService = currentUserService
-        self.content = content()
-    }
-    
-    var body: some View {
-        NavigationStack {
-            VStack(alignment: .leading, spacing: 24) {
-                content
-            }
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Menu {
-                        Button("Other Menu Items") { }
-                    } label: {
-                        Label("Menu", systemImage: "line.3.horizontal")
-                    }
-                }
-            }
-            .padding(.vertical)
-        }
-        .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
-        .environment(\.font, Font.body)
-    }
 }
 #endif

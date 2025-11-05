@@ -22,7 +22,8 @@ import Foundation
 import SwiftUI
 
 enum NavigationItem: String, CaseIterable, Identifiable {
-    case announcements,
+    case home,
+         announcements,
          contacts,
          comments,
          messages,
@@ -34,6 +35,7 @@ enum NavigationItem: String, CaseIterable, Identifiable {
 
     var label: String {
         switch self {
+        case .home: return "Home"
         case .announcements: return "Announcements"
         case .contacts: return "Contacts"
         case .comments: return "Public Comments"
@@ -47,19 +49,21 @@ enum NavigationItem: String, CaseIterable, Identifiable {
     
     var sortOrder: (Int, Int) {
         switch self {
-        case .announcements: return (0,0)
-        case .contacts: return (0,1)
-        case .messages: return (0,2)
-        case .comments: return (0,3)
-        case .activity: return (1,0)
-        case .settings: return (1,1)
-        case .support: return (1,2)
+        case .home: return (0,0)
+        case .announcements: return (1,0)
+        case .contacts: return (1,2)
+        case .messages: return (-1,0)   // hide
+        case .comments: return (-1,0)   // hide
+        case .activity: return (2,0)
+        case .settings: return (2,1)
+        case .support: return (2,2)
         case .profile: return (-1,0)    // hide
         }
     }
 
     var systemImage: String {
         switch self {
+        case .home: return "house"
         case .announcements: return "megaphone"
         case .contacts: return "person.2.circle"
         case .messages: return "envelope"
