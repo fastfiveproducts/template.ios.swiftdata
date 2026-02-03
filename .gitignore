@@ -8,6 +8,10 @@ xcuserdata/
 # Add this line if you want to avoid checking in source code from the Xcode workspace
 *.xcworkspace
 
+# Xcode build artifacts
+build/
+DerivedData/
+
 ## Obj-C/Swift specific
 *.hmap
 

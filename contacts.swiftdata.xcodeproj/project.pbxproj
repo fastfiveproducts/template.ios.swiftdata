@@ -73,6 +73,7 @@
 		B59779DD2EB93B9B00712D85 /* template_diff.zsh in Resources */ = {isa = PBXBuildFile; fileRef = B597799C2EB93B9B00712D85 /* template_diff.zsh */; };
 		B59779DF2EB98A9900712D85 /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59779DE2EB98A9900712D85 /* MainTabView.swift */; };
 		B59779E12EB98F5A00712D85 /* MainViewPreviewWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59779E02EB98F5A00712D85 /* MainViewPreviewWrapper.swift */; };
+		B5A0A71C2F32A21A004D0593 /* DefaultConnector in Frameworks */ = {isa = PBXBuildFile; productRef = B5A0A71B2F32A21A004D0593 /* DefaultConnector */; };
 		B5C0BD622E24187300641B69 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = B5C0BD602E24187300641B69 /* LICENSE */; };
 		B5C0BD632E24187300641B69 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = B5C0BD612E24187300641B69 /* README.md */; };
 		B5C0BD652E2418F100641B69 /* LICENSE-EXCEPTIONS.md in Resources */ = {isa = PBXBuildFile; fileRef = B5C0BD642E2418E200641B69 /* LICENSE-EXCEPTIONS.md */; };
@@ -167,6 +168,7 @@
 				B5C0BDEF2E241F6F00641B69 /* FirebaseDatabase in Frameworks */,
 				B5C0BDE92E241F6F00641B69 /* FirebaseAppCheck in Frameworks */,
 				B5C0BDEB2E241F6F00641B69 /* FirebaseAuth in Frameworks */,
+				B5A0A71C2F32A21A004D0593 /* DefaultConnector in Frameworks */,
 				B5C0BDED2E241F6F00641B69 /* FirebaseCore in Frameworks */,
 				B5C0BDE62E241F1000641B69 /* DefaultConnector in Frameworks */,
 				B5C0BDF12E241F6F00641B69 /* FirebaseFirestore in Frameworks */,
@@ -420,6 +422,7 @@
 				B5C0BDEC2E241F6F00641B69 /* FirebaseCore */,
 				B5C0BDEE2E241F6F00641B69 /* FirebaseDatabase */,
 				B5C0BDF02E241F6F00641B69 /* FirebaseFirestore */,
+				B5A0A71B2F32A21A004D0593 /* DefaultConnector */,
 			);
 			productName = contacts;
 			productReference = B5D0C78E2E2415FC00B31F19 /* contacts.swiftdata.swiftdata.app */;
@@ -451,7 +454,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				B5C0BDE72E241F6F00641B69 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
-				B58457672EA07D660093C071 /* XCLocalSwiftPackageReference "../template.firebase/dataconnect-generated/swift/DefaultConnector" */,
+				B5A0A71A2F32A21A004D0593 /* XCLocalSwiftPackageReference "../dataconnect-generated/swift/DefaultConnector" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = B5D0C78F2E2415FC00B31F19 /* Products */;
@@ -767,9 +770,9 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		B58457672EA07D660093C071 /* XCLocalSwiftPackageReference "../template.firebase/dataconnect-generated/swift/DefaultConnector" */ = {
+		B5A0A71A2F32A21A004D0593 /* XCLocalSwiftPackageReference "../dataconnect-generated/swift/DefaultConnector" */ = {
 			isa = XCLocalSwiftPackageReference;
-			relativePath = "../template.firebase/dataconnect-generated/swift/DefaultConnector";
+			relativePath = "../dataconnect-generated/swift/DefaultConnector";
 		};
 /* End XCLocalSwiftPackageReference section */
 
@@ -785,6 +788,10 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		B5A0A71B2F32A21A004D0593 /* DefaultConnector */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = DefaultConnector;
+		};
 		B5C0BDE52E241F1000641B69 /* DefaultConnector */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = DefaultConnector;
