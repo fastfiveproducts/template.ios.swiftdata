@@ -52,7 +52,7 @@ struct RequiresSignInView<Content: View>: View {
 #Preview ("test-data signed-in") {
     let currentUserService = CurrentUserTestService.sharedSignedIn
     RequiresSignInView(currentUserService: currentUserService) {
-        CommentPostsStackView(
+        CommentsMainView(
             currentUserService: currentUserService,
             store: PublicCommentStore.testLoaded()
         )
@@ -63,7 +63,7 @@ struct RequiresSignInView<Content: View>: View {
 #Preview ("no-data and signed-out") {
     let currentUserService = CurrentUserTestService.sharedSignedOut
     RequiresSignInView(currentUserService: currentUserService) {
-        CommentPostsStackView(
+        CommentsMainView(
             currentUserService: currentUserService,
             store: PublicCommentStore()
         )

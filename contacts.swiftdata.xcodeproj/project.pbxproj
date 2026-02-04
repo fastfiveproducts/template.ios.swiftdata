@@ -39,10 +39,11 @@
 		B59779BB2EB93B9B00712D85 /* ContactListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59779742EB93B9B00712D85 /* ContactListView.swift */; };
 		B59779BC2EB93B9B00712D85 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59779762EB93B9B00712D85 /* HomeView.swift */; };
 		B59779BD2EB93B9B00712D85 /* MainMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59779772EB93B9B00712D85 /* MainMenuView.swift */; };
-		B59779BE2EB93B9B00712D85 /* CommentPostsStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59779792EB93B9B00712D85 /* CommentPostsStackView.swift */; };
+		B59779BE2EB93B9B00712D85 /* CommentsMainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59779792EB93B9B00712D85 /* CommentsMainView.swift */; };
 		B59779BF2EB93B9B00712D85 /* PostBubbleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B597797A2EB93B9B00712D85 /* PostBubbleView.swift */; };
 		B59779C02EB93B9B00712D85 /* PostsScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B597797B2EB93B9B00712D85 /* PostsScrollView.swift */; };
 		B59779C12EB93B9B00712D85 /* UserPostsStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B597797C2EB93B9B00712D85 /* UserPostsStackView.swift */; };
+		B5977A002EB93B9B00712D85 /* MessagesMainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5977A012EB93B9B00712D85 /* MessagesMainView.swift */; };
 		B59779C32EB93B9B00712D85 /* ActivityLogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B597797F2EB93B9B00712D85 /* ActivityLogView.swift */; };
 		B59779C42EB93B9B00712D85 /* OverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59779802EB93B9B00712D85 /* OverlayView.swift */; };
 		B59779C52EB93B9B00712D85 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59779812EB93B9B00712D85 /* SettingsView.swift */; };
@@ -120,10 +121,11 @@
 		B59779742EB93B9B00712D85 /* ContactListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactListView.swift; sourceTree = "<group>"; };
 		B59779762EB93B9B00712D85 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		B59779772EB93B9B00712D85 /* MainMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainMenuView.swift; sourceTree = "<group>"; };
-		B59779792EB93B9B00712D85 /* CommentPostsStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentPostsStackView.swift; sourceTree = "<group>"; };
+		B59779792EB93B9B00712D85 /* CommentsMainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentsMainView.swift; sourceTree = "<group>"; };
 		B597797A2EB93B9B00712D85 /* PostBubbleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostBubbleView.swift; sourceTree = "<group>"; };
 		B597797B2EB93B9B00712D85 /* PostsScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostsScrollView.swift; sourceTree = "<group>"; };
 		B597797C2EB93B9B00712D85 /* UserPostsStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserPostsStackView.swift; sourceTree = "<group>"; };
+		B5977A012EB93B9B00712D85 /* MessagesMainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesMainView.swift; sourceTree = "<group>"; };
 		B597797F2EB93B9B00712D85 /* ActivityLogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityLogView.swift; sourceTree = "<group>"; };
 		B59779802EB93B9B00712D85 /* OverlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayView.swift; sourceTree = "<group>"; };
 		B59779812EB93B9B00712D85 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
@@ -294,7 +296,8 @@
 		B597797E2EB93B9B00712D85 /* Posts */ = {
 			isa = PBXGroup;
 			children = (
-				B59779792EB93B9B00712D85 /* CommentPostsStackView.swift */,
+				B59779792EB93B9B00712D85 /* CommentsMainView.swift */,
+				B5977A012EB93B9B00712D85 /* MessagesMainView.swift */,
 				B597797A2EB93B9B00712D85 /* PostBubbleView.swift */,
 				B597797B2EB93B9B00712D85 /* PostsScrollView.swift */,
 				B597797C2EB93B9B00712D85 /* UserPostsStackView.swift */,
@@ -526,7 +529,8 @@
 				B59779BB2EB93B9B00712D85 /* ContactListView.swift in Sources */,
 				B59779BC2EB93B9B00712D85 /* HomeView.swift in Sources */,
 				B59779BD2EB93B9B00712D85 /* MainMenuView.swift in Sources */,
-				B59779BE2EB93B9B00712D85 /* CommentPostsStackView.swift in Sources */,
+				B59779BE2EB93B9B00712D85 /* CommentsMainView.swift in Sources */,
+				B5977A002EB93B9B00712D85 /* MessagesMainView.swift in Sources */,
 				B59779BF2EB93B9B00712D85 /* PostBubbleView.swift in Sources */,
 				B59779C02EB93B9B00712D85 /* PostsScrollView.swift in Sources */,
 				B59779C12EB93B9B00712D85 /* UserPostsStackView.swift in Sources */,

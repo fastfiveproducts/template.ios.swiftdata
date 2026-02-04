@@ -86,7 +86,7 @@ extension MainTabView {
         {
             ToolbarItem(placement: .navigationBarTrailing) {
                 NavigationLink(destination:
-                    CommentPostsStackView(
+                    CommentsMainView(
                         currentUserService: currentUserService,
                         store: publicCommentStore
                     ).onAppear { OverlayManager.shared.hide(.splash) })
@@ -95,26 +95,18 @@ extension MainTabView {
                         .foregroundColor(.primary)
                 }
                 .buttonStyle(BorderlessButtonStyle())
-                
+
             }
         }
-        
+
         if privateMessageStore.list.count > 0,
            currentUserService.isSignedIn
         {
             ToolbarItem(placement: .navigationBarTrailing) {
                 NavigationLink(destination:
-                    UserPostsStackView(
+                    MessagesMainView(
                         currentUserService: currentUserService,
-                        viewModel: UserPostViewModel<PrivateMessage>(),
-                        store: privateMessageStore,
-                        sectionTitle: "Your Messages",
-                        composeTitle: "New Message",
-                        textFieldLabel: "Message Text",
-                        buttonText: "Send Message",
-                        createPost: { candidate in
-                            try await privateMessageStore.createPrivateMessage(from: candidate)
-                        }
+                        store: privateMessageStore
                     ).onAppear { OverlayManager.shared.hide(.splash) })
                 {
                     Label("Messages", systemImage: "envelope")

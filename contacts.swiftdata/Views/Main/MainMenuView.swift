@@ -69,7 +69,7 @@ extension MainMenuView {
         {
             ToolbarItem(placement: .navigationBarTrailing) {
                 NavigationLink(destination:
-                    CommentPostsStackView(
+                    CommentsMainView(
                         currentUserService: currentUserService,
                         store: publicCommentStore
                     ).onAppear { OverlayManager.shared.hide(.splash) })
@@ -78,27 +78,19 @@ extension MainMenuView {
                         .foregroundColor(.primary)
                 }
                 .buttonStyle(BorderlessButtonStyle())
-                
+
             }
         }
-        
+
         if privateMessageStore.list.count > 0,
            currentUserService.isSignedIn,
            self.selectedMenuItem != .messages
         {
             ToolbarItem(placement: .navigationBarTrailing) {
                 NavigationLink(destination:
-                    UserPostsStackView(
+                    MessagesMainView(
                         currentUserService: currentUserService,
-                        viewModel: UserPostViewModel<PrivateMessage>(),
-                        store: privateMessageStore,
-                        sectionTitle: "Your Messages",
-                        composeTitle: "New Message",
-                        textFieldLabel: "Message Text",
-                        buttonText: "Send Message",
-                        createPost: { candidate in
-                            try await privateMessageStore.createPrivateMessage(from: candidate)
-                        }
+                        store: privateMessageStore
                     ).onAppear { OverlayManager.shared.hide(.splash) })
                 {
                     Label("Messages", systemImage: "envelope")
@@ -196,26 +188,19 @@ extension MainMenuView {
             
         case .messages:
             RequiresSignInView(currentUserService: currentUserService) {
-                UserPostsStackView(
+                MessagesMainView(
                     currentUserService: currentUserService,
-                    viewModel: UserPostViewModel<PrivateMessage>(),
-                    store: privateMessageStore,
-                    sectionTitle: "Your Messages",
-                    composeTitle: "New Message",
-                    textFieldLabel: "Message Text",
-                    buttonText: "Send Message",
-                    createPost: { candidate in
-                        try await privateMessageStore.createPrivateMessage(from: candidate)
-                    }
+                    store: privateMessageStore
                 )
             }
             .onAppear { OverlayManager.shared.hide(.splash) }
-            
+
         case .comments:
             RequiresSignInView(currentUserService: currentUserService) {
-                CommentPostsStackView(
+                CommentsMainView(
                     currentUserService: currentUserService,
-                    store: publicCommentStore)
+                    store: publicCommentStore
+                )
             }
             .onAppear { OverlayManager.shared.hide(.splash) }
             

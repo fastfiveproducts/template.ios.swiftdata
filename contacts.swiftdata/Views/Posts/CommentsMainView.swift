@@ -1,11 +1,11 @@
 //
-//  CommentPostsStackView.swift
+//  CommentsMainView.swift
 //
 //  Template file created by Pete Maiser, 7/15/2025
-//  Modified by Pete Maiser, Fast Five Products LLC, on 2/4/26.
+//  Renamed from CommentPostsStackView.swift by Pete Maiser, Fast Five Products LLC, on 2/4/26.
 //      Template v0.2.5 (updated) — Fast Five Products LLC's public AGPL template.
 //
-//  Copyright © 2025 Fast Five Products LLC. All rights reserved.
+//  Copyright © 2025, 2026 Fast Five Products LLC. All rights reserved.
 //
 //  This file is part of a project licensed under the GNU Affero General Public License v3.0.
 //  See the LICENSE file at the root of this repository for full terms.
@@ -20,10 +20,10 @@
 
 import SwiftUI
 
-struct CommentPostsStackView: View, DebugPrintable {
+struct CommentsMainView: View, DebugPrintable {
     @ObservedObject var currentUserService: CurrentUserService
     @ObservedObject var store: PublicCommentStore
-    
+
     var body: some View {
         VStackBox {
             PostsScrollView(
@@ -63,7 +63,7 @@ struct CommentPostsStackView: View, DebugPrintable {
 #Preview  {
     let currentUserService = CurrentUserTestService.sharedSignedIn
     let store = PublicCommentStore.testLoaded()
-    CommentPostsStackView(
+    CommentsMainView(
         currentUserService: currentUserService,
         store: store
     )
