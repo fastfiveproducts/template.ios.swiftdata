@@ -25,47 +25,65 @@ struct CommentsMainView: View, DebugPrintable {
     @ObservedObject var store: PublicCommentStore
 
     var body: some View {
-        VStackBox {
+        VStack(alignment: .leading, spacing: 0) {
             PostsScrollView(
                 store: store,
                 currentUserId: currentUserService.userKey.uid,
                 showFromUser: true,
                 hideWhenEmpty: true
             )
+            .padding(.horizontal)
+
+            Spacer(minLength: 0)
+
             Divider()
-            NavigationLink {
-                UserPostsStackView(
-                    currentUserService: currentUserService,
-                    viewModel: UserPostViewModel<PublicComment>(),
-                    store: store,
-                    sectionTitle: "Your Past Comments",
-                    composeTitle: "Write Comment",
-                    textFieldLabel: "Comment Text",
-                    buttonText: "Submit New Comment",
-                    createPost: { candidate in
-                        try await store.createPublicComment(from: candidate)
+                .padding(.bottom, 16)
+            VStackBox(title: "Write a Comment") {
+                NavigationLink {
+                    UserPostsStackView(
+                        currentUserService: currentUserService,
+                        viewModel: UserPostViewModel<PublicComment>(),
+                        store: store,
+                        sectionTitle: "Your Past Comments",
+                        composeTitle: "Write a Comment",
+                        textFieldLabel: "Comment Text",
+                        buttonText: "Submit New Comment",
+                        createPost: { candidate in
+                            try await store.createPublicComment(from: candidate)
+                        }
+                    )
+                } label: {
+                    HStack {
+                        Spacer()
+                        Text("My Comments")
+                        Spacer()
                     }
-                )
-            } label: {
-                HStack {
-                    Spacer()
-                    Text("Write a Comment")
-                    Spacer()
+                    .foregroundColor(.accentColor)
                 }
-                .foregroundColor(.accentColor)
             }
         }
+        .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
+        .environment(\.font, Font.body)
     }
 }
 
 
 #if DEBUG
 #Preview  {
-    let currentUserService = CurrentUserTestService.sharedSignedIn
-    let store = PublicCommentStore.testLoaded()
-    CommentsMainView(
-        currentUserService: currentUserService,
-        store: store
-    )
+    NavigationStack {
+        CommentsMainView(
+            currentUserService: CurrentUserTestService.sharedSignedIn,
+            store: PublicCommentStore.testLoaded()
+        )
+    }
+}
+
+#Preview ("Empty") {
+    NavigationStack {
+        CommentsMainView(
+            currentUserService: CurrentUserTestService.sharedSignedIn,
+            store: PublicCommentStore()
+        )
+    }
 }
 #endif

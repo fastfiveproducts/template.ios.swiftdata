@@ -12,6 +12,7 @@
 		B59779A02EB93B9B00712D85 /* FirestoreConnector.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59779512EB93B9B00712D85 /* FirestoreConnector.swift */; };
 		B59779A12EB93B9B00712D85 /* HelpTextConnector.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59779522EB93B9B00712D85 /* HelpTextConnector.swift */; };
 		B59779A22EB93B9B00712D85 /* PostsConnector.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59779532EB93B9B00712D85 /* PostsConnector.swift */; };
+		B5977A102EB93B9B00712D85 /* UsersConnector.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5977A112EB93B9B00712D85 /* UsersConnector.swift */; };
 		B59779A32EB93B9B00712D85 /* RestrictedWordConnector.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59779542EB93B9B00712D85 /* RestrictedWordConnector.swift */; };
 		B59779A42EB93B9B00712D85 /* CloudErrorCodes.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59779562EB93B9B00712D85 /* CloudErrorCodes.swift */; };
 		B59779A52EB93B9B00712D85 /* SignInOutObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59779572EB93B9B00712D85 /* SignInOutObserver.swift */; };
@@ -35,6 +36,7 @@
 		B59779B72EB93B9B00712D85 /* DeviceStamping.swift in Sources */ = {isa = PBXBuildFile; fileRef = B597796E2EB93B9B00712D85 /* DeviceStamping.swift */; };
 		B59779B82EB93B9B00712D85 /* UserAccountViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59779702EB93B9B00712D85 /* UserAccountViewModel.swift */; };
 		B59779B92EB93B9B00712D85 /* UserPostViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59779712EB93B9B00712D85 /* UserPostViewModel.swift */; };
+		B5977A212EB93B9B00712D85 /* MessagesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5977A202EB93B9B00712D85 /* MessagesViewModel.swift */; };
 		B59779BA2EB93B9B00712D85 /* ContactDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59779732EB93B9B00712D85 /* ContactDetailView.swift */; };
 		B59779BB2EB93B9B00712D85 /* ContactListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59779742EB93B9B00712D85 /* ContactListView.swift */; };
 		B59779BC2EB93B9B00712D85 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59779762EB93B9B00712D85 /* HomeView.swift */; };
@@ -94,6 +96,7 @@
 		B59779512EB93B9B00712D85 /* FirestoreConnector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreConnector.swift; sourceTree = "<group>"; };
 		B59779522EB93B9B00712D85 /* HelpTextConnector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpTextConnector.swift; sourceTree = "<group>"; };
 		B59779532EB93B9B00712D85 /* PostsConnector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostsConnector.swift; sourceTree = "<group>"; };
+		B5977A112EB93B9B00712D85 /* UsersConnector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsersConnector.swift; sourceTree = "<group>"; };
 		B59779542EB93B9B00712D85 /* RestrictedWordConnector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestrictedWordConnector.swift; sourceTree = "<group>"; };
 		B59779562EB93B9B00712D85 /* CloudErrorCodes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudErrorCodes.swift; sourceTree = "<group>"; };
 		B59779572EB93B9B00712D85 /* SignInOutObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInOutObserver.swift; sourceTree = "<group>"; };
@@ -117,6 +120,7 @@
 		B597796E2EB93B9B00712D85 /* DeviceStamping.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceStamping.swift; sourceTree = "<group>"; };
 		B59779702EB93B9B00712D85 /* UserAccountViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAccountViewModel.swift; sourceTree = "<group>"; };
 		B59779712EB93B9B00712D85 /* UserPostViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserPostViewModel.swift; sourceTree = "<group>"; };
+		B5977A202EB93B9B00712D85 /* MessagesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesViewModel.swift; sourceTree = "<group>"; };
 		B59779732EB93B9B00712D85 /* ContactDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactDetailView.swift; sourceTree = "<group>"; };
 		B59779742EB93B9B00712D85 /* ContactListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactListView.swift; sourceTree = "<group>"; };
 		B59779762EB93B9B00712D85 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
@@ -198,6 +202,7 @@
 				B59779522EB93B9B00712D85 /* HelpTextConnector.swift */,
 				B59779532EB93B9B00712D85 /* PostsConnector.swift */,
 				B59779542EB93B9B00712D85 /* RestrictedWordConnector.swift */,
+				B5977A112EB93B9B00712D85 /* UsersConnector.swift */,
 			);
 			path = Cloud;
 			sourceTree = "<group>";
@@ -269,6 +274,7 @@
 			children = (
 				B59779702EB93B9B00712D85 /* UserAccountViewModel.swift */,
 				B59779712EB93B9B00712D85 /* UserPostViewModel.swift */,
+				B5977A202EB93B9B00712D85 /* MessagesViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -501,6 +507,7 @@
 				B59779A02EB93B9B00712D85 /* FirestoreConnector.swift in Sources */,
 				B59779A12EB93B9B00712D85 /* HelpTextConnector.swift in Sources */,
 				B59779A22EB93B9B00712D85 /* PostsConnector.swift in Sources */,
+				B5977A102EB93B9B00712D85 /* UsersConnector.swift in Sources */,
 				B59779A32EB93B9B00712D85 /* RestrictedWordConnector.swift in Sources */,
 				B59779A42EB93B9B00712D85 /* CloudErrorCodes.swift in Sources */,
 				B59779A52EB93B9B00712D85 /* SignInOutObserver.swift in Sources */,
@@ -525,6 +532,7 @@
 				B59779B72EB93B9B00712D85 /* DeviceStamping.swift in Sources */,
 				B59779B82EB93B9B00712D85 /* UserAccountViewModel.swift in Sources */,
 				B59779B92EB93B9B00712D85 /* UserPostViewModel.swift in Sources */,
+				B5977A212EB93B9B00712D85 /* MessagesViewModel.swift in Sources */,
 				B59779BA2EB93B9B00712D85 /* ContactDetailView.swift in Sources */,
 				B59779BB2EB93B9B00712D85 /* ContactListView.swift in Sources */,
 				B59779BC2EB93B9B00712D85 /* HomeView.swift in Sources */,

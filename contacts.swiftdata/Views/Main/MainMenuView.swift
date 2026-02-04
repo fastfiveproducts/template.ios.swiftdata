@@ -63,9 +63,9 @@ extension MainMenuView {
             self.menuView
         }
         
-        if publicCommentStore.list.count > 0,
-           currentUserService.isSignedIn,
-           self.selectedMenuItem != .comments
+        if currentUserService.isSignedIn
+//          ,publicCommentStore.list.count > 0    // uncomment this to have comments display only if there already is one
+          ,self.selectedMenuItem != .comments
         {
             ToolbarItem(placement: .navigationBarTrailing) {
                 NavigationLink(destination:
@@ -82,9 +82,9 @@ extension MainMenuView {
             }
         }
 
-        if privateMessageStore.list.count > 0,
-           currentUserService.isSignedIn,
-           self.selectedMenuItem != .messages
+        if currentUserService.isSignedIn
+//          ,privateMessageStore.list.count > 0   // uncomment this to have messages display only if there already is one
+          ,self.selectedMenuItem != .messages
         {
             ToolbarItem(placement: .navigationBarTrailing) {
                 NavigationLink(destination:
@@ -236,9 +236,20 @@ extension MainMenuView {
         announcementStore: AnnouncementStore.testLoaded(),
 //        announcementStore: AnnouncementStore.testTiny(),
         publicCommentStore: PublicCommentStore.testLoaded(),
-        privateMessageStore: PrivateMessageStore()             // loading empty because private messages not used yet
+        privateMessageStore: PrivateMessageStore.testLoaded()
     )
     .modelContainer(container)
+    .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
+    .environment(\.font, Font.body)
+}
+#Preview ("no-data and signed-in") {
+    return MainMenuView(
+        currentUserService: CurrentUserTestService.sharedSignedIn,
+        announcementStore: AnnouncementStore(),
+        publicCommentStore: PublicCommentStore(),
+        privateMessageStore: PrivateMessageStore()
+    )
+    .modelContainer(ModelContainerManager.emptyContainer)
     .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
     .environment(\.font, Font.body)
 }

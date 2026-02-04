@@ -146,7 +146,7 @@ private extension UserPostsStackView {
         viewModel: viewModel,
         store: store,
         sectionTitle: "Your Past Comments",
-        composeTitle: "Write Comment",
+        composeTitle: "Write a Comment",
         textFieldLabel: "Comment Text",
         buttonText: "Submit New Comment",
         createPost: { candidate in
@@ -163,7 +163,7 @@ private extension UserPostsStackView {
         viewModel: viewModel,
         store: store,
         sectionTitle: "Your Past Comments",
-        composeTitle: "Write Comment",
+        composeTitle: "Write a Comment",
         textFieldLabel: "Comment Text",
         buttonText: "Submit New Comment",
         createPost: { candidate in

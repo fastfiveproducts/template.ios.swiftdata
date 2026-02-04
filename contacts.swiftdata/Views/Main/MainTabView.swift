@@ -81,8 +81,8 @@ struct MainTabView: View {
 extension MainTabView {
     @ToolbarContentBuilder
     var mainToolbar: some ToolbarContent {
-        if publicCommentStore.list.count > 0,
-           currentUserService.isSignedIn
+        if currentUserService.isSignedIn
+//          ,publicCommentStore.list.count > 0    // uncomment this to have comments display only if there already is one
         {
             ToolbarItem(placement: .navigationBarTrailing) {
                 NavigationLink(destination:
@@ -99,8 +99,8 @@ extension MainTabView {
             }
         }
 
-        if privateMessageStore.list.count > 0,
-           currentUserService.isSignedIn
+        if currentUserService.isSignedIn
+//          ,privateMessageStore.list.count > 0   // uncomment this to have messages display only if there already is one
         {
             ToolbarItem(placement: .navigationBarTrailing) {
                 NavigationLink(destination:
@@ -142,6 +142,17 @@ extension MainTabView {
         privateMessageStore: PrivateMessageStore.testLoaded()
     )
     .modelContainer(container)
+    .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
+    .environment(\.font, Font.body)
+}
+#Preview ("no-data and signed-in") {
+    return MainTabView(
+        currentUserService: CurrentUserTestService.sharedSignedIn,
+        announcementStore: AnnouncementStore(),
+        publicCommentStore: PublicCommentStore(),
+        privateMessageStore: PrivateMessageStore()
+    )
+    .modelContainer(ModelContainerManager.emptyContainer)
     .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
     .environment(\.font, Font.body)
 }

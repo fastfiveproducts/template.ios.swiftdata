@@ -2,7 +2,8 @@
 //  MessagesMainView.swift
 //
 //  Created by Pete Maiser, Fast Five Products LLC, on 2/4/26.
-//      Template v0.2.5 — Fast Five Products LLC's public AGPL template.
+//  Modified by Pete Maiser, Fast Five Products LLC, on 2/4/26.
+//      Template v0.2.5 (updated) — Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2026 Fast Five Products LLC. All rights reserved.
 //
@@ -22,6 +23,7 @@ import SwiftUI
 struct MessagesMainView: View, DebugPrintable {
     @ObservedObject var currentUserService: CurrentUserService
     @ObservedObject var store: PrivateMessageStore
+    @StateObject private var viewModel = MessagesViewModel()
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -30,12 +32,14 @@ struct MessagesMainView: View, DebugPrintable {
 
             Spacer(minLength: 0)
 
-            // New message section (placeholder for Phase 2 user search)
+            // New message search section
             Divider()
+                .padding(.bottom, 16)
             newMessageSection
         }
         .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
         .environment(\.font, Font.body)
+        .alert("Search Error", error: $viewModel.error)
     }
 
     // MARK: - Conversations List
@@ -92,12 +96,87 @@ struct MessagesMainView: View, DebugPrintable {
 
     // MARK: - New Message Section
 
+    private var filteredSearchResults: [UserKey] {
+        viewModel.searchResults.filter { $0.uid != currentUserService.userKey.uid }
+    }
+
+    private var existingPartnerIds: Set<String> {
+        Set(store.conversationPartners(for: currentUserService.userKey.uid).map { $0.userKey.uid })
+    }
+
     private var newMessageSection: some View {
-        VStackBox(title: "New Message") {
-            Text("User search coming soon...")
-                .foregroundColor(.secondary)
-                .frame(maxWidth: .infinity, alignment: .center)
-                .padding()
+        VStackBox(title: "New Conversation") {
+            // Search field
+            HStack {
+                TextField("Search for user display name...", text: $viewModel.searchText)
+                    .textFieldStyle(.roundedBorder)
+                    .autocorrectionDisabled()
+                    .textInputAutocapitalization(.never)
+                    .onSubmit {
+                        performSearch()
+                    }
+
+                Button(action: performSearch) {
+                    if viewModel.isSearching {
+                        ProgressView()
+                            .frame(width: 20, height: 20)
+                    } else {
+                        Image(systemName: "magnifyingglass")
+                    }
+                }
+                .disabled(viewModel.searchText.isEmpty || viewModel.isSearching)
+            }
+            .padding(.horizontal)
+
+            // Search results
+            if !filteredSearchResults.isEmpty {
+                Divider()
+                    .padding(.vertical, 8)
+
+                ForEach(filteredSearchResults, id: \.uid) { user in
+                    let hasExistingConversation = existingPartnerIds.contains(user.uid)
+                    NavigationLink {
+                        UserPostsStackView(
+                            currentUserService: currentUserService,
+                            viewModel: UserPostViewModel<PrivateMessage>(),
+                            store: store,
+                            sectionTitle: "Messages with \(user.displayName)",
+                            composeTitle: "New Message",
+                            textFieldLabel: "Message Text",
+                            buttonText: "Send Message",
+                            createPost: { candidate in
+                                try await store.createPrivateMessage(from: candidate)
+                            },
+                            conversationWith: user
+                        )
+                    } label: {
+                        HStack {
+                            Image(systemName: "person.circle")
+                                .foregroundColor(.accentColor)
+                            Text(user.displayName)
+                                .foregroundColor(.primary)
+                            Spacer()
+                            Text(hasExistingConversation ? "Resume Conversation" : "Start Conversation")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                        .padding(.horizontal)
+                        .padding(.vertical, 6)
+                    }
+                }
+            } else if viewModel.hasSearched && !viewModel.isSearching {
+                Text("No users found")
+                    .foregroundColor(.secondary)
+                    .padding()
+            }
+        }
+    }
+
+    // MARK: - Search
+
+    private func performSearch() {
+        Task {
+            await viewModel.searchUsers()
         }
     }
 }
