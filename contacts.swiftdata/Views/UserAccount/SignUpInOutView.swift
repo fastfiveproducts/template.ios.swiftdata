@@ -3,7 +3,7 @@
 //
 //  Template created by Pete Maiser, July 2024 through August 2025
 //  Modified by Pete Maiser, Fast Five Products LLC, on 10/23/25.
-//      Template v0.2.3 (updated) Fast Five Products LLC's public AGPL template.
+//      Template v0.2.5 (updated) Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025 Fast Five Products LLC. All rights reserved.
 //
@@ -144,6 +144,11 @@ struct SignUpInOutView: View, DebugPrintable {
                 viewModel: viewModel,
                 currentUserService: currentUserService
             )
+        } else if currentUserService.isIncompleteUserAccount {
+            CompleteAccountView(
+                viewModel: viewModel,
+                currentUserService: currentUserService
+            )
         } else if viewModel.changePasswordMode {
             ChangePasswordView(
                 viewModel: viewModel,
@@ -261,6 +266,18 @@ private extension SignUpInOutView {
 #Preview ("test-data creating-account") {
     let viewModel = UserAccountViewModel(createAccountMode: true)
     let currentUserService = CurrentUserTestService.sharedSignedOut
+    Form {
+        SignUpInOutView(
+            viewModel: viewModel,
+            currentUserService: currentUserService
+        )
+    }
+    .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
+    .environment(\.font, Font.body)
+}
+#Preview ("test-data incomplete-user-account") {
+    let viewModel = UserAccountViewModel()
+    let currentUserService = CurrentUserTestService.sharedIncompleteUserAccount
     Form {
         SignUpInOutView(
             viewModel: viewModel,

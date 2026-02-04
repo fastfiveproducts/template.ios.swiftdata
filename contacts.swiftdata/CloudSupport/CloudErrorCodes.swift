@@ -3,7 +3,7 @@
 //
 //  Template created by Pete Maiser, July 2024 through August 2025
 //  Modified by Pete Maiser, Fast Five Products LLC, on 8/28/25.
-//      Template v0.2.2 (updated) Fast Five Products LLC's public AGPL template.
+//      Template v0.2.5 (updated) Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025 Fast Five Products LLC. All rights reserved.
 //
@@ -47,9 +47,10 @@ enum AccountCreationError: Error, LocalizedError {
     case invalidInput
     case userIdNotFound
     case userAccountCreationIncomplete(Error)
+    case userAccountCompletionFailed(Error)
     case userDisplayNameCreationFailed
     case setUserDisplayNameFailed
-    
+
     var errorDescription: String? {
         switch self {
             case .invalidInput:
@@ -58,6 +59,8 @@ enum AccountCreationError: Error, LocalizedError {
                 return NSLocalizedString("Could not complete user create process, please try again", comment: "Unexpected Cloud Services Error")
             case let .userAccountCreationIncomplete(error):
                 return NSLocalizedString("Error in user profile creation, please try again.  Error: \(error)", comment: "Cloud Services Communications Error")
+            case let .userAccountCompletionFailed(error):
+                return NSLocalizedString("Error completing user account setup, please try again.  Error: \(error)", comment: "Cloud Services Communications Error")
             case .userDisplayNameCreationFailed:
                 return NSLocalizedString("Error in user display name creation, default used; you can change display name later in your user profie.", comment: "Cloud Services Communications Error")
             case .setUserDisplayNameFailed:
