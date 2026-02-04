@@ -32,13 +32,21 @@ struct PostsScrollView<T: Post>: View {
     var showToUser: Bool = false
     var hideWhenEmpty: Bool = false
 
-    // Apply filters
+    // Sort order: when true, displays newest first at top (like a feed); default is newest at bottom (like Messages app)
+    var newestAtTop: Bool = false
+
+    // Apply filters and sort order
     private var filteredPosts: [T] {
         guard case let .loaded(posts) = store.list else { return [] }
-        return posts.filter { post in
+        let filtered = posts.filter { post in
             let toMatch = toUserId == nil || post.to.uid == toUserId
             let fromMatch = fromUserId == nil || post.from.uid == fromUserId
             return toMatch && fromMatch
+        }
+        if newestAtTop {
+            return filtered.sorted { $0.timestamp > $1.timestamp }
+        } else {
+            return filtered.sorted { $0.timestamp < $1.timestamp }
         }
     }
 
@@ -73,18 +81,33 @@ struct PostsScrollView<T: Post>: View {
                         }
                     }
                 } else {
-                    ScrollView {
-                        LazyVStack(spacing: 4) {
-                            ForEach(filteredPosts) { post in
-                                PostBubbleView(
-                                    post: post,
-                                    isSent: post.from.uid == currentUserId,
-                                    showFromUser: showFromUser,
-                                    showToUser: showToUser
-                                )
+                    ScrollViewReader { proxy in
+                        ScrollView {
+                            LazyVStack(spacing: 4) {
+                                ForEach(filteredPosts) { post in
+                                    PostBubbleView(
+                                        post: post,
+                                        isSent: post.from.uid == currentUserId,
+                                        showFromUser: showFromUser,
+                                        showToUser: showToUser
+                                    )
+                                    .id(post.id)
+                                }
+                            }
+                            .padding(.top, 10)
+                        }
+                        .onAppear {
+                            if !newestAtTop, let lastPost = filteredPosts.last {
+                                proxy.scrollTo(lastPost.id, anchor: .bottom)
                             }
                         }
-                        .padding(.top, 10)
+                        .onChange(of: filteredPosts.count) {
+                            if !newestAtTop, let lastPost = filteredPosts.last {
+                                withAnimation {
+                                    proxy.scrollTo(lastPost.id, anchor: .bottom)
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -145,6 +168,21 @@ struct PostsScrollView<T: Post>: View {
             }
         }
         .padding()
+    }
+    .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
+    .environment(\.font, Font.body)
+}
+
+#Preview ("Newest on Top") {
+    let currentUserService = CurrentUserTestService.sharedSignedIn
+           
+    Section(header: Text("All Comments")) {
+        PostsScrollView(
+            store: PublicCommentStore.testLoaded(),
+            currentUserId: currentUserService.userKey.uid,
+            showFromUser: true,
+            newestAtTop: true
+        )
     }
     .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
     .environment(\.font, Font.body)
