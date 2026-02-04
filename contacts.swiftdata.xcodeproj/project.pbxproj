@@ -57,6 +57,7 @@
 		B59779CD2EB93B9B00712D85 /* RequiresSignInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B597798A2EB93B9B00712D85 /* RequiresSignInView.swift */; };
 		B59779CE2EB93B9B00712D85 /* SignUpInLinkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B597798B2EB93B9B00712D85 /* SignUpInLinkView.swift */; };
 		B59779CF2EB93B9B00712D85 /* SignUpInOutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B597798C2EB93B9B00712D85 /* SignUpInOutView.swift */; };
+		B59779E32F515A0000712D85 /* CompleteAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59779E22F515A0000712D85 /* CompleteAccountView.swift */; };
 		B59779D02EB93B9B00712D85 /* UserAccountProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B597798D2EB93B9B00712D85 /* UserAccountProfileView.swift */; };
 		B59779D12EB93B9B00712D85 /* UserAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B597798E2EB93B9B00712D85 /* UserAccountView.swift */; };
 		B59779D22EB93B9B00712D85 /* UserAssociationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B597798F2EB93B9B00712D85 /* UserAssociationView.swift */; };
@@ -137,6 +138,7 @@
 		B597798A2EB93B9B00712D85 /* RequiresSignInView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequiresSignInView.swift; sourceTree = "<group>"; };
 		B597798B2EB93B9B00712D85 /* SignUpInLinkView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpInLinkView.swift; sourceTree = "<group>"; };
 		B597798C2EB93B9B00712D85 /* SignUpInOutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpInOutView.swift; sourceTree = "<group>"; };
+		B59779E22F515A0000712D85 /* CompleteAccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompleteAccountView.swift; sourceTree = "<group>"; };
 		B597798D2EB93B9B00712D85 /* UserAccountProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAccountProfileView.swift; sourceTree = "<group>"; };
 		B597798E2EB93B9B00712D85 /* UserAccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAccountView.swift; sourceTree = "<group>"; };
 		B597798F2EB93B9B00712D85 /* UserAssociationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAssociationView.swift; sourceTree = "<group>"; };
@@ -320,6 +322,7 @@
 			isa = PBXGroup;
 			children = (
 				B59779882EB93B9B00712D85 /* ChangePasswordView.swift */,
+				B59779E22F515A0000712D85 /* CompleteAccountView.swift */,
 				B59779892EB93B9B00712D85 /* CreateAccountView.swift */,
 				B597798A2EB93B9B00712D85 /* RequiresSignInView.swift */,
 				B597798B2EB93B9B00712D85 /* SignUpInLinkView.swift */,
@@ -540,6 +543,7 @@
 				B59779CD2EB93B9B00712D85 /* RequiresSignInView.swift in Sources */,
 				B59779CE2EB93B9B00712D85 /* SignUpInLinkView.swift in Sources */,
 				B59779CF2EB93B9B00712D85 /* SignUpInOutView.swift in Sources */,
+				B59779E32F515A0000712D85 /* CompleteAccountView.swift in Sources */,
 				B59779D02EB93B9B00712D85 /* UserAccountProfileView.swift in Sources */,
 				B59779D12EB93B9B00712D85 /* UserAccountView.swift in Sources */,
 				B59779D22EB93B9B00712D85 /* UserAssociationView.swift in Sources */,

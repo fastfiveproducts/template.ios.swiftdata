@@ -38,3 +38,8 @@ dataconnect-generated
 
 # Custom template-diff output
 template_diff.txt
+
+# Claude Code session data and logs
+.claude/sessions/
+.claude/logs/
+.claude/tmp/
