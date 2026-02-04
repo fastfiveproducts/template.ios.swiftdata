@@ -2,7 +2,8 @@
 //  CommentPostsStackView.swift
 //
 //  Template file created by Pete Maiser, 7/15/2025
-//      Template v0.2.0 Fast Five Products LLC's public AGPL template.
+//  Modified by Pete Maiser, Fast Five Products LLC, on 2/4/26.
+//      Template v0.2.5 (updated) — Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025 Fast Five Products LLC. All rights reserved.
 //
@@ -33,10 +34,17 @@ struct CommentPostsStackView: View, DebugPrintable {
             )
             Divider()
             NavigationLink {
-                UserCommentPostsStackView(
+                UserPostsStackView(
                     currentUserService: currentUserService,
                     viewModel: UserPostViewModel<PublicComment>(),
-                    store: store
+                    store: store,
+                    sectionTitle: "Your Past Comments",
+                    composeTitle: "Write Comment",
+                    textFieldLabel: "Comment Text",
+                    buttonText: "Submit New Comment",
+                    createPost: { candidate in
+                        try await store.createPublicComment(from: candidate)
+                    }
                 )
             } label: {
                 HStack {

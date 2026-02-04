@@ -1,10 +1,11 @@
 //
-//  UserCommentPostsStackView.swift
+//  UserPostsStackView.swift
 //
 //  Template created by Pete Maiser, July 2024 through May 2025
-//      Template v0.1.2 (renamed) Fast Five Products LLC's public AGPL template.
+//  Made/renamed from UserCommentPostsStackView.swift by Pete Maiser, Fast Five Products LLC, on 2/4/26.
+//      Template v0.2.5 — Fast Five Products LLC's public AGPL template.
 //
-//  Copyright © 2025 Fast Five Products LLC. All rights reserved.
+//  Copyright © 2025, 2026 Fast Five Products LLC. All rights reserved.
 //
 //  This file is part of a project licensed under the GNU Affero General Public License v3.0.
 //  See the LICENSE file at the root of this repository for full terms.
@@ -19,13 +20,23 @@
 
 import SwiftUI
 
-struct UserCommentPostsStackView: View, DebugPrintable {
+struct UserPostsStackView<T: Post>: View, DebugPrintable {
     @ObservedObject var currentUserService: CurrentUserService
-    @ObservedObject var viewModel: UserPostViewModel<PublicComment>
-    @ObservedObject var store: PublicCommentStore
-    
+    @ObservedObject var viewModel: UserPostViewModel<T>
+    @ObservedObject var store: ListableStore<T>
+
+    // Configuration
+    let sectionTitle: String
+    let composeTitle: String
+    let textFieldLabel: String
+    let buttonText: String
+    let createPost: (PostCandidate) async throws -> T
+
+    // Optional: for message conversations, filter to show only posts with this user
+    var conversationWith: UserKey?
+
     @Environment(\.dismiss) private var dismiss
-    
+
     @FocusState private var focusedField: Field?
     private func nextField() {
         switch focusedField {
@@ -36,12 +47,30 @@ struct UserCommentPostsStackView: View, DebugPrintable {
         }
     }
     private enum Field: Hashable { case firstField }
-         
+
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
-            
+
+            // MARK: -- Past Posts
+            VStack(alignment: .leading, spacing: 8) {
+                Text(sectionTitle)
+                    .font(.title3)
+                    .fontWeight(.semibold)
+                    .padding(.horizontal)
+                PostsScrollView(
+                    store: store,
+                    currentUserId: currentUserService.userKey.uid,
+                    fromUserId: conversationWith == nil ? currentUserService.userKey.uid : nil,
+                    conversationWith: conversationWith?.uid
+                )
+                .padding(.horizontal)
+            }
+
+            Spacer(minLength: 0)
+
             // MARK: -- Write
-            VStackBox(title: "Write Comment"){
+            Divider()
+            VStackBox(title: composeTitle){
                 LabeledContent {
                     TextEditor(text: $viewModel.capturedContentText)
                         .frame(minHeight: 80, maxHeight: 100)
@@ -52,7 +81,7 @@ struct UserCommentPostsStackView: View, DebugPrintable {
                         )
                         .focused($focusedField, equals: .firstField)
                 } label: {
-                    Text("Comment Text")
+                    Text(textFieldLabel)
                 }
                 .labeledContentStyle(TopLabeledContentStyle())
 
@@ -60,7 +89,7 @@ struct UserCommentPostsStackView: View, DebugPrintable {
                     if viewModel.isWorking {
                         ProgressView()
                     } else {
-                        Text("Submit New Comment")
+                        Text(buttonText)
                             .frame(maxWidth: .infinity)
                     }
                 }
@@ -75,23 +104,6 @@ struct UserCommentPostsStackView: View, DebugPrintable {
                 guard !viewModel.isWorking, viewModel.error == nil else { return }
                 dismiss()
             }
-
-            // MARK: -- Past Comments
-            Divider()
-            VStack(alignment: .leading, spacing: 8) {
-                Text("Your Past Comments")      // TODO: touch here to open a browsing-specific View
-                    .font(.title3)
-                    .fontWeight(.semibold)
-                    .padding(.horizontal)
-                PostsScrollView(
-                    store: store,
-                    currentUserId: currentUserService.userKey.uid,
-                    fromUserId: currentUserService.userKey.uid
-                )
-                .padding(.horizontal)
-            }
-            
-            Spacer()
         }
         .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
         .environment(\.font, Font.body)
@@ -101,7 +113,7 @@ struct UserCommentPostsStackView: View, DebugPrintable {
 }
 
 
-private extension UserCommentPostsStackView {
+private extension UserPostsStackView {
     private func submit() {
         debugprint("(View) submit called")
         viewModel.isWorking = true
@@ -110,13 +122,13 @@ private extension UserCommentPostsStackView {
             do {
                 viewModel.postCandidate = PostCandidate(
                     from: currentUserService.userKey,
-                    to: UserKey.blankUser,
+                    to: conversationWith ?? UserKey.blankUser,
                     title: viewModel.capturedTitleText,
                     content: viewModel.capturedContentText)
-                viewModel.createdPost = try await store.createPublicComment(from: viewModel.postCandidate)
+                viewModel.createdPost = try await createPost(viewModel.postCandidate)
                 debugprint(viewModel.createdPost.objectDescription)
             } catch {
-                debugprint("🛑 ERROR:  Cloud Error publishing Comment: \(error)")
+                debugprint("🛑 ERROR:  Cloud Error publishing \(T.typeDisplayName): \(error)")
                 viewModel.error = error
             }
         }
@@ -125,24 +137,56 @@ private extension UserCommentPostsStackView {
 
 
 #if DEBUG
-#Preview ("Loaded") {
+#Preview ("Comments - Loaded") {
     let currentUserService = CurrentUserTestService.sharedSignedIn
     let viewModel = UserPostViewModel<PublicComment>()
     let store = PublicCommentStore.testLoaded()
-    UserCommentPostsStackView(
+    UserPostsStackView(
         currentUserService: currentUserService,
         viewModel: viewModel,
-        store: store
+        store: store,
+        sectionTitle: "Your Past Comments",
+        composeTitle: "Write Comment",
+        textFieldLabel: "Comment Text",
+        buttonText: "Submit New Comment",
+        createPost: { candidate in
+            try await store.createPublicComment(from: candidate)
+        }
     )
 }
-#Preview ("Empty") {
+#Preview ("Comments - Empty") {
     let currentUserService = CurrentUserTestService.sharedSignedIn
     let viewModel = UserPostViewModel<PublicComment>()
     let store = PublicCommentStore()
-    UserCommentPostsStackView(
+    UserPostsStackView(
         currentUserService: currentUserService,
         viewModel: viewModel,
-        store: store
+        store: store,
+        sectionTitle: "Your Past Comments",
+        composeTitle: "Write Comment",
+        textFieldLabel: "Comment Text",
+        buttonText: "Submit New Comment",
+        createPost: { candidate in
+            try await store.createPublicComment(from: candidate)
+        }
+    )
+}
+#Preview ("Messages - Loaded") {
+    let currentUserService = CurrentUserTestService.sharedSignedIn
+    let viewModel = UserPostViewModel<PrivateMessage>()
+    let store = PrivateMessageStore.testLoaded()
+    UserPostsStackView(
+        currentUserService: currentUserService,
+        viewModel: viewModel,
+        store: store,
+        sectionTitle: "Messages with Test User",
+        composeTitle: "New Message",
+        textFieldLabel: "Message Text",
+        buttonText: "Send Message",
+        createPost: { candidate in
+            try await store.createPrivateMessage(from: candidate)
+        },
+        conversationWith: UserKey.testObjectAnother
     )
 }
 #endif

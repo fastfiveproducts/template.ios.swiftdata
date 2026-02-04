@@ -2,8 +2,8 @@
 //  PostsScrollView.swift
 //
 //  Template created by Pete Maiser, July 2024 through May 2025
-//  Modified by Pete Maiser, Fast Five Products LLC, on 2/3/26.
-//      Template v0.2.5 (updated) Fast Five Products LLC's public AGPL template.
+//  Modified by Pete Maiser, Fast Five Products LLC, on 2/4/26.
+//      Template v0.2.5 (updated) — Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025 Fast Five Products LLC. All rights reserved.
 //
@@ -27,6 +27,7 @@ struct PostsScrollView<T: Post>: View {
     // Optional filters
     var fromUserId: String?
     var toUserId: String?
+    var conversationWith: String?  // For message conversations: shows posts between currentUserId and this user
     
     // Optional visuals
     var showFromUser: Bool = false
@@ -40,6 +41,13 @@ struct PostsScrollView<T: Post>: View {
     private var filteredPosts: [T] {
         guard case let .loaded(posts) = store.list else { return [] }
         let filtered = posts.filter { post in
+            // Conversation filter: show messages between currentUser and conversationWith
+            if let conversationWith = conversationWith {
+                let sentToThem = post.from.uid == currentUserId && post.to.uid == conversationWith
+                let receivedFromThem = post.from.uid == conversationWith && post.to.uid == currentUserId
+                return sentToThem || receivedFromThem
+            }
+            // Standard filters (AND logic)
             let toMatch = toUserId == nil || post.to.uid == toUserId
             let fromMatch = fromUserId == nil || post.from.uid == fromUserId
             return toMatch && fromMatch
@@ -140,25 +148,6 @@ struct PostsScrollView<T: Post>: View {
                 )
             }
         
-
-            Section(header: Text("Inbox Messages")) {
-                PostsScrollView(
-                    store: PrivateMessageStore.testLoaded(),
-                    currentUserId: currentUserService.userKey.uid,
-                    toUserId: currentUserService.userKey.uid,
-                    showFromUser: true
-                )
-            }
-            
-            Section(header: Text("Sent Messages")) {
-                PostsScrollView(
-                    store: PrivateMessageStore.testLoaded(),
-                    currentUserId: currentUserService.userKey.uid,
-                    fromUserId: currentUserService.userKey.uid,
-                    showToUser: true
-                )
-            }
-
             Section(header: Text("All Messages")) {
                 PostsScrollView(
                     store: PrivateMessageStore.testLoaded(),

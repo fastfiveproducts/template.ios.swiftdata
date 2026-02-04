@@ -42,8 +42,7 @@
 		B59779BE2EB93B9B00712D85 /* CommentPostsStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59779792EB93B9B00712D85 /* CommentPostsStackView.swift */; };
 		B59779BF2EB93B9B00712D85 /* PostBubbleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B597797A2EB93B9B00712D85 /* PostBubbleView.swift */; };
 		B59779C02EB93B9B00712D85 /* PostsScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B597797B2EB93B9B00712D85 /* PostsScrollView.swift */; };
-		B59779C12EB93B9B00712D85 /* UserCommentPostsStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B597797C2EB93B9B00712D85 /* UserCommentPostsStackView.swift */; };
-		B59779C22EB93B9B00712D85 /* UserMessagePostsStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B597797D2EB93B9B00712D85 /* UserMessagePostsStackView.swift */; };
+		B59779C12EB93B9B00712D85 /* UserPostsStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B597797C2EB93B9B00712D85 /* UserPostsStackView.swift */; };
 		B59779C32EB93B9B00712D85 /* ActivityLogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B597797F2EB93B9B00712D85 /* ActivityLogView.swift */; };
 		B59779C42EB93B9B00712D85 /* OverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59779802EB93B9B00712D85 /* OverlayView.swift */; };
 		B59779C52EB93B9B00712D85 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59779812EB93B9B00712D85 /* SettingsView.swift */; };
@@ -124,8 +123,7 @@
 		B59779792EB93B9B00712D85 /* CommentPostsStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentPostsStackView.swift; sourceTree = "<group>"; };
 		B597797A2EB93B9B00712D85 /* PostBubbleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostBubbleView.swift; sourceTree = "<group>"; };
 		B597797B2EB93B9B00712D85 /* PostsScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostsScrollView.swift; sourceTree = "<group>"; };
-		B597797C2EB93B9B00712D85 /* UserCommentPostsStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserCommentPostsStackView.swift; sourceTree = "<group>"; };
-		B597797D2EB93B9B00712D85 /* UserMessagePostsStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserMessagePostsStackView.swift; sourceTree = "<group>"; };
+		B597797C2EB93B9B00712D85 /* UserPostsStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserPostsStackView.swift; sourceTree = "<group>"; };
 		B597797F2EB93B9B00712D85 /* ActivityLogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityLogView.swift; sourceTree = "<group>"; };
 		B59779802EB93B9B00712D85 /* OverlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayView.swift; sourceTree = "<group>"; };
 		B59779812EB93B9B00712D85 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
@@ -299,8 +297,7 @@
 				B59779792EB93B9B00712D85 /* CommentPostsStackView.swift */,
 				B597797A2EB93B9B00712D85 /* PostBubbleView.swift */,
 				B597797B2EB93B9B00712D85 /* PostsScrollView.swift */,
-				B597797C2EB93B9B00712D85 /* UserCommentPostsStackView.swift */,
-				B597797D2EB93B9B00712D85 /* UserMessagePostsStackView.swift */,
+				B597797C2EB93B9B00712D85 /* UserPostsStackView.swift */,
 			);
 			path = Posts;
 			sourceTree = "<group>";
@@ -532,8 +529,7 @@
 				B59779BE2EB93B9B00712D85 /* CommentPostsStackView.swift in Sources */,
 				B59779BF2EB93B9B00712D85 /* PostBubbleView.swift in Sources */,
 				B59779C02EB93B9B00712D85 /* PostsScrollView.swift in Sources */,
-				B59779C12EB93B9B00712D85 /* UserCommentPostsStackView.swift in Sources */,
-				B59779C22EB93B9B00712D85 /* UserMessagePostsStackView.swift in Sources */,
+				B59779C12EB93B9B00712D85 /* UserPostsStackView.swift in Sources */,
 				B59779C32EB93B9B00712D85 /* ActivityLogView.swift in Sources */,
 				B59779C42EB93B9B00712D85 /* OverlayView.swift in Sources */,
 				B59779C52EB93B9B00712D85 /* SettingsView.swift in Sources */,
