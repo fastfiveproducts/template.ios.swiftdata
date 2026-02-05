@@ -70,6 +70,9 @@ struct CompleteAccountView: View, DebugPrintable {
 
             }
             .onAppear { focusedField = .displayName }
+            .onChange(of: viewModel.capturedDisplayNameText) {
+                viewModel.clearStatus()
+            }
             .onSubmit {
                 completeAccount()
             }

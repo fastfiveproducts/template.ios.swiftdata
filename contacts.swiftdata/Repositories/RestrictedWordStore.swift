@@ -38,7 +38,9 @@ final class RestrictedWordStore: ObservableObject, DebugPrintable {
     static let shared = RestrictedWordStore()
     
     // set how to fetch data into the store
-    private let fetchFromService = RestrictedWordConnector().fetch
+    private let fetchFromService: () async throws -> [String] = {
+        try await RestrictedWordConnector().fetch()
+    }
     
     // function to fetch data, will only fetch one time
     func enableRestrictedWordCheck() {
