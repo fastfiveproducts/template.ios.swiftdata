@@ -76,7 +76,7 @@ struct UserPostsStackView<T: Post>: View, DebugPrintable {
             VStackBox(title: composeTitle){
                 LabeledContent {
                     TextEditor(text: $viewModel.capturedContentText)
-                        .frame(minHeight: conversationWith != nil ? 40 : 80, maxHeight: 100)
+                        .frame(height: 40)
                         .padding(4)
                         .overlay(
                             RoundedRectangle(cornerRadius: 8)
@@ -96,8 +96,9 @@ struct UserPostsStackView<T: Post>: View, DebugPrintable {
                             .frame(maxWidth: .infinity)
                     }
                 }
+                .disabled(viewModel.capturedContentText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
                 .padding()
-                .background(Color.accentColor)
+                .background(viewModel.capturedContentText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? Color.gray : Color.accentColor)
                 .foregroundColor(.white)
                 .cornerRadius(8)
             }
@@ -109,7 +110,7 @@ struct UserPostsStackView<T: Post>: View, DebugPrintable {
                 guard !viewModel.isWorking, viewModel.error == nil else { return }
                 if conversationWith != nil {
                     viewModel.capturedContentText = ""
-                    focusedField = .firstField
+                    focusedField = nil
                 } else {
                     dismiss()
                 }
@@ -118,6 +119,15 @@ struct UserPostsStackView<T: Post>: View, DebugPrintable {
         .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
         .environment(\.font, Font.body)
         .disabled(viewModel.isWorking)
+        .toolbar {
+            ToolbarItemGroup(placement: .keyboard) {
+                Spacer()
+                Button("Cancel") {
+                    viewModel.capturedContentText = ""
+                    focusedField = nil
+                }
+            }
+        }
         .alert("Error", error: $viewModel.error)
         .onAppear {
             pollTimer = Timer.scheduledTimer(withTimeInterval: 30, repeats: true) { _ in
