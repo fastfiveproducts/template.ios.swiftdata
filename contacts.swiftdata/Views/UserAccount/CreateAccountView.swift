@@ -85,6 +85,9 @@ struct CreateAccountView: View, DebugPrintable {
                 
             }
             .onAppear { focusedField = .passwordAgain }
+            .onChange(of: viewModel.capturedDisplayNameText) {
+                viewModel.clearStatus()
+            }
             .onSubmit {
                 if (viewModel.notRobot) {
                     createAccount() }

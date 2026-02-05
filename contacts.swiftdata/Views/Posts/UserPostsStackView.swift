@@ -3,7 +3,8 @@
 //
 //  Template created by Pete Maiser, July 2024 through May 2025
 //  Made/renamed from UserCommentPostsStackView.swift by Pete Maiser, Fast Five Products LLC, on 2/4/26.
-//      Template v0.2.5 — Fast Five Products LLC's public AGPL template.
+//  Modified by Pete Maiser, Fast Five Products LLC, on 2/5/26.
+//      Template v0.2.5 (updated) — Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025, 2026 Fast Five Products LLC. All rights reserved.
 //
@@ -88,6 +89,12 @@ struct UserPostsStackView<T: Post>: View, DebugPrintable {
                 }
                 .labeledContentStyle(TopLabeledContentStyle())
 
+                if !viewModel.statusText.isEmpty {
+                    Text(viewModel.statusText)
+                        .foregroundColor(.red)
+                        .font(.footnote)
+                }
+
                 Button(action: submit) {
                     if viewModel.isWorking {
                         ProgressView()
@@ -106,6 +113,9 @@ struct UserPostsStackView<T: Post>: View, DebugPrintable {
                 if conversationWith == nil { focusedField = .firstField }
             }
             .onSubmit(submit)
+            .onChange(of: viewModel.capturedContentText) {
+                viewModel.clearStatus()
+            }
             .onChange(of: viewModel.isWorking) {
                 guard !viewModel.isWorking, viewModel.error == nil else { return }
                 if conversationWith != nil {
@@ -146,21 +156,23 @@ struct UserPostsStackView<T: Post>: View, DebugPrintable {
 
 private extension UserPostsStackView {
     private func submit() {
-        debugprint("(View) submit called")
-        viewModel.isWorking = true
-        Task {
-            defer { viewModel.isWorking = false }
-            do {
-                viewModel.postCandidate = PostCandidate(
-                    from: currentUserService.userKey,
-                    to: conversationWith ?? UserKey.blankUser,
-                    title: viewModel.capturedTitleText,
-                    content: viewModel.capturedContentText)
-                viewModel.createdPost = try await createPost(viewModel.postCandidate)
-                debugprint(viewModel.createdPost.objectDescription)
-            } catch {
-                debugprint("🛑 ERROR:  Cloud Error publishing \(T.typeDisplayName): \(error)")
-                viewModel.error = error
+        debugprint("submit called")
+        viewModel.postCandidate = PostCandidate(
+            from: currentUserService.userKey,
+            to: conversationWith ?? UserKey.blankUser,
+            title: viewModel.capturedTitleText,
+            content: viewModel.capturedContentText)
+        if viewModel.isReadyToPost() {
+            viewModel.isWorking = true
+            Task {
+                defer { viewModel.isWorking = false }
+                do {
+                    viewModel.createdPost = try await createPost(viewModel.postCandidate)
+                    debugprint(viewModel.createdPost.objectDescription)
+                } catch {
+                    debugprint("🛑 ERROR:  Cloud Error publishing \(T.typeDisplayName): \(error)")
+                    viewModel.error = error
+                }
             }
         }
     }

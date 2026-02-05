@@ -2,7 +2,7 @@
 //  UserAccountViewModel.swift
 //
 //  Template created by Pete Maiser, July 2024 through August 2025
-//  Modified by Pete Maiser, Fast Five Products LLC, on 2/3/26.
+//  Modified by Pete Maiser, Fast Five Products LLC, on 2/5/26.
 //      Template v0.2.5 (updated) — Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025 Fast Five Products LLC. All rights reserved.
@@ -32,8 +32,9 @@ class UserAccountViewModel: ObservableObject, DebugPrintable
     }
     #endif
     
-    // MARK: -- Status
+    // Status
     @Published private(set) var statusText = ""
+    func clearStatus() { statusText = "" }
     @Published var error: Error?
     @Published var createAccountMode = false
     @Published var completeUserAccountMode = false
