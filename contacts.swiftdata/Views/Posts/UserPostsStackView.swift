@@ -102,7 +102,12 @@ struct UserPostsStackView<T: Post>: View, DebugPrintable {
             .onSubmit(submit)
             .onChange(of: viewModel.isWorking) {
                 guard !viewModel.isWorking, viewModel.error == nil else { return }
-                dismiss()
+                if conversationWith != nil {
+                    viewModel.capturedContentText = ""
+                    focusedField = .firstField
+                } else {
+                    dismiss()
+                }
             }
         }
         .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
