@@ -76,7 +76,7 @@ struct UserPostsStackView<T: Post>: View, DebugPrintable {
             VStackBox(title: composeTitle){
                 LabeledContent {
                     TextEditor(text: $viewModel.capturedContentText)
-                        .frame(minHeight: 80, maxHeight: 100)
+                        .frame(minHeight: conversationWith != nil ? 40 : 80, maxHeight: 100)
                         .padding(4)
                         .overlay(
                             RoundedRectangle(cornerRadius: 8)
@@ -101,7 +101,9 @@ struct UserPostsStackView<T: Post>: View, DebugPrintable {
                 .foregroundColor(.white)
                 .cornerRadius(8)
             }
-            .onAppear {focusedField = .firstField}
+            .onAppear {
+                if conversationWith == nil { focusedField = .firstField }
+            }
             .onSubmit(submit)
             .onChange(of: viewModel.isWorking) {
                 guard !viewModel.isWorking, viewModel.error == nil else { return }
