@@ -19,6 +19,7 @@
 
 
 import SwiftUI
+import Combine
 
 struct PostsScrollView<T: Post>: View {
     @ObservedObject var store: ListableStore<T>
@@ -104,13 +105,30 @@ struct PostsScrollView<T: Post>: View {
                                 }
                             }
                             .padding(.top, 10)
+                            .padding(.bottom, 4)
                         }
+                        .scrollDismissesKeyboard(.interactively)
                         .onAppear {
                             if !newestAtTop, let lastPost = filteredPosts.last {
                                 proxy.scrollTo(lastPost.id, anchor: .bottom)
                             }
                         }
+                        .task {
+                            try? await Task.sleep(for: .milliseconds(500))
+                            if !newestAtTop, let lastPost = filteredPosts.last {
+                                withAnimation {
+                                    proxy.scrollTo(lastPost.id, anchor: .bottom)
+                                }
+                            }
+                        }
                         .onChange(of: filteredPosts.count) {
+                            if !newestAtTop, let lastPost = filteredPosts.last {
+                                withAnimation {
+                                    proxy.scrollTo(lastPost.id, anchor: .bottom)
+                                }
+                            }
+                        }
+                        .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardDidShowNotification)) { _ in
                             if !newestAtTop, let lastPost = filteredPosts.last {
                                 withAnimation {
                                     proxy.scrollTo(lastPost.id, anchor: .bottom)

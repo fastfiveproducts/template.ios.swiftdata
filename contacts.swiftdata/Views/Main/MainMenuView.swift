@@ -74,7 +74,7 @@ extension MainMenuView {
                         store: publicCommentStore
                     ).onAppear { OverlayManager.shared.hide(.splash) })
                 {
-                    Label("Comments", systemImage: "bubble.left.and.bubble.right")
+                    Label("Comments", systemImage: "exclamationmark.bubble")
                         .foregroundColor(.primary)
                 }
                 .buttonStyle(BorderlessButtonStyle())
@@ -93,7 +93,7 @@ extension MainMenuView {
                         store: privateMessageStore
                     ).onAppear { OverlayManager.shared.hide(.splash) })
                 {
-                    Label("Messages", systemImage: "envelope")
+                    Label("Messages", systemImage: "bubble.left.and.bubble.right")
                         .foregroundColor(.primary)
                 }
                 .buttonStyle(BorderlessButtonStyle())

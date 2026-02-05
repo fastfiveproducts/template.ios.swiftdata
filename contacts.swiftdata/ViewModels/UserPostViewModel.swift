@@ -31,7 +31,7 @@ class UserPostViewModel<T: Post>: ObservableObject, DebugPrintable {
     // Capture
     var toUser: UserKey = UserKey.blankUser
     var capturedTitleText = ""
-    var capturedContentText = ""
+    @Published var capturedContentText = ""
     
     // Validation
     func isReadyToSubmitComment() -> Bool {
