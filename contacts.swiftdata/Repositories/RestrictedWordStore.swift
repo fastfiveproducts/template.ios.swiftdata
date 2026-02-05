@@ -2,8 +2,8 @@
 //  RestrictedWordStore.swift
 //
 //  Template created by Pete Maiser, July 2024 through May 2025
-//  Modified by Pete Maiser, Fast Five Products LLC, on 10/23/25.
-//      Template v0.2.3 (updated) Fast Five Products LLC's public AGPL template.
+//  Modified by Pete Maiser, Fast Five Products LLC, on 2/5/26.
+//      Template v0.2.5 (updated) — Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025 Fast Five Products LLC. All rights reserved.
 //
@@ -29,10 +29,10 @@ import Foundation
 
 @MainActor
 final class RestrictedWordStore: ObservableObject, DebugPrintable {
-    
+
     // primary data available from the store
     private var list: Loadable<[String]> = .none
-    
+   
     // initiate this store as a Swift Singleton
     // this is also how to 'get' the singleton store
     static let shared = RestrictedWordStore()
@@ -41,6 +41,16 @@ final class RestrictedWordStore: ObservableObject, DebugPrintable {
     private let fetchFromService: () async throws -> [String] = {
         try await RestrictedWordConnector().fetch()
     }
+    
+    // character substitution cipher for obfuscating restricted words
+    // words are stored ciphered in the database; user input is ciphered before matching
+    // the same map must be used by all clients and by SQL inserts (via PostgreSQL translate())
+    private static let cipherFrom: [Character] = Array("abcdefghijklmnopqrstuvwxyz")
+    // private static let cipherTo:   [Character] = Array("abcdefghijklmnopqrstuvwxyz")     // No cipher
+    private static let cipherTo:   [Character] = Array("qmjztgfkpwlsboxncryevhiadu")        // random-generated FFP.LLC v2026-02-05 cipher
+    private static let cipherMap: [Character: Character] = Dictionary(
+        uniqueKeysWithValues: zip(cipherFrom, cipherTo)
+    )
     
     // function to fetch data, will only fetch one time
     func enableRestrictedWordCheck() {
@@ -65,9 +75,15 @@ final class RestrictedWordStore: ObservableObject, DebugPrintable {
         }
     }
     
+    // apply character substitution cipher to a string (only lowercase a-z is substituted)
+    private func cipher(_ input: String) -> String {
+        String(input.map { Self.cipherMap[$0] ?? $0 })
+    }
+
     // function to check a string for restricted text per the rules below (case doesn't matter)
+    // note: stored words are already ciphered; user input is ciphered before matching
     func containsRestrictedWords(_ input: String) -> Bool {
-        
+
         // What should happen - return true if:
         // a) there is an exact match of course, e.g. string == badword
         // b) user appears to be getting around badword by imbedding it in other chars,
@@ -77,10 +93,11 @@ final class RestrictedWordStore: ObservableObject, DebugPrintable {
         // c) string doesn't match any bad words at all, of course, e.g. string = goodword
         // d) string is a subset of bad word, e.g. string = badw
         // e) there is system error; app-user likely has bigger problems in this case
-        
+
         if case let .loaded(keywords) = list {
+            let cipheredInput = cipher(input.lowercased())
             for word in keywords {
-                if input.lowercased().contains(word.lowercased()) {
+                if cipheredInput.contains(word) {
                     debugprint("Restricted Text found.")
                     return true
                 }
@@ -100,8 +117,8 @@ final class RestrictedWordStore: ObservableObject, DebugPrintable {
 #if DEBUG
 extension RestrictedWordStore {
     static func testLoaded() -> RestrictedWordStore {
-        let store = RestrictedWordStore()
-        store.list = .loaded(["badword", "worseword"])
+        let store = RestrictedWordStore()      
+        store.list = .loaded(["badword", "worseword"].map { store.cipher($0) })
         store.debugprint("loaded \(store.list.count) test Restricted Text Keywords")
         return store
     }
