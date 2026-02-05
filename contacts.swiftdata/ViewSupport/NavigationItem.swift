@@ -66,7 +66,7 @@ enum NavigationItem: String, CaseIterable, Identifiable {
         case .home: return "house"
         case .announcements: return "megaphone"
         case .contacts: return "person.2.circle"
-        case .messages: return "envelope"
+        case .messages: return "message"
         case .comments: return "text.bubble"
         case .activity: return "book.pages"
         case .settings: return "gearshape.fill"

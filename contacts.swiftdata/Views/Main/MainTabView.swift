@@ -91,7 +91,7 @@ extension MainTabView {
                         store: publicCommentStore
                     ).onAppear { OverlayManager.shared.hide(.splash) })
                 {
-                    Label("Comments", systemImage: "bubble.left.and.bubble.right")
+                    Label("Comments", systemImage: "text.bubble")
                         .foregroundColor(.primary)
                 }
                 .buttonStyle(BorderlessButtonStyle())
@@ -109,7 +109,7 @@ extension MainTabView {
                         store: privateMessageStore
                     ).onAppear { OverlayManager.shared.hide(.splash) })
                 {
-                    Label("Messages", systemImage: "envelope")
+                    Label("Messages", systemImage: "message")
                         .foregroundColor(.primary)
                 }
                 .buttonStyle(BorderlessButtonStyle())
