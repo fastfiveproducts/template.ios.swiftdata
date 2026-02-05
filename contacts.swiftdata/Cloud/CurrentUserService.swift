@@ -3,7 +3,7 @@
 //
 //  Template created by Pete Maiser, July 2024 through August 2025
 //  Modified by Pete Maiser, Fast Five Products LLC, on 2/3/26.
-//      Template v0.2.5 (updated) Fast Five Products LLC's public AGPL template.
+//      Template v0.2.5 (updated) — Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025 Fast Five Products LLC. All rights reserved.
 //
@@ -344,6 +344,7 @@ extension CurrentUserService {
                 createDeviceIdentifierstamp: deviceIdentifierstamp(),
                 createDeviceTimestamp: deviceTimestamp(),
                 displayNameText: displayNameText,
+                displayNameTextLower: displayNameText.lowercased(),
                 photoUrl: profile.photoUrl
             )
             let userProfile = UserAccount(uid: profile.uid, displayName: profile.displayName, photoUrl: profile.displayName)
@@ -374,7 +375,8 @@ extension CurrentUserService {
         let _ = try await DataConnect.defaultConnector.updateUserAccountDisplayNameMutation.execute(
             updateDeviceIdentifierstamp: deviceIdentifierstamp(),
             updateDeviceTimestamp: deviceTimestamp(),
-            displayNameText: displayName
+            displayNameText: displayName,
+            displayNameTextLower: displayName.lowercased()
         )
     }
         
@@ -404,19 +406,6 @@ extension CurrentUserService {
         else { throw FetchDataError.userDataNotFound }
     }
     
-    func fetchUserAccount(forUserId uid: String) async throws -> UserAccount {
-        guard !uid.isEmpty else { throw FetchDataError.invalidFunctionInput}
-        let queryRef = DataConnect.defaultConnector.getUserAccountQuery.ref(userId: uid)
-        let operationResult = try await queryRef.execute()
-        let accounts = try operationResult.data.userAccounts.compactMap { firebaseAccount -> UserAccount? in
-            let account = try makeUserAccount(from: firebaseAccount)
-            guard account.isValid else { throw FetchDataError.invalidCloudData }
-            return account
-        }
-        if accounts.count == 1 { return accounts.first! }
-        else if accounts.count >= 1 { throw FetchDataError.userDataDuplicatesFound }
-        else { throw FetchDataError.userDataNotFound }
-    }
 }
 
 
@@ -431,15 +420,6 @@ private extension UserAuth {
 }
 
 extension CurrentUserService {
-    private func makeUserAccount(
-        from firebaseAccount: GetUserAccountQuery.Data.UserAccount
-    ) throws -> UserAccount {
-        return UserAccount(
-            uid: firebaseAccount.id,
-            displayName: firebaseAccount.displayNameText,
-            photoUrl: firebaseAccount.photoUrl
-        )
-    }
     private func makeUserAccount(
         from firebaseAccount: GetMyUserAccountQuery.Data.UserAccount
     ) throws -> UserAccount {

@@ -2,8 +2,8 @@
 //  PostStores.swift
 //
 //  Template created by Pete Maiser, July 2024 through May 2025
-//  Modified by Pete Maiser, Fast Five Products LLC, on 10/23/25.
-//      Template v0.2.3 (updated) Fast Five Products LLC's public AGPL template.
+//  Modified by Pete Maiser, Fast Five Products LLC, on 2/4/26.
+//      Template v0.2.5 (updated) — Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025 Fast Five Products LLC. All rights reserved.
 //
@@ -82,7 +82,44 @@ final class PrivateMessageStore: ListableStore<PrivateMessage> {
             throw error
         }
     }
-        
+
+    // Returns unique conversation partners (users the current user has exchanged messages with),
+    // sorted by oldest first so most recent appears at bottom (Messages-style).
+    func conversationPartners(for currentUserId: String) -> [(userKey: UserKey, lastMessageDate: Date)] {
+        guard case let .loaded(messages) = list else { return [] }
+
+        // Dictionary to track the most recent message timestamp for each partner
+        var partnerTimestamps: [String: (userKey: UserKey, timestamp: Date)] = [:]
+
+        for message in messages {
+            let partnerKey: UserKey
+            if message.from.uid == currentUserId {
+                // Current user sent this message, partner is the recipient
+                partnerKey = message.to
+            } else {
+                // Current user received this message, partner is the sender
+                partnerKey = message.from
+            }
+
+            // Skip blank/invalid users
+            guard partnerKey.isValid else { continue }
+
+            // Update if this is a newer message with this partner
+            if let existing = partnerTimestamps[partnerKey.uid] {
+                if message.timestamp > existing.timestamp {
+                    partnerTimestamps[partnerKey.uid] = (partnerKey, message.timestamp)
+                }
+            } else {
+                partnerTimestamps[partnerKey.uid] = (partnerKey, message.timestamp)
+            }
+        }
+
+        // Sort by oldest first (so newest appears at bottom, Messages-style)
+        return partnerTimestamps.values
+            .sorted { $0.timestamp < $1.timestamp }
+            .map { (userKey: $0.userKey, lastMessageDate: $0.timestamp) }
+    }
+
 }
 
 #if DEBUG

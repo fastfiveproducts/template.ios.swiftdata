@@ -12,6 +12,7 @@
 		B59779A02EB93B9B00712D85 /* FirestoreConnector.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59779512EB93B9B00712D85 /* FirestoreConnector.swift */; };
 		B59779A12EB93B9B00712D85 /* HelpTextConnector.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59779522EB93B9B00712D85 /* HelpTextConnector.swift */; };
 		B59779A22EB93B9B00712D85 /* PostsConnector.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59779532EB93B9B00712D85 /* PostsConnector.swift */; };
+		B5977A102EB93B9B00712D85 /* UsersConnector.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5977A112EB93B9B00712D85 /* UsersConnector.swift */; };
 		B59779A32EB93B9B00712D85 /* RestrictedWordConnector.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59779542EB93B9B00712D85 /* RestrictedWordConnector.swift */; };
 		B59779A42EB93B9B00712D85 /* CloudErrorCodes.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59779562EB93B9B00712D85 /* CloudErrorCodes.swift */; };
 		B59779A52EB93B9B00712D85 /* SignInOutObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59779572EB93B9B00712D85 /* SignInOutObserver.swift */; };
@@ -35,15 +36,16 @@
 		B59779B72EB93B9B00712D85 /* DeviceStamping.swift in Sources */ = {isa = PBXBuildFile; fileRef = B597796E2EB93B9B00712D85 /* DeviceStamping.swift */; };
 		B59779B82EB93B9B00712D85 /* UserAccountViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59779702EB93B9B00712D85 /* UserAccountViewModel.swift */; };
 		B59779B92EB93B9B00712D85 /* UserPostViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59779712EB93B9B00712D85 /* UserPostViewModel.swift */; };
+		B5977A212EB93B9B00712D85 /* MessagesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5977A202EB93B9B00712D85 /* MessagesViewModel.swift */; };
 		B59779BA2EB93B9B00712D85 /* ContactDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59779732EB93B9B00712D85 /* ContactDetailView.swift */; };
 		B59779BB2EB93B9B00712D85 /* ContactListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59779742EB93B9B00712D85 /* ContactListView.swift */; };
 		B59779BC2EB93B9B00712D85 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59779762EB93B9B00712D85 /* HomeView.swift */; };
 		B59779BD2EB93B9B00712D85 /* MainMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59779772EB93B9B00712D85 /* MainMenuView.swift */; };
-		B59779BE2EB93B9B00712D85 /* CommentPostsStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59779792EB93B9B00712D85 /* CommentPostsStackView.swift */; };
+		B59779BE2EB93B9B00712D85 /* CommentsMainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59779792EB93B9B00712D85 /* CommentsMainView.swift */; };
 		B59779BF2EB93B9B00712D85 /* PostBubbleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B597797A2EB93B9B00712D85 /* PostBubbleView.swift */; };
 		B59779C02EB93B9B00712D85 /* PostsScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B597797B2EB93B9B00712D85 /* PostsScrollView.swift */; };
-		B59779C12EB93B9B00712D85 /* UserCommentPostsStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B597797C2EB93B9B00712D85 /* UserCommentPostsStackView.swift */; };
-		B59779C22EB93B9B00712D85 /* UserMessagePostsStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B597797D2EB93B9B00712D85 /* UserMessagePostsStackView.swift */; };
+		B59779C12EB93B9B00712D85 /* UserPostsStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B597797C2EB93B9B00712D85 /* UserPostsStackView.swift */; };
+		B5977A002EB93B9B00712D85 /* MessagesMainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5977A012EB93B9B00712D85 /* MessagesMainView.swift */; };
 		B59779C32EB93B9B00712D85 /* ActivityLogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B597797F2EB93B9B00712D85 /* ActivityLogView.swift */; };
 		B59779C42EB93B9B00712D85 /* OverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59779802EB93B9B00712D85 /* OverlayView.swift */; };
 		B59779C52EB93B9B00712D85 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59779812EB93B9B00712D85 /* SettingsView.swift */; };
@@ -94,6 +96,7 @@
 		B59779512EB93B9B00712D85 /* FirestoreConnector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreConnector.swift; sourceTree = "<group>"; };
 		B59779522EB93B9B00712D85 /* HelpTextConnector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpTextConnector.swift; sourceTree = "<group>"; };
 		B59779532EB93B9B00712D85 /* PostsConnector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostsConnector.swift; sourceTree = "<group>"; };
+		B5977A112EB93B9B00712D85 /* UsersConnector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsersConnector.swift; sourceTree = "<group>"; };
 		B59779542EB93B9B00712D85 /* RestrictedWordConnector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestrictedWordConnector.swift; sourceTree = "<group>"; };
 		B59779562EB93B9B00712D85 /* CloudErrorCodes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudErrorCodes.swift; sourceTree = "<group>"; };
 		B59779572EB93B9B00712D85 /* SignInOutObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInOutObserver.swift; sourceTree = "<group>"; };
@@ -117,15 +120,16 @@
 		B597796E2EB93B9B00712D85 /* DeviceStamping.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceStamping.swift; sourceTree = "<group>"; };
 		B59779702EB93B9B00712D85 /* UserAccountViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAccountViewModel.swift; sourceTree = "<group>"; };
 		B59779712EB93B9B00712D85 /* UserPostViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserPostViewModel.swift; sourceTree = "<group>"; };
+		B5977A202EB93B9B00712D85 /* MessagesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesViewModel.swift; sourceTree = "<group>"; };
 		B59779732EB93B9B00712D85 /* ContactDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactDetailView.swift; sourceTree = "<group>"; };
 		B59779742EB93B9B00712D85 /* ContactListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactListView.swift; sourceTree = "<group>"; };
 		B59779762EB93B9B00712D85 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		B59779772EB93B9B00712D85 /* MainMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainMenuView.swift; sourceTree = "<group>"; };
-		B59779792EB93B9B00712D85 /* CommentPostsStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentPostsStackView.swift; sourceTree = "<group>"; };
+		B59779792EB93B9B00712D85 /* CommentsMainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentsMainView.swift; sourceTree = "<group>"; };
 		B597797A2EB93B9B00712D85 /* PostBubbleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostBubbleView.swift; sourceTree = "<group>"; };
 		B597797B2EB93B9B00712D85 /* PostsScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostsScrollView.swift; sourceTree = "<group>"; };
-		B597797C2EB93B9B00712D85 /* UserCommentPostsStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserCommentPostsStackView.swift; sourceTree = "<group>"; };
-		B597797D2EB93B9B00712D85 /* UserMessagePostsStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserMessagePostsStackView.swift; sourceTree = "<group>"; };
+		B597797C2EB93B9B00712D85 /* UserPostsStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserPostsStackView.swift; sourceTree = "<group>"; };
+		B5977A012EB93B9B00712D85 /* MessagesMainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesMainView.swift; sourceTree = "<group>"; };
 		B597797F2EB93B9B00712D85 /* ActivityLogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityLogView.swift; sourceTree = "<group>"; };
 		B59779802EB93B9B00712D85 /* OverlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayView.swift; sourceTree = "<group>"; };
 		B59779812EB93B9B00712D85 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
@@ -198,6 +202,7 @@
 				B59779522EB93B9B00712D85 /* HelpTextConnector.swift */,
 				B59779532EB93B9B00712D85 /* PostsConnector.swift */,
 				B59779542EB93B9B00712D85 /* RestrictedWordConnector.swift */,
+				B5977A112EB93B9B00712D85 /* UsersConnector.swift */,
 			);
 			path = Cloud;
 			sourceTree = "<group>";
@@ -269,6 +274,7 @@
 			children = (
 				B59779702EB93B9B00712D85 /* UserAccountViewModel.swift */,
 				B59779712EB93B9B00712D85 /* UserPostViewModel.swift */,
+				B5977A202EB93B9B00712D85 /* MessagesViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -296,11 +302,11 @@
 		B597797E2EB93B9B00712D85 /* Posts */ = {
 			isa = PBXGroup;
 			children = (
-				B59779792EB93B9B00712D85 /* CommentPostsStackView.swift */,
+				B59779792EB93B9B00712D85 /* CommentsMainView.swift */,
+				B5977A012EB93B9B00712D85 /* MessagesMainView.swift */,
 				B597797A2EB93B9B00712D85 /* PostBubbleView.swift */,
 				B597797B2EB93B9B00712D85 /* PostsScrollView.swift */,
-				B597797C2EB93B9B00712D85 /* UserCommentPostsStackView.swift */,
-				B597797D2EB93B9B00712D85 /* UserMessagePostsStackView.swift */,
+				B597797C2EB93B9B00712D85 /* UserPostsStackView.swift */,
 			);
 			path = Posts;
 			sourceTree = "<group>";
@@ -501,6 +507,7 @@
 				B59779A02EB93B9B00712D85 /* FirestoreConnector.swift in Sources */,
 				B59779A12EB93B9B00712D85 /* HelpTextConnector.swift in Sources */,
 				B59779A22EB93B9B00712D85 /* PostsConnector.swift in Sources */,
+				B5977A102EB93B9B00712D85 /* UsersConnector.swift in Sources */,
 				B59779A32EB93B9B00712D85 /* RestrictedWordConnector.swift in Sources */,
 				B59779A42EB93B9B00712D85 /* CloudErrorCodes.swift in Sources */,
 				B59779A52EB93B9B00712D85 /* SignInOutObserver.swift in Sources */,
@@ -525,15 +532,16 @@
 				B59779B72EB93B9B00712D85 /* DeviceStamping.swift in Sources */,
 				B59779B82EB93B9B00712D85 /* UserAccountViewModel.swift in Sources */,
 				B59779B92EB93B9B00712D85 /* UserPostViewModel.swift in Sources */,
+				B5977A212EB93B9B00712D85 /* MessagesViewModel.swift in Sources */,
 				B59779BA2EB93B9B00712D85 /* ContactDetailView.swift in Sources */,
 				B59779BB2EB93B9B00712D85 /* ContactListView.swift in Sources */,
 				B59779BC2EB93B9B00712D85 /* HomeView.swift in Sources */,
 				B59779BD2EB93B9B00712D85 /* MainMenuView.swift in Sources */,
-				B59779BE2EB93B9B00712D85 /* CommentPostsStackView.swift in Sources */,
+				B59779BE2EB93B9B00712D85 /* CommentsMainView.swift in Sources */,
+				B5977A002EB93B9B00712D85 /* MessagesMainView.swift in Sources */,
 				B59779BF2EB93B9B00712D85 /* PostBubbleView.swift in Sources */,
 				B59779C02EB93B9B00712D85 /* PostsScrollView.swift in Sources */,
-				B59779C12EB93B9B00712D85 /* UserCommentPostsStackView.swift in Sources */,
-				B59779C22EB93B9B00712D85 /* UserMessagePostsStackView.swift in Sources */,
+				B59779C12EB93B9B00712D85 /* UserPostsStackView.swift in Sources */,
 				B59779C32EB93B9B00712D85 /* ActivityLogView.swift in Sources */,
 				B59779C42EB93B9B00712D85 /* OverlayView.swift in Sources */,
 				B59779C52EB93B9B00712D85 /* SettingsView.swift in Sources */,

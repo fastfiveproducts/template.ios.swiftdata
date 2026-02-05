@@ -130,8 +130,7 @@ struct PrivateMessage: Post, Listable  {
     
     // to conform to Listable, supply a 'is valid' computed property
     var isValid: Bool {
-        guard !title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
-              !content.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
+        guard !content.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
               from.isValid,
               to.isValid
         else {
