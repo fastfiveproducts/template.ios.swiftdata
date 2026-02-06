@@ -51,11 +51,38 @@ final class RestrictedWordStore: ObservableObject, DebugPrintable {
     private static let cipherMap: [Character: Character] = Dictionary(
         uniqueKeysWithValues: zip(cipherFrom, cipherTo)
     )
-    
-    // function to fetch data, will only fetch one time
+
+    // bundled restricted words (already ciphered) for local-only apps without a backend
+    // call enableRestrictedWordCheckWithBundledWords() instead of enableRestrictedWordCheck()
+    private static let bundledRestrictedWords: [String] = [
+        "qoqs stqlqft", "qyy gvjl", "qyygvjl", "qyygvjltr", "qyy-gvjltr", "qyyspjl",
+        "qyyopfftr", "mpf msqjl", "msqjl jxjl", "msxi dxvr sxqz", "mrxektrgvjltr",
+        "mrxio ykxitry", "mveensvf", "jqrnte bvojktr", "jqrntebvojktr",
+        "jkpjl ipek q zpjl", "jkpsz-gvjltr", "jxxooqyy", "j-v-o-e", "jvoe kqpr",
+        "jvoekxst", "jvoespjl", "jvoespjltr", "jvoespjlpof", "jvoerqf", "jvoey",
+        "jvoeypjst", "zqet rqnt", "zqetrqnt", "zplt", "zpofstmtrrpty", "zpofstmtrrd",
+        "zvbmjvoe", "zdlty", "tqe kqpr npt", "tqe bd qyy", "tqenvyyd", "gqfmqf",
+        "gqfgvjltr", "gqfftz", "gqffpof", "gqffpee", "gqffxejxjl", "gqffxey", "gqfxey",
+        "gqfeqrz", "gtbqst ycvprepof", "gpye gvjl", "gpyetz", "gpyegvjl", "gpyegvjltz",
+        "gpyegvjltr", "gpyegvjltry", "gpyegvjlpof", "gpyegvjlpofy", "gpyegvjly",
+        "gpyepof", "gvjleqrz", "gvjl-eqrz", "gvjleqrzy", "gvzft nqjltr", "gvzftnqjltr",
+        "gvzft-nqjltr", "fqdeqrz", "fxzqbo", "fxzqbope", "fxzzqbbpe", "fxzzqbo",
+        "fxzzqbotz", "fxz-zqbotz", "fxzzqbope", "fxzzqbobvekqgvjltr", "fxzyzqbo",
+        "fxszto ykxitr", "fxsztoykxitr", "fxxly", "kxenvyyd", "lplty", "lvoe", "ldlt",
+        "bqlt bt jxbt", "bqst ycvprepof", "bjgqffte", "bxstye", "opffqk", "opffqy",
+        "opffqu", "opfftry", "xsz mqf", "nxsqjl", "nxxoqop", "nxxoqod", "nxxoeqof",
+        "nxxn jkvet", "nxxnjkvet", "nxxnvojktr", "nvoqood", "nvoqod", "nvolqyy",
+        "nvyypty", "nvyyd gqre", "nvyyd nqsqjt", "nvyydnxvoztr", "nvyydy", "rqnpof",
+        "rteqrz", "reqrz", "r-eqrz", "yqoz opfftr", "yqozopfftr", "ykqhtz mtqhtr",
+        "ykqhtz nvyyd", "yktbqst", "ykpejvoe", "ykpezpjl", "ykpetqetr", "ykpekxst",
+        "ysve mvjlte", "ysvemqf", "ysvey", "ynply", "ynrtqz stfy", "eiqey", "vnylpre",
+        "ipfftr", "dtssxi ykxitry"
+    ]
+
+    // function to fetch data from the server, will only fetch one time
     func enableRestrictedWordCheck() {
         if case .loaded(_) = list { return }
-        
+
         Task {
             list = .loading
             do {
@@ -65,7 +92,7 @@ final class RestrictedWordStore: ObservableObject, DebugPrintable {
                     deviceLog("Restricted Word functionality enabled but no Restricted Words found.", category: "RestrictedWords")
                 }
                 list = .loaded(result)
-                debugprint ("fetched \(list.count) Restricted Text Keywords")
+                debugprint ("fetched \(list.count) Restricted Text Keywords from server")
             }
             catch {
                 list = .error(error)
@@ -73,6 +100,13 @@ final class RestrictedWordStore: ObservableObject, DebugPrintable {
                 deviceLog("🛑 ERROR:  fetching Restricted Word List: %@", category: "RestrictedWords", error: error)
             }
         }
+    }
+
+    // function to use bundled words for local-only apps (no server fetch)
+    func enableRestrictedWordCheckWithBundledWords() {
+        if case .loaded(_) = list { return }
+        list = .loaded(Self.bundledRestrictedWords)
+        debugprint("loaded \(list.count) Restricted Text Keywords from app bundle")
     }
     
     // apply character substitution cipher to a string (only lowercase a-z is substituted)
