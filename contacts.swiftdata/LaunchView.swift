@@ -51,9 +51,10 @@ struct LaunchView: View {
         .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
         .environment(\.font, Font.body)
         
-        // Initialize Cloud Repositories
+        // Initialize Repositories
         .task {
-            RestrictedWordStore.shared.enableRestrictedWordCheck()
+            RestrictedWordStore.shared.enableRestrictedWordCheck()                  // Load from server
+            // RestrictedWordStore.shared.enableRestrictedWordCheckWithBundledWords()  // Load from bundle
             HelpTextStore.shared.initialize()
             AnnouncementStore.shared.initialize()
             PublicCommentStore.shared.initialize()
