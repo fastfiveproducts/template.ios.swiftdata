@@ -21,7 +21,7 @@
 import SwiftUI
 
 struct CreateAccountView: View, DebugPrintable {
-    @ObservedObject var viewModel : UserAccountViewModel
+    @ObservedObject var viewModel: UserAccountViewModel
     @ObservedObject var currentUserService: CurrentUserService
     
     @FocusState private var focusedField: Field?

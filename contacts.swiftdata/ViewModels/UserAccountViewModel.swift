@@ -86,7 +86,7 @@ class UserAccountViewModel: ObservableObject, DebugPrintable
         }
         
         if RestrictedWordStore.shared.containsRestrictedWords(capturedDisplayNameText) {
-            statusText = "Display Name matched one or more keywords on our Restricted Text List. Please adjust.";
+            statusText = "Display Name matched one or more keywords on our Restricted Text List. Please adjust."
             isReady = false
         }
         return isReady
@@ -162,7 +162,7 @@ class UserAccountViewModel: ObservableObject, DebugPrintable
         }
 
         if RestrictedWordStore.shared.containsRestrictedWords(capturedDisplayNameText) {
-            statusText = "Display Name matched one or more keywords on our Restricted Text List. Please adjust.";
+            statusText = "Display Name matched one or more keywords on our Restricted Text List. Please adjust."
             isReady = false
         }
         return isReady

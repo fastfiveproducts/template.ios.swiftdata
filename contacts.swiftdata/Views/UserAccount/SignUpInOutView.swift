@@ -21,7 +21,7 @@
 import SwiftUI
 
 struct SignUpInOutView: View, DebugPrintable {
-    @ObservedObject var viewModel : UserAccountViewModel
+    @ObservedObject var viewModel: UserAccountViewModel
     @ObservedObject var currentUserService: CurrentUserService
     @State private var showResetConfirmation = false
     

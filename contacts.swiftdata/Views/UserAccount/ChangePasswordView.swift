@@ -21,7 +21,7 @@
 import SwiftUI
 
 struct ChangePasswordView: View, DebugPrintable {
-    @ObservedObject var viewModel : UserAccountViewModel
+    @ObservedObject var viewModel: UserAccountViewModel
     @ObservedObject var currentUserService: CurrentUserService
     @State private var showConfirmation = false
     

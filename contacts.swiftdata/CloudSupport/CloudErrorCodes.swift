@@ -32,7 +32,7 @@ enum AuthError: Error, LocalizedError {
             case .invalidInput:
                 return NSLocalizedString("Missing Data, please check all fields and try again", comment: "User Input Error")
             case .emailLinkInvalid:
-                return NSLocalizedString("Invalid link recieved from cloud in user create process, please try again", comment: "Cloud Services Communications Error")
+                return NSLocalizedString("Invalid link received from cloud in user create process, please try again", comment: "Cloud Services Communications Error")
             case .userNotFound:
                 return NSLocalizedString("Could not complete sign in as user does not exist", comment: "User does not exist")
             case .signInInputsNotFound:
@@ -62,9 +62,9 @@ enum AccountCreationError: Error, LocalizedError {
             case let .userAccountCompletionFailed(error):
                 return NSLocalizedString("Error completing user account setup, please try again.  Error: \(error)", comment: "Cloud Services Communications Error")
             case .userDisplayNameCreationFailed:
-                return NSLocalizedString("Error in user display name creation, default used; you can change display name later in your user profie.", comment: "Cloud Services Communications Error")
+                return NSLocalizedString("Error in user display name creation, default used; you can change display name later in your user profile.", comment: "Cloud Services Communications Error")
             case .setUserDisplayNameFailed:
-                return NSLocalizedString("Error in user display name update, default used; you can change display name later in your user profie.", comment: "Cloud Services Communications Error")
+                return NSLocalizedString("Error in user display name update, default used; you can change display name later in your user profile.", comment: "Cloud Services Communications Error")
         }
     }
 }
@@ -104,24 +104,24 @@ enum FetchDataError: Error, LocalizedError {
 }
 
 enum UpsertDataError: Error, LocalizedError {
-    case invalidFunctionInput, unexpectdInternalError
+    case invalidFunctionInput, unexpectedInternalError
     case objectConversionError
     
     var errorDescription: String? {
         switch self {
             case .invalidFunctionInput:
                 return NSLocalizedString("Invalid function input, check fields and try again.", comment: "Internal Error")
-            case .unexpectdInternalError:
+            case .unexpectedInternalError:
                 return NSLocalizedString("Unknown Internal Error, try again.", comment: "Internal Error")
                 
             case .objectConversionError:
-                return NSLocalizedString("Data Coversion Error in Data Translation for Cloud Integration.", comment: "Cloud Data Conversion Error")
+                return NSLocalizedString("Data Conversion Error in Data Translation for Cloud Integration.", comment: "Cloud Data Conversion Error")
         }
     }
 }
 
 enum ObjectStoreError: Error, LocalizedError {
-    case invalidFunctionInput, unexpectdInternalError
+    case invalidFunctionInput, unexpectedInternalError
     case objectConversionError, unknownCloudError
     case storeNotLoaded, storeNotInitalized, objectNotAvailable
     
@@ -129,11 +129,11 @@ enum ObjectStoreError: Error, LocalizedError {
         switch self {
             case .invalidFunctionInput:
                 return NSLocalizedString("Invalid function input.", comment: "Internal Error")
-            case .unexpectdInternalError:
+            case .unexpectedInternalError:
                 return NSLocalizedString("Unknown Internal Error, try again.", comment: "Internal Error")
                 
             case .objectConversionError:
-                return NSLocalizedString("Data Coversion Error in Data Translation for Cloud Integration.", comment: "Cloud Data Conversion Error")
+                return NSLocalizedString("Data Conversion Error in Data Translation for Cloud Integration.", comment: "Cloud Data Conversion Error")
             case .unknownCloudError:
                 return NSLocalizedString("Unknown Cloud Error, try again.", comment: "Cloud Services Error")
                 

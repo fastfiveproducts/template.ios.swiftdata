@@ -27,8 +27,10 @@ struct UserAccountProfileView: View {
     }
 }
 
+#if DEBUG
 #Preview {
     Form {
         UserAccountProfileView()
     }
 }
+#endif

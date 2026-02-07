@@ -27,8 +27,10 @@ struct UserAssociationView: View {
     }
 }
 
+#if DEBUG
 #Preview {
     Form {
         UserAssociationView()
     }
 }
+#endif

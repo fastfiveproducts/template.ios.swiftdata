@@ -27,8 +27,10 @@ struct UserDemographicsView: View {
     }
 }
 
+#if DEBUG
 #Preview {
     Form {
         UserDemographicsView()
     }
 }
+#endif

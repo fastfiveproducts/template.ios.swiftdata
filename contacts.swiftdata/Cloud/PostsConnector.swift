@@ -27,7 +27,7 @@ fileprivate let defaultFetchLimit: Int = 100
 // Services:
 struct PostsConnector {
     
-    func fetchPublicComments(limit:Int? = defaultFetchLimit) async throws -> [PublicComment] {
+    func fetchPublicComments(limit: Int? = defaultFetchLimit) async throws -> [PublicComment] {
         var comments: [PublicComment] = []
         let queryRef = DataConnect.defaultConnector.listPublicCommentsQuery.ref(limit: limit!)
         let operationResult = try await queryRef.execute()
@@ -39,7 +39,7 @@ struct PostsConnector {
         return comments
     }
     
-    func fetchMyPrivateMessages(limit:Int? = defaultFetchLimit) async throws -> [PrivateMessage] {
+    func fetchMyPrivateMessages(limit: Int? = defaultFetchLimit) async throws -> [PrivateMessage] {
         var messages: [PrivateMessage] = []
         let queryRef = DataConnect.defaultConnector.getMyPrivateMessagesQuery.ref(limit: limit!)
         let operationResult = try await queryRef.execute()
@@ -51,7 +51,7 @@ struct PostsConnector {
         return messages
     }
     
-    func fetchPublicCommentReferences(for commentId:UUID, limit:Int? = defaultFetchLimit) async throws -> [PostReference] {
+    func fetchPublicCommentReferences(for commentId: UUID, limit: Int? = defaultFetchLimit) async throws -> [PostReference] {
         var references: [PostReference] = []
         let queryRef = DataConnect.defaultConnector.getPublicCommentReferencesQuery.ref(commentId: commentId, limit: limit!)
         let operationResult = try await queryRef.execute()
@@ -63,7 +63,7 @@ struct PostsConnector {
         return references
     }
         
-    func fetchMyPrivateMessageReferences(limit:Int? = defaultFetchLimit) async throws -> [PostReference] {
+    func fetchMyPrivateMessageReferences(limit: Int? = defaultFetchLimit) async throws -> [PostReference] {
         var references: [PostReference] = []
         let queryRef = DataConnect.defaultConnector.getMyPrivateMessageReferencesQuery.ref(limit: limit!)
         let operationResult = try await queryRef.execute()
@@ -75,7 +75,7 @@ struct PostsConnector {
         return references
     }
 
-    func fetchPrivateMessageReferences(for messageId:UUID, limit:Int? = defaultFetchLimit) async throws -> [PostReference] {
+    func fetchPrivateMessageReferences(for messageId: UUID, limit: Int? = defaultFetchLimit) async throws -> [PostReference] {
         var references: [PostReference] = []
         let queryRef = DataConnect.defaultConnector.getPrivateMessageReferencesQuery.ref(messageId: messageId, limit: limit!)
         let operationResult = try await queryRef.execute()
@@ -172,7 +172,7 @@ private extension PostsConnector {
         )
     }
     
-    func makePublicCommentStruct(from postCandidate: PostCandidate, withId createdId:UUID) -> PublicComment {
+    func makePublicCommentStruct(from postCandidate: PostCandidate, withId createdId: UUID) -> PublicComment {
         return PublicComment(
             id: createdId,
             timestamp: Date(),
@@ -202,7 +202,7 @@ private extension PostsConnector {
         )
     }
     
-    func makePrivateMessageStruct(from postCandidate: PostCandidate, withId createdId:UUID) -> PrivateMessage {
+    func makePrivateMessageStruct(from postCandidate: PostCandidate, withId createdId: UUID) -> PrivateMessage {
         return PrivateMessage(
             id: createdId,
             timestamp: Date(),
