@@ -37,7 +37,8 @@ struct CommentsMainView: View, DebugPrintable {
             Spacer(minLength: 0)
 
             Divider()
-                .padding(.bottom, 16)
+                .padding(.top, 8)
+                .padding(.bottom, 12)
             VStackBox(title: "Write a Comment") {
                 NavigationLink {
                     UserPostsStackView(
