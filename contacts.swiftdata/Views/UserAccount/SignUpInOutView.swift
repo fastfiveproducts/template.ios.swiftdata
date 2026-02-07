@@ -249,8 +249,6 @@ private extension SignUpInOutView {
             currentUserService: currentUserService
         )
     }
-    .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
-    .environment(\.font, Font.body)
 }
 #Preview ("test-data signed-out") {
     let currentUserService = CurrentUserTestService.sharedSignedOut
@@ -260,8 +258,6 @@ private extension SignUpInOutView {
             currentUserService: currentUserService
         )
     }
-    .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
-    .environment(\.font, Font.body)
 }
 #Preview ("test-data creating-account") {
     let viewModel = UserAccountViewModel(createAccountMode: true)
@@ -272,8 +268,6 @@ private extension SignUpInOutView {
             currentUserService: currentUserService
         )
     }
-    .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
-    .environment(\.font, Font.body)
 }
 #Preview ("test-data incomplete-user-account") {
     let viewModel = UserAccountViewModel()
@@ -284,7 +278,5 @@ private extension SignUpInOutView {
             currentUserService: currentUserService
         )
     }
-    .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
-    .environment(\.font, Font.body)
 }
 #endif

@@ -62,8 +62,7 @@ struct CommentsMainView: View, DebugPrintable {
                 }
             }
         }
-        .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
-        .environment(\.font, Font.body)
+        .styledView()
         .polling({ store.fetch() })
     }
 }

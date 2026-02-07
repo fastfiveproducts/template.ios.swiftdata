@@ -132,8 +132,6 @@ private extension ChangePasswordView {
                 currentUserService: currentUserService
             )
         }
-        .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
-        .environment(\.font, Font.body)
     }
 }
 #endif

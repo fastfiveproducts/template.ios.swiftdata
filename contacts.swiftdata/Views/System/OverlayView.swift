@@ -47,8 +47,7 @@ struct OverlayView: View {
                     .zIndex(overlay.zIndex)
             }
         }
-        .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
-        .environment(\.font, Font.body)
+        .styledView()
     }
     
     @ViewBuilder

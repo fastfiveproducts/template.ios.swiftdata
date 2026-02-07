@@ -122,8 +122,7 @@ struct UserPostsStackView<T: Post>: View, DebugPrintable {
                 }
             }
         }
-        .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
-        .environment(\.font, Font.body)
+        .styledView()
         .disabled(viewModel.isWorking)
         .toolbar {
             ToolbarItemGroup(placement: .keyboard) {

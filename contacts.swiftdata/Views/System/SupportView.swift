@@ -170,7 +170,5 @@ struct SupportView: View {
 #if DEBUG
 #Preview {
     SupportView()
-        .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
-        .environment(\.font, Font.body)
 }
 #endif

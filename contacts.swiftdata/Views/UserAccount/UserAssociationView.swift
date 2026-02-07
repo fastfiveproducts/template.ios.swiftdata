@@ -24,6 +24,7 @@ struct UserAssociationView: View {
         Section {
             Text("User Association View goes here, when the user is signed-in!  And when it is implemented.")
         }
+        .styledView()
     }
 }
 

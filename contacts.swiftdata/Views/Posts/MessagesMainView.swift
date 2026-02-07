@@ -37,8 +37,7 @@ struct MessagesMainView: View, DebugPrintable {
                 .padding(.bottom, 16)
             newMessageSection
         }
-        .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
-        .environment(\.font, Font.body)
+        .styledView()
         .alert("Search Error", error: $viewModel.error)
         .polling({ store.fetch() })
     }

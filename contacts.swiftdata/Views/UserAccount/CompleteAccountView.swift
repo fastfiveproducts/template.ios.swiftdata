@@ -147,8 +147,6 @@ private extension CompleteAccountView {
                 currentUserService: currentUserService
             )
         }
-        .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
-        .environment(\.font, Font.body)
     }
 }
 #Preview ("test-data showing status") {
@@ -161,8 +159,6 @@ private extension CompleteAccountView {
                 currentUserService: currentUserService
             )
         }
-        .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
-        .environment(\.font, Font.body)
 
         Spacer()
         Button("Next State", action: currentUserService.nextCreateState)

@@ -97,6 +97,14 @@ extension OverlayAnimation {
     }
 }
 
+extension View {
+    func styledView() -> some View {
+        self
+            .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
+            .environment(\.font, Font.body)
+    }
+}
+
 extension Color {
     init(hex: String) {
         let hex = hex.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
@@ -143,8 +151,7 @@ extension ViewConfig {
             ColorTest()
         }
     }
-    .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
-    .environment(\.font, Font.body)
+    .styledView()
 }
 
 #Preview ("Splash Text") {
@@ -154,8 +161,7 @@ extension ViewConfig {
             .font(.title)
             .fontWeight(.semibold)
             .foregroundStyle(ViewConfig.fgColor)
-            .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
-            .environment(\.font, Font.body)
+            .styledView()
     }
 }
 

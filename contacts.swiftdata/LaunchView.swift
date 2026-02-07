@@ -48,8 +48,7 @@ struct LaunchView: View {
             OverlayView()
                 .zIndex(30)
         }
-        .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
-        .environment(\.font, Font.body)
+        .styledView()
         
         // Initialize Repositories
         .task {

@@ -177,8 +177,6 @@ struct PostsScrollView<T: Post>: View {
         }
         .padding()
     }
-    .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
-    .environment(\.font, Font.body)
 }
 
 #Preview ("Newest on Top") {
@@ -192,8 +190,6 @@ struct PostsScrollView<T: Post>: View {
             newestAtTop: true
         )
     }
-    .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
-    .environment(\.font, Font.body)
 }
 
 #Preview ("Empty") {
@@ -213,7 +209,5 @@ struct PostsScrollView<T: Post>: View {
             )
         }
     }
-    .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
-    .environment(\.font, Font.body)
 }
 #endif

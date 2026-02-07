@@ -132,8 +132,6 @@ struct StoreListView<T: Listable, Content: View>: View {
         }
 
     }
-    .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
-    .environment(\.font, Font.body)
 }
 #Preview ("Form: Empty") {
     Form {
@@ -141,16 +139,12 @@ struct StoreListView<T: Listable, Content: View>: View {
             StoreListView(store: ListableStore<Announcement>.testEmpty(), showDividers: false)
         }
     }
-    .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
-    .environment(\.font, Font.body)
 }
 #Preview ("Bullets") {
     StoreListView(store: ListableStore<Announcement>.testLoaded(with: Announcement.testObjects),
                   showBullets: true,
                   showDividers: false
     )
-        .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
-        .environment(\.font, Font.body)
 }
 #Preview ("Custom Content: simple") {
     StoreListView(store: ListableStore<Announcement>.testLoaded(with: Announcement.testObjects)) { object in
@@ -158,8 +152,6 @@ struct StoreListView<T: Listable, Content: View>: View {
             Text(object.content)
         }
     }
-    .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
-    .environment(\.font, Font.body)
 }
 #Preview ("Custom Content: complex") {
     StoreListView(store: ListableStore<Announcement>.testLoaded(with: Announcement.testObjects)) {announcement in
@@ -182,7 +174,5 @@ struct StoreListView<T: Listable, Content: View>: View {
                 .foregroundStyle(.secondary)
         }
     }
-    .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
-    .environment(\.font, Font.body)
 }
 #endif

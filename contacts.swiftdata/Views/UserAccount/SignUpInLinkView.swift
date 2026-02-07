@@ -97,8 +97,6 @@ struct SignUpInLinkView: View {
         }
         Spacer()
     }
-    .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
-    .environment(\.font, Font.body)
 }
 #Preview ("signed-out") {
     let currentUserService = CurrentUserTestService.sharedSignedOut
@@ -117,7 +115,5 @@ struct SignUpInLinkView: View {
         }
         Spacer()
     }
-    .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
-    .environment(\.font, Font.body)
 }
 #endif
