@@ -97,6 +97,9 @@ struct PostsScrollView<T: Post>: View {
                         .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardDidShowNotification)) { _ in
                             scrollToBottom(posts, proxy: proxy, animated: false)
                         }
+                        .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardDidHideNotification)) { _ in
+                            scrollToBottom(posts, proxy: proxy)
+                        }
                     }
                 }
             }
