@@ -91,7 +91,7 @@ struct UserPostsStackView<T: Post>: View, DebugPrintable {
 
                 if !viewModel.statusText.isEmpty {
                     Text(viewModel.statusText)
-                        .foregroundColor(.red)
+                        .foregroundStyle(.red)
                         .font(.footnote)
                 }
 
@@ -106,8 +106,8 @@ struct UserPostsStackView<T: Post>: View, DebugPrintable {
                 .disabled(viewModel.capturedContentText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
                 .padding()
                 .background(viewModel.capturedContentText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? Color.gray : Color.accentColor)
-                .foregroundColor(.white)
-                .cornerRadius(8)
+                .foregroundStyle(.white)
+                .clipShape(RoundedRectangle(cornerRadius: 8))
             }
             .onAppear {
                 if conversationWith == nil { focusedField = .firstField }

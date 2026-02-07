@@ -59,7 +59,7 @@ struct CommentsMainView: View, DebugPrintable {
                         Text("My Comments")
                         Spacer()
                     }
-                    .foregroundColor(.accentColor)
+                    .foregroundStyle(Color.accentColor)
                 }
             }
         }

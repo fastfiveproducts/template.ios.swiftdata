@@ -64,7 +64,7 @@ struct MessagesMainView: View, DebugPrintable {
             if partners.isEmpty {
                 VStack {
                     Text("No conversations yet")
-                        .foregroundColor(.secondary)
+                        .foregroundStyle(.secondary)
                         .padding()
                     Spacer()
                 }
@@ -87,16 +87,16 @@ struct MessagesMainView: View, DebugPrintable {
                     } label: {
                         HStack {
                             Image(systemName: "person.circle.fill")
-                                .foregroundColor(.secondary)
+                                .foregroundStyle(.secondary)
                                 .font(.title2)
                             Text(partner.userKey.displayName)
                                 .font(.body)
                             Spacer()
                             Text(partner.lastMessageDate.formatted(date: .abbreviated, time: .omitted))
                                 .font(.caption)
-                                .foregroundColor(.secondary)
+                                .foregroundStyle(.secondary)
                             Image(systemName: "chevron.right")
-                                .foregroundColor(.secondary)
+                                .foregroundStyle(.secondary)
                                 .font(.caption)
                         }
                         .padding(.vertical, 4)
@@ -165,13 +165,13 @@ struct MessagesMainView: View, DebugPrintable {
                     } label: {
                         HStack {
                             Image(systemName: "person.circle")
-                                .foregroundColor(.accentColor)
+                                .foregroundStyle(Color.accentColor)
                             Text(user.displayName)
-                                .foregroundColor(.primary)
+                                .foregroundStyle(.primary)
                             Spacer()
                             Text(hasExistingConversation ? "Resume Conversation" : "Start Conversation")
                                 .font(.caption)
-                                .foregroundColor(.secondary)
+                                .foregroundStyle(.secondary)
                         }
                         .padding(.horizontal)
                         .padding(.vertical, 6)
@@ -179,7 +179,7 @@ struct MessagesMainView: View, DebugPrintable {
                 }
             } else if viewModel.hasSearched && !viewModel.isSearching {
                 Text("No users found")
-                    .foregroundColor(.secondary)
+                    .foregroundStyle(.secondary)
                     .padding()
             }
         }

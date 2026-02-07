@@ -66,7 +66,7 @@ struct SignUpInLinkView: View {
                               : NavigationItem.profile.systemImage)
                         Text(trailingText)
                     }
-                    .foregroundColor(ViewConfig.linkColor)
+                    .foregroundStyle(ViewConfig.linkColor)
                 }
             }
             .buttonStyle(BorderlessButtonStyle())

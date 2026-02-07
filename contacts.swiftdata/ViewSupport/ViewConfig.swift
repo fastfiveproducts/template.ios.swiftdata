@@ -127,11 +127,11 @@ extension ViewConfig {
 #Preview ("Colors") {
     ScrollView {
         VStackBox {
-            Text("brandColor").foregroundColor(ViewConfig.brandColor)
-            Text("linkColor").foregroundColor(ViewConfig.linkColor)
+            Text("brandColor").foregroundStyle(ViewConfig.brandColor)
+            Text("linkColor").foregroundStyle(ViewConfig.linkColor)
         }
         VStackBox (backgroundColor: ViewConfig.bgColor) {
-            Text("fgColor on bgColor").foregroundColor(ViewConfig.fgColor)
+            Text("fgColor on bgColor").foregroundStyle(ViewConfig.fgColor)
         }
         VStackBox (backgroundColor: Color(.gray)) {
             ColorTest()
@@ -153,7 +153,7 @@ extension ViewConfig {
         ViewConfig.SpashTextView()
             .font(.title)
             .fontWeight(.semibold)
-            .foregroundColor(ViewConfig.fgColor)
+            .foregroundStyle(ViewConfig.fgColor)
             .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
             .environment(\.font, Font.body)
     }
@@ -161,10 +161,10 @@ extension ViewConfig {
 
 fileprivate struct ColorTest: View {
     var body: some View {
-        Text("brandColor").foregroundColor(ViewConfig.brandColor)
-        Text("linkColor").foregroundColor(ViewConfig.linkColor)
-        Text("bgColor").foregroundColor(ViewConfig.bgColor)
-        Text("fgColor").foregroundColor(ViewConfig.fgColor)
+        Text("brandColor").foregroundStyle(ViewConfig.brandColor)
+        Text("linkColor").foregroundStyle(ViewConfig.linkColor)
+        Text("bgColor").foregroundStyle(ViewConfig.bgColor)
+        Text("fgColor").foregroundStyle(ViewConfig.fgColor)
     }
 }
 #endif

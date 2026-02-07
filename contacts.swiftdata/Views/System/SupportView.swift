@@ -29,11 +29,11 @@ struct SupportView: View {
                     Text("Getting Started with \(ViewConfig.brandName)")
                         .font(.largeTitle)
                         .fontWeight(.bold)
-                        .foregroundColor(ViewConfig.fgColor)
+                        .foregroundStyle(ViewConfig.fgColor)
 
                     Text("A quick guide to help you explore and get comfortable with the app.")
                         .font(.subheadline)
-                        .foregroundColor(ViewConfig.fgColor)
+                        .foregroundStyle(ViewConfig.fgColor)
                 }
                 .padding(.horizontal)
                 .padding(.top)
@@ -44,7 +44,7 @@ struct SupportView: View {
                 VStackBox(titleView: {
                     Label("What This App Does", systemImage: "sparkles")
                         .font(.headline)
-                        .foregroundColor(ViewConfig.brandColor)
+                        .foregroundStyle(ViewConfig.brandColor)
                 }) {
                     Text("""
                     The Template App provides a clean starting point for building SwiftUI apps with shared services, data stores, and visual components.
@@ -57,7 +57,7 @@ struct SupportView: View {
                 VStackBox(titleView: {
                     Label("Layout Overview", systemImage: "square.grid.2x2")
                         .font(.headline)
-                        .foregroundColor(ViewConfig.brandColor)
+                        .foregroundStyle(ViewConfig.brandColor)
                 }) {
                     Text("""
                     Most screens use a VStack-based layout for clarity and flexibility. You’ll see consistent section headers and spacing throughout.
@@ -70,7 +70,7 @@ struct SupportView: View {
                 VStackBox(titleView: {
                     Label("Configuration", systemImage: "gearshape.fill")
                         .font(.headline)
-                        .foregroundColor(ViewConfig.brandColor)
+                        .foregroundStyle(ViewConfig.brandColor)
                 }) {
                     Text("""
                     App-wide appearance and constants live in `ViewConfig`. You can easily customize brand colors, fonts, and layout sizes there. You can also define dynamic colors, links, and branding for your app’s environment.
@@ -83,7 +83,7 @@ struct SupportView: View {
                 VStackBox(titleView: {
                     Label("Frequently Asked Questions", systemImage: "questionmark.circle.fill")
                         .font(.headline)
-                        .foregroundColor(ViewConfig.brandColor)
+                        .foregroundStyle(ViewConfig.brandColor)
                 }) {
                     VStack(alignment: .leading, spacing: 12) {
                         Group {
@@ -135,7 +135,7 @@ struct SupportView: View {
                 VStack(alignment: .center, spacing: 8) {
                     Text("Need more help?")
                         .font(.headline)
-                        .foregroundColor(ViewConfig.fgColor)
+                        .foregroundStyle(ViewConfig.fgColor)
 
                     HStack(spacing: 4) {
                         Text("Visit")
@@ -145,7 +145,7 @@ struct SupportView: View {
                             Text(ViewConfig.supportText)
                                 .font(.subheadline)
                                 .fontWeight(.semibold)
-                                .foregroundColor(.blue)
+                                .foregroundStyle(.blue)
                         }
                     }
                     .padding(.horizontal, 6)

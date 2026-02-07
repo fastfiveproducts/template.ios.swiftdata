@@ -41,7 +41,7 @@ struct CompleteAccountView: View, DebugPrintable {
             Section(header: Text("Complete Your Account")) {
                 Text("Your sign-in was successful, but your account setup is incomplete. Please complete your account to continue.")
                     .font(.subheadline)
-                    .foregroundColor(.secondary)
+                    .foregroundStyle(.secondary)
 
                 LabeledContent {
                     Text(currentUserService.user.auth.email)
@@ -50,9 +50,9 @@ struct CompleteAccountView: View, DebugPrintable {
 
                 LabeledContent {
                     TextField(text: $viewModel.capturedDisplayNameText) {}
-                        .autocapitalization(.none)
+                        .textInputAutocapitalization(.never)
                         .keyboardType(.emailAddress)
-                        .disableAutocorrection(true)
+                        .autocorrectionDisabled()
                         .focused($focusedField, equals: .displayName)
                         .onTapGesture { nextField() }
                         .onSubmit { completeAccount() }
@@ -61,7 +61,7 @@ struct CompleteAccountView: View, DebugPrintable {
 
                 Button("Complete Account", action: completeAccount)
                     .frame(maxWidth: .infinity)
-                    .foregroundColor(.white)
+                    .foregroundStyle(.white)
                     .listRowBackground(Color.accentColor)
                     .disabled(viewModel.capturedDisplayNameText.isEmpty ||
                         currentUserService.isCreatingUserAccount ||
@@ -93,7 +93,7 @@ struct CompleteAccountView: View, DebugPrintable {
                     if viewModel.showSuccessMode {
                         HStack {
                             Image(systemName: "checkmark.circle.fill")
-                                .foregroundColor(.green)
+                                .foregroundStyle(.green)
                             Text("Account Setup Complete!")
                                 .fontWeight(.medium)
                         }
@@ -121,12 +121,12 @@ private extension CompleteAccountView {
         HStack {
             if isDone {
                 Image(systemName: "checkmark.circle")
-                    .foregroundColor(.green)
+                    .foregroundStyle(.green)
             } else if isActive {
                 ProgressView()
             } else {
                 Image(systemName: "circle")
-                    .foregroundColor(.gray)
+                    .foregroundStyle(.gray)
             }
 
             Text(label + (isDone ? " DONE" : isActive ? "..." : ""))

@@ -71,7 +71,7 @@ struct SignUpInOutView: View, DebugPrintable {
                     Text(currentUserService.isSignedIn ? "Sign Out" : "Submit")
                 }
                 .frame(maxWidth: .infinity)
-                .foregroundColor(.white)
+                .foregroundStyle(.white)
                 .listRowBackground(Color.accentColor)
                 
             }
@@ -81,9 +81,9 @@ struct SignUpInOutView: View, DebugPrintable {
                 LabeledContent {
                     TextField(text: $viewModel.capturedEmailText, prompt: Text(currentUserService.isSignedIn ? currentUserService.user.auth.email : "sign-in or sign-up email address")) {}
                         .disabled(viewModel.createAccountMode)
-                        .autocapitalization(.none)
+                        .textInputAutocapitalization(.never)
                         .keyboardType(.emailAddress)
-                        .disableAutocorrection(true)
+                        .autocorrectionDisabled()
                         .focused($focusedField, equals: .username)
                         .onTapGesture { nextField() }
                         .onSubmit { nextField() }
@@ -94,9 +94,9 @@ struct SignUpInOutView: View, DebugPrintable {
                 if viewModel.createAccountMode {
                     LabeledContent {
                         SecureField(text: $viewModel.capturedPasswordText, prompt: Text("password")) {}
-                            .autocapitalization(/*@START_MENU_TOKEN@*/.none/*@END_MENU_TOKEN@*/)
+                            .textInputAutocapitalization(.never)
                             .keyboardType(.emailAddress)
-                            .disableAutocorrection(true)
+                            .autocorrectionDisabled()
                             .focused($focusedField, equals: .password)
                             .onTapGesture { nextField() }
                             .onSubmit { createAccount() }
@@ -106,9 +106,9 @@ struct SignUpInOutView: View, DebugPrintable {
                     LabeledContent {
                         SecureField(text: $viewModel.capturedPasswordText, prompt: Text("password")) {}
                             .disabled(currentUserService.isSignedIn)
-                            .autocapitalization(/*@START_MENU_TOKEN@*/.none/*@END_MENU_TOKEN@*/)
+                            .textInputAutocapitalization(.never)
                             .keyboardType(.emailAddress)
-                            .disableAutocorrection(true)
+                            .autocorrectionDisabled()
                             .focused($focusedField, equals: .password)
                             .onTapGesture { toggleSignUpInOut() }
                             .onSubmit { toggleSignUpInOut() }
@@ -118,7 +118,7 @@ struct SignUpInOutView: View, DebugPrintable {
                         Text(currentUserService.isSignedIn ? "Sign Out" : "Submit")
                     }
                     .frame(maxWidth: .infinity)
-                    .foregroundColor(.white)
+                    .foregroundStyle(.white)
                     .listRowBackground(Color.accentColor)
                     .disabled(viewModel.capturedEmailText.isEmpty
                         || viewModel.capturedPasswordText.isEmpty

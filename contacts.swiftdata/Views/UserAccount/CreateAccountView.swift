@@ -44,9 +44,9 @@ struct CreateAccountView: View, DebugPrintable {
             Section(header: Text("Create New Account")) {
                 LabeledContent {
                     SecureField(text: $viewModel.capturedPasswordMatchText, prompt: Text("password")) {}
-                        .autocapitalization(/*@START_MENU_TOKEN@*/.none/*@END_MENU_TOKEN@*/)
+                        .textInputAutocapitalization(.never)
                         .keyboardType(.emailAddress)
-                        .disableAutocorrection(true)
+                        .autocorrectionDisabled()
                         .focused($focusedField, equals: .passwordAgain)
                         .onTapGesture { nextField() }
                         .onSubmit { nextField() }
@@ -55,9 +55,9 @@ struct CreateAccountView: View, DebugPrintable {
                 
                 LabeledContent {
                     TextField(text: $viewModel.capturedDisplayNameText) {}
-                        .autocapitalization(.none)
+                        .textInputAutocapitalization(.never)
                         .keyboardType(.emailAddress)
-                        .disableAutocorrection(true)
+                        .autocorrectionDisabled()
                         .focused($focusedField, equals: .displayName)
                         .onTapGesture { nextField() }
                         .onSubmit { nextField() }
@@ -73,7 +73,7 @@ struct CreateAccountView: View, DebugPrintable {
                 
                 Button("Submit", action: createAccount)
                     .frame(maxWidth: .infinity)
-                    .foregroundColor(.white)
+                    .foregroundStyle(.white)
                     .listRowBackground(Color.accentColor)
                     .disabled(viewModel.capturedPasswordMatchText.isEmpty ||
                         viewModel.capturedDisplayNameText.isEmpty ||
@@ -113,7 +113,7 @@ struct CreateAccountView: View, DebugPrintable {
                     if viewModel.showSuccessMode {
                         HStack {
                             Image(systemName: "checkmark.circle.fill")
-                                .foregroundColor(.green)
+                                .foregroundStyle(.green)
                             Text("Create Account Successful!")
                                 .fontWeight(.medium)
                         }
@@ -126,7 +126,7 @@ struct CreateAccountView: View, DebugPrintable {
             Section {
                 Button("Start Over", action: startOver)
                     .frame(maxWidth: .infinity)
-                    .foregroundColor(.white)
+                    .foregroundStyle(.white)
                     .listRowBackground(Color.accentColor)
             }
         }
@@ -153,12 +153,12 @@ private extension CreateAccountView {
         HStack {
             if isDone {
                 Image(systemName: "checkmark.circle")
-                    .foregroundColor(.green)
+                    .foregroundStyle(.green)
             } else if isActive {
                 ProgressView()
             } else {
                 Image(systemName: "circle")
-                    .foregroundColor(.gray)
+                    .foregroundStyle(.gray)
             }
 
             Text(label + (isDone ? " DONE" : isActive ? "..." : ""))

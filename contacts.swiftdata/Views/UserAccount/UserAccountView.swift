@@ -42,7 +42,7 @@ struct UserAccountView: View {
         .alert("Error", error: $viewModel.error)
     
         Text(viewModel.statusText)
-            .foregroundColor(.red)
+            .foregroundStyle(.red)
     }
 }
 

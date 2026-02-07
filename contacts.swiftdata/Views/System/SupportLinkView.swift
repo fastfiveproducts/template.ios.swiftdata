@@ -62,7 +62,7 @@ struct SupportLinkView: View {
                               : NavigationItem.support.systemImage)
                         Text(trailingText)
                     }
-                    .foregroundColor(ViewConfig.linkColor)
+                    .foregroundStyle(ViewConfig.linkColor)
                 }
             }
             .buttonStyle(BorderlessButtonStyle())
@@ -85,7 +85,7 @@ struct SupportLinkView: View {
                               : NavigationItem.support.systemImage)
                         Text(trailingText)
                     }
-                    .foregroundColor(ViewConfig.linkColor)
+                    .foregroundStyle(ViewConfig.linkColor)
                 }
             }
             .buttonStyle(BorderlessButtonStyle())

@@ -85,7 +85,7 @@ final class ModelContainerManager: ObservableObject, DebugPrintable {
     }
     private func makeURL(for userId: String?) -> URL {
         let owner = userId.map { "user_\($0)" } ?? "guest"
-        return baseDirectory.appendingPathComponent("\(owner)_streems.sqlite")
+        return baseDirectory.appending(path: "\(owner)_streems.sqlite")
     }
     static var emptyContainer: ModelContainer {
         let schema = Schema([])

@@ -58,13 +58,13 @@ struct OverlayView: View {
             SplashView()
                 .font(.title)
                 .fontWeight(.semibold)
-                .foregroundColor(ViewConfig.fgColor)
+                .foregroundStyle(ViewConfig.fgColor)
         case .loading:
             VStack {
                 ViewConfig.SpashTextView()
                     .font(.title)
                     .fontWeight(.semibold)
-                    .foregroundColor(.clear)     // preserve layout between splash and loading with clear text
+                    .foregroundStyle(.clear)     // preserve layout between splash and loading with clear text
                 Text("\n")
                     .font(.title)
                     .fontWeight(.semibold)
@@ -72,7 +72,7 @@ struct OverlayView: View {
                     ProgressView()
                         .progressViewStyle(CircularProgressViewStyle(tint: ViewConfig.fgColor))
                     Text("Loading local data…")
-                        .foregroundColor(ViewConfig.fgColor)
+                        .foregroundStyle(ViewConfig.fgColor)
                 }
                     .font(.title3)
                     .fontWeight(.semibold)

@@ -70,7 +70,7 @@ struct PostsScrollView<T: Post>: View {
 
             case .error(let error):
                 Text("Error loading content: \(error.localizedDescription)")
-                    .foregroundColor(.red)
+                    .foregroundStyle(.red)
                     .padding()
 
             case .none:
@@ -84,7 +84,7 @@ struct PostsScrollView<T: Post>: View {
                     } else {
                         VStack(alignment: .leading) {
                             Text("None!")
-                                .foregroundColor(.secondary)
+                                .foregroundStyle(.secondary)
                                 .padding(.horizontal)
                                 .padding(.top, 10)
                             Spacer(minLength: 0) // optional, to push empty state up
