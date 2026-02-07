@@ -24,11 +24,14 @@ struct UserDemographicsView: View {
         Section {
             Text("User Demographics View goes here, when the user is signed-in!  And when it is implemented.")
         }
+        .styledView()
     }
 }
 
+#if DEBUG
 #Preview {
     Form {
         UserDemographicsView()
     }
 }
+#endif

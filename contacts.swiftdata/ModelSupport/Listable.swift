@@ -35,10 +35,7 @@ extension Listable {
 
 extension Listable {
     func dateString(from date: Date?) -> String {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateStyle = .medium
-        dateFormatter.timeStyle = .none
-        let string = date != nil ? dateFormatter.string(from: date!) : "unknown date"
-        return string
+        guard let date else { return "unknown date" }
+        return date.formatted(date: .abbreviated, time: .omitted)
     }
 }

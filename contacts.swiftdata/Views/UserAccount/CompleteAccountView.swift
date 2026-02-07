@@ -1,11 +1,10 @@
 //
-//  CreateAccountView.swift
+//  CompleteAccountView.swift
 //
-//  Template created by Pete Maiser, July 2024 through August 2025
-//  Modified by Pete Maiser, Fast Five Products LLC, on 8/28/25.
-//      Template v0.2.2 (updated) Fast Five Products LLC's public AGPL template.
+//  Created by by Pete Maiser, Fast Five Products LLC, on 2/3/26.
+//      Template v0.2.5 — Fast Five Products LLC's public AGPL template.
 //
-//  Copyright © 2025 Fast Five Products LLC. All rights reserved.
+//  Copyright © 2025, 2026 Fast Five Products LLC. All rights reserved.
 //
 //  This file is part of a project licensed under the GNU Affero General Public License v3.0.
 //  See the LICENSE file at the root of this repository for full terms.
@@ -20,39 +19,35 @@
 
 import SwiftUI
 
-struct CreateAccountView: View, DebugPrintable {
+struct CompleteAccountView: View, DebugPrintable {
     @ObservedObject var viewModel: UserAccountViewModel
     @ObservedObject var currentUserService: CurrentUserService
-    
+
     @FocusState private var focusedField: Field?
     private func nextField() {
         switch focusedField {
-            case .passwordAgain:
-                focusedField = .displayName
             case .displayName:
                 focusedField = .none
             case .none:
                 focusedField = .none
         }
     }
-    private enum Field: Hashable { case passwordAgain, displayName}
+    private enum Field: Hashable { case displayName }
 
     var body: some View {
-        
+
         if !viewModel.showStatusMode {
-            
-            Section(header: Text("Create New Account")) {
+
+            Section(header: Text("Complete Your Account")) {
+                Text("Your sign-in was successful, but your account setup is incomplete. Please complete your account to continue.")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+
                 LabeledContent {
-                    SecureField(text: $viewModel.capturedPasswordMatchText, prompt: Text("password")) {}
-                        .textInputAutocapitalization(.never)
-                        .keyboardType(.emailAddress)
-                        .autocorrectionDisabled()
-                        .focused($focusedField, equals: .passwordAgain)
-                        .onTapGesture { nextField() }
-                        .onSubmit { nextField() }
-                } label: { Text("enter password again:") }
+                    Text(currentUserService.user.auth.email)
+                } label: { Text("email address:") }
                     .labeledContentStyle(TopLabeledContentStyle())
-                
+
                 LabeledContent {
                     TextField(text: $viewModel.capturedDisplayNameText) {}
                         .textInputAutocapitalization(.never)
@@ -60,61 +55,46 @@ struct CreateAccountView: View, DebugPrintable {
                         .autocorrectionDisabled()
                         .focused($focusedField, equals: .displayName)
                         .onTapGesture { nextField() }
-                        .onSubmit { nextField() }
+                        .onSubmit { completeAccount() }
                 } label: { Text("enter a Display Name:") }
                     .labeledContentStyle(TopLabeledContentStyle())
-                
-                Toggle(isOn: $viewModel.notRobot) {
-                    Text("I am not a Robot")
-                }
-                Toggle(isOn: $viewModel.dislikesRobots) {
-                    Text("I don't even like Robots")
-                }
-                
-                Button("Submit", action: createAccount)
+
+                Button("Complete Account", action: completeAccount)
                     .frame(maxWidth: .infinity)
                     .foregroundStyle(.white)
                     .listRowBackground(Color.accentColor)
-                    .disabled(viewModel.capturedPasswordMatchText.isEmpty ||
-                        viewModel.capturedDisplayNameText.isEmpty ||
-                        viewModel.notRobot == false ||
-                        currentUserService.isCreatingUser ||
+                    .disabled(viewModel.capturedDisplayNameText.isEmpty ||
                         currentUserService.isCreatingUserAccount ||
                         currentUserService.isUpdatingUserAccount
                     )
-                
+
             }
-            .onAppear { focusedField = .passwordAgain }
+            .onAppear { focusedField = .displayName }
             .onChange(of: viewModel.capturedDisplayNameText) {
                 viewModel.clearStatus()
             }
             .onSubmit {
-                if (viewModel.notRobot) {
-                    createAccount() }
+                completeAccount()
             }
         }
-        
+
 
         if viewModel.showStatusMode {
-            Section (header: Text("Creating New Account")) {
+            Section (header: Text("Completing Account Setup")) {
                 VStack(alignment: .leading, spacing: 8) {
-                    statusRow("Creating User",
-                              isActive: currentUserService.isCreatingUser,
-                              isDone: !currentUserService.isCreatingUser && (currentUserService.isCreatingUserAccount || currentUserService.isUpdatingUserAccount || viewModel.showSuccessMode))
-                    
                     statusRow("Creating User Profile",
                               isActive: currentUserService.isCreatingUserAccount,
                               isDone: !currentUserService.isCreatingUserAccount && (currentUserService.isUpdatingUserAccount || viewModel.showSuccessMode))
-                    
+
                     statusRow("Setting Display Name",
                               isActive: currentUserService.isUpdatingUserAccount,
                               isDone: !currentUserService.isUpdatingUserAccount && viewModel.showSuccessMode)
-                    
+
                     if viewModel.showSuccessMode {
                         HStack {
                             Image(systemName: "checkmark.circle.fill")
                                 .foregroundStyle(.green)
-                            Text("Create Account Successful!")
+                            Text("Account Setup Complete!")
                                 .fontWeight(.medium)
                         }
                         .padding(.top, 4)
@@ -122,38 +102,26 @@ struct CreateAccountView: View, DebugPrintable {
                 }
                 .padding(.vertical, 8)
             }
-        } else {
-            Section {
-                Button("Start Over", action: startOver)
-                    .frame(maxWidth: .infinity)
-                    .foregroundStyle(.white)
-                    .listRowBackground(Color.accentColor)
-            }
         }
     }
 }
 
-private extension CreateAccountView {
-    
-    private func startOver() {
-        debugprint("startOver called")
-        viewModel.resetCreateAccount()
-    }
-       
-    private func createAccount() {
-        debugprint("createAccount called")
-        if viewModel.isReadyToCreateAccount() {
+private extension CompleteAccountView {
+
+    private func completeAccount() {
+        debugprint("completeAccount called")
+        if viewModel.isReadyToCompleteUserAccount() {
             Task {
                 do {
-                    try await viewModel.createAccountWithService(currentUserService)
+                    try await viewModel.completeUserAccountWithService(currentUserService)
                 } catch {
-                    debugprint("🛑 ERROR:  (View) Error creating User Account: \(error)")
+                    debugprint("🛑 ERROR:  (View) Error completing User Account: \(error)")
                     viewModel.error = error
                 }
             }
         }
     }
-    
+
     private func statusRow(_ label: String, isActive: Bool, isDone: Bool) -> some View {
         HStack {
             if isDone {
@@ -167,7 +135,7 @@ private extension CreateAccountView {
             }
 
             Text(label + (isDone ? " DONE" : isActive ? "..." : ""))
-            
+
             Spacer()
         }
     }
@@ -175,11 +143,11 @@ private extension CreateAccountView {
 
 
 #if DEBUG
-#Preview ("test-data signed-out") {
-    let currentUserService = CurrentUserTestService.sharedSignedOut
+#Preview ("test-data incomplete user account") {
+    let currentUserService = CurrentUserTestService.sharedIncompleteUserAccount
     ScrollViewReader { proxy in
         Form {
-            CreateAccountView(
+            CompleteAccountView(
                 viewModel: UserAccountViewModel(),
                 currentUserService: currentUserService
             )
@@ -188,18 +156,17 @@ private extension CreateAccountView {
 }
 #Preview ("test-data showing status") {
     let currentUserService = CurrentUserTestService.sharedCreatingUser
-    let viewModel = UserAccountViewModel(createAccountMode: true, showStatusMode: true)
+    let viewModel = UserAccountViewModel(showStatusMode: true, completeUserAccountMode: true)
     ScrollViewReader { proxy in
         Form {
-            CreateAccountView(
+            CompleteAccountView(
                 viewModel: viewModel,
                 currentUserService: currentUserService
             )
         }
-        
+
         Spacer()
         Button("Next State", action: currentUserService.nextCreateState)
     }
 }
 #endif
-

@@ -52,14 +52,18 @@ struct FirestoreConnector: DebugPrintable {
 private extension DocumentReference {
     func setData<T: Encodable>(from value: T) async throws {
         return try await withCheckedThrowingContinuation { continuation in
-            // Throws an encoding error if there's a problem with our model
-            // All other errors are passed to the completion handle
-            try! setData(from: value) { error in
-                if let error = error {
-                    continuation.resume(throwing: error)
-                    return
+            do {
+                // Encoding errors (e.g. model conformance issues) are thrown here;
+                // all other errors are passed to the completion handler
+                try setData(from: value) { error in
+                    if let error = error {
+                        continuation.resume(throwing: error)
+                        return
+                    }
+                    continuation.resume()
                 }
-                continuation.resume()
+            } catch {
+                continuation.resume(throwing: error)
             }
         }
     }

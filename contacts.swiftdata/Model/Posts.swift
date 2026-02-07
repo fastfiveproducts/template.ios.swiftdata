@@ -130,8 +130,7 @@ struct PrivateMessage: Post, Listable  {
     
     // to conform to Listable, supply a 'is valid' computed property
     var isValid: Bool {
-        guard !title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
-              !content.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
+        guard !content.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
               from.isValid,
               to.isValid
         else {
@@ -155,7 +154,7 @@ enum MessageStatusCode: String, Codable { case
 
 struct MessageStatus: Codable, Hashable {
     private(set) var timestamp: Date?
-    var uid: String!
+    var uid: String
     var status: MessageStatusCode
 }
 
@@ -201,7 +200,7 @@ extension PrivateMessage {
 extension PrivateMessage {
     static let testObject = PrivateMessage(
         id: UUID(),
-        timestamp: Date(),
+        timestamp: Date().addingTimeInterval(-86400*2),
         from: UserKey.testObject,
         to: UserKey.testObjectAnother,
         title: "Title Lorem Ipsum",
@@ -209,7 +208,7 @@ extension PrivateMessage {
     )
     static let testObjectAnother = PrivateMessage(
         id: UUID(),
-        timestamp: Date(),
+        timestamp: Date().addingTimeInterval(-86400*1),
         from: UserKey.testObjectAnother,
         to: UserKey.testObject,
         title: "Another Title Lorem ipsum",
@@ -229,7 +228,7 @@ extension PrivateMessage {
 extension PublicComment {
     static let testObject = PublicComment(
         id: UUID(),
-        timestamp: Date(),
+        timestamp: Date().addingTimeInterval(-86400*2),
         from: UserKey.testObject,
         to: UserKey.blankUser,
         title: "",
@@ -237,7 +236,7 @@ extension PublicComment {
     )
     static let testObjectAnother = PublicComment(
         id: UUID(),
-        timestamp: Date(),
+        timestamp: Date().addingTimeInterval(-86400*1),
         from: UserKey.testObjectAnother,
         to: UserKey.blankUser,
         title: "",

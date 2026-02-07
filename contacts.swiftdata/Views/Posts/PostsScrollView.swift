@@ -2,7 +2,8 @@
 //  PostsScrollView.swift
 //
 //  Template created by Pete Maiser, July 2024 through May 2025
-//      Template v0.1.1 Fast Five Products LLC's public AGPL template.
+//  Modified by Pete Maiser, Fast Five Products LLC, on 2/4/26.
+//      Template v0.2.5 (updated) — Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025 Fast Five Products LLC. All rights reserved.
 //
@@ -18,6 +19,7 @@
 
 
 import SwiftUI
+import Combine
 
 struct PostsScrollView<T: Post>: View {
     @ObservedObject var store: ListableStore<T>
@@ -26,21 +28,15 @@ struct PostsScrollView<T: Post>: View {
     // Optional filters
     var fromUserId: String?
     var toUserId: String?
+    var conversationWith: String?  // For message conversations: shows posts between currentUserId and this user
     
     // Optional visuals
     var showFromUser: Bool = false
     var showToUser: Bool = false
     var hideWhenEmpty: Bool = false
 
-    // Apply filters
-    private var filteredPosts: [T] {
-        guard case let .loaded(posts) = store.list else { return [] }
-        return posts.filter { post in
-            let toMatch = toUserId == nil || post.to.uid == toUserId
-            let fromMatch = fromUserId == nil || post.from.uid == fromUserId
-            return toMatch && fromMatch
-        }
-    }
+    // Sort order: when true, displays newest first at top (like a feed); default is newest at bottom (like Messages app)
+    var newestAtTop: Bool = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -52,7 +48,7 @@ struct PostsScrollView<T: Post>: View {
 
             case .error(let error):
                 Text("Error loading content: \(error.localizedDescription)")
-                    .foregroundColor(.red)
+                    .foregroundStyle(.red)
                     .padding()
 
             case .none:
@@ -60,36 +56,88 @@ struct PostsScrollView<T: Post>: View {
                     .padding(.top, 10)
 
             case .loaded:
-                if filteredPosts.isEmpty {
+                let posts = filteredPosts
+                if posts.isEmpty {
                     if hideWhenEmpty {
                         EmptyView()
                     } else {
                         VStack(alignment: .leading) {
                             Text("None!")
-                                .foregroundColor(.secondary)
+                                .foregroundStyle(.secondary)
                                 .padding(.horizontal)
                                 .padding(.top, 10)
                             Spacer(minLength: 0) // optional, to push empty state up
                         }
                     }
                 } else {
-                    ScrollView {
-                        LazyVStack(spacing: 4) {
-                            ForEach(filteredPosts) { post in
-                                PostBubbleView(
-                                    post: post,
-                                    isSent: post.from.uid == currentUserId,
-                                    showFromUser: showFromUser,
-                                    showToUser: showToUser
-                                )
+                    ScrollViewReader { proxy in
+                        ScrollView {
+                            LazyVStack(spacing: 4) {
+                                ForEach(posts) { post in
+                                    PostBubbleView(
+                                        post: post,
+                                        isSent: post.from.uid == currentUserId,
+                                        showFromUser: showFromUser,
+                                        showToUser: showToUser
+                                    )
+                                    .id(post.id)
+                                }
                             }
+                            .padding(.top, 10)
+                            .padding(.bottom, 4)
                         }
-                        .padding(.top, 10)
+                        .scrollDismissesKeyboard(.interactively)
+                        .task {
+                            try? await Task.sleep(for: .milliseconds(500))
+                            scrollToBottom(posts, proxy: proxy, animated: false)
+                        }
+                        .onChange(of: posts.count) {
+                            scrollToBottom(posts, proxy: proxy)
+                        }
+                        .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardDidShowNotification)) { _ in
+                            scrollToBottom(posts, proxy: proxy, animated: false)
+                        }
+                        .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardDidHideNotification)) { _ in
+                            scrollToBottom(posts, proxy: proxy)
+                        }
                     }
                 }
             }
         }
         .frame(maxWidth: .infinity, alignment: .topLeading)
+    }
+    
+    private var filteredPosts: [T] {
+        guard case let .loaded(posts) = store.list else { return [] }
+        let filtered = posts.filter { post in
+            // Conversation filter: show messages between currentUser and conversationWith
+            if let conversationWith = conversationWith {
+                let sentToThem = post.from.uid == currentUserId && post.to.uid == conversationWith
+                let receivedFromThem = post.from.uid == conversationWith && post.to.uid == currentUserId
+                return sentToThem || receivedFromThem
+            }
+            // Standard filters (AND logic)
+            let toMatch = toUserId == nil || post.to.uid == toUserId
+            let fromMatch = fromUserId == nil || post.from.uid == fromUserId
+            return toMatch && fromMatch
+        }
+        if newestAtTop {
+            return filtered.sorted { $0.timestamp > $1.timestamp }
+        } else {
+            return filtered.sorted { $0.timestamp < $1.timestamp }
+        }
+    }
+    
+    private func scrollToBottom(_ posts: [T], proxy: ScrollViewProxy, animated: Bool = true) {
+        if !newestAtTop, let lastPost = posts.last {
+            if animated {
+                withAnimation {
+                    proxy.scrollTo(lastPost.id, anchor: .bottom)
+                }
+            } else {
+                proxy.scrollTo(lastPost.id, anchor: .bottom)
+            }
+        }
     }
 }
 
@@ -116,25 +164,6 @@ struct PostsScrollView<T: Post>: View {
                 )
             }
         
-
-            Section(header: Text("Inbox Messages")) {
-                PostsScrollView(
-                    store: PrivateMessageStore.testLoaded(),
-                    currentUserId: currentUserService.userKey.uid,
-                    toUserId: currentUserService.userKey.uid,
-                    showFromUser: true
-                )
-            }
-            
-            Section(header: Text("Sent Messages")) {
-                PostsScrollView(
-                    store: PrivateMessageStore.testLoaded(),
-                    currentUserId: currentUserService.userKey.uid,
-                    fromUserId: currentUserService.userKey.uid,
-                    showToUser: true
-                )
-            }
-
             Section(header: Text("All Messages")) {
                 PostsScrollView(
                     store: PrivateMessageStore.testLoaded(),
@@ -146,8 +175,19 @@ struct PostsScrollView<T: Post>: View {
         }
         .padding()
     }
-    .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
-    .environment(\.font, Font.body)
+}
+
+#Preview ("Newest on Top") {
+    let currentUserService = CurrentUserTestService.sharedSignedIn
+           
+    Section(header: Text("All Comments")) {
+        PostsScrollView(
+            store: PublicCommentStore.testLoaded(),
+            currentUserId: currentUserService.userKey.uid,
+            showFromUser: true,
+            newestAtTop: true
+        )
+    }
 }
 
 #Preview ("Empty") {
@@ -167,7 +207,5 @@ struct PostsScrollView<T: Post>: View {
             )
         }
     }
-    .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
-    .environment(\.font, Font.body)
 }
 #endif

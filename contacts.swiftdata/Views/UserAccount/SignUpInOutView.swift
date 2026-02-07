@@ -2,8 +2,8 @@
 //  SignUpSignInSignOutView.swift
 //
 //  Template created by Pete Maiser, July 2024 through August 2025
-//  Modified by Pete Maiser, Fast Five Products LLC, on 10/23/25.
-//      Template v0.2.3 (updated) Fast Five Products LLC's public AGPL template.
+//  Modified by Pete Maiser, Fast Five Products LLC, on 2/3/26.
+//      Template v0.2.5 (updated) — Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025 Fast Five Products LLC. All rights reserved.
 //
@@ -21,7 +21,7 @@
 import SwiftUI
 
 struct SignUpInOutView: View, DebugPrintable {
-    @ObservedObject var viewModel : UserAccountViewModel
+    @ObservedObject var viewModel: UserAccountViewModel
     @ObservedObject var currentUserService: CurrentUserService
     @State private var showResetConfirmation = false
     
@@ -71,7 +71,7 @@ struct SignUpInOutView: View, DebugPrintable {
                     Text(currentUserService.isSignedIn ? "Sign Out" : "Submit")
                 }
                 .frame(maxWidth: .infinity)
-                .foregroundColor(.white)
+                .foregroundStyle(.white)
                 .listRowBackground(Color.accentColor)
                 
             }
@@ -81,9 +81,9 @@ struct SignUpInOutView: View, DebugPrintable {
                 LabeledContent {
                     TextField(text: $viewModel.capturedEmailText, prompt: Text(currentUserService.isSignedIn ? currentUserService.user.auth.email : "sign-in or sign-up email address")) {}
                         .disabled(viewModel.createAccountMode)
-                        .autocapitalization(.none)
+                        .textInputAutocapitalization(.never)
                         .keyboardType(.emailAddress)
-                        .disableAutocorrection(true)
+                        .autocorrectionDisabled()
                         .focused($focusedField, equals: .username)
                         .onTapGesture { nextField() }
                         .onSubmit { nextField() }
@@ -94,9 +94,9 @@ struct SignUpInOutView: View, DebugPrintable {
                 if viewModel.createAccountMode {
                     LabeledContent {
                         SecureField(text: $viewModel.capturedPasswordText, prompt: Text("password")) {}
-                            .autocapitalization(/*@START_MENU_TOKEN@*/.none/*@END_MENU_TOKEN@*/)
+                            .textInputAutocapitalization(.never)
                             .keyboardType(.emailAddress)
-                            .disableAutocorrection(true)
+                            .autocorrectionDisabled()
                             .focused($focusedField, equals: .password)
                             .onTapGesture { nextField() }
                             .onSubmit { createAccount() }
@@ -106,9 +106,9 @@ struct SignUpInOutView: View, DebugPrintable {
                     LabeledContent {
                         SecureField(text: $viewModel.capturedPasswordText, prompt: Text("password")) {}
                             .disabled(currentUserService.isSignedIn)
-                            .autocapitalization(/*@START_MENU_TOKEN@*/.none/*@END_MENU_TOKEN@*/)
+                            .textInputAutocapitalization(.never)
                             .keyboardType(.emailAddress)
-                            .disableAutocorrection(true)
+                            .autocorrectionDisabled()
                             .focused($focusedField, equals: .password)
                             .onTapGesture { toggleSignUpInOut() }
                             .onSubmit { toggleSignUpInOut() }
@@ -118,7 +118,7 @@ struct SignUpInOutView: View, DebugPrintable {
                         Text(currentUserService.isSignedIn ? "Sign Out" : "Submit")
                     }
                     .frame(maxWidth: .infinity)
-                    .foregroundColor(.white)
+                    .foregroundStyle(.white)
                     .listRowBackground(Color.accentColor)
                     .disabled(viewModel.capturedEmailText.isEmpty
                         || viewModel.capturedPasswordText.isEmpty
@@ -141,6 +141,11 @@ struct SignUpInOutView: View, DebugPrintable {
 
         if viewModel.createAccountMode {
             CreateAccountView(
+                viewModel: viewModel,
+                currentUserService: currentUserService
+            )
+        } else if currentUserService.isIncompleteUserAccount {
+            CompleteAccountView(
                 viewModel: viewModel,
                 currentUserService: currentUserService
             )
@@ -197,7 +202,6 @@ private extension SignUpInOutView {
                     } else {
                         debugprint("🛑 ERROR:  (View) Error signing into User Account: \(error)")
                         viewModel.error = error
-                        throw error
                     }
                 }
             }
@@ -208,7 +212,12 @@ private extension SignUpInOutView {
         debugprint("createAccount called")
         if viewModel.isReadyToCreateAccount() {
             Task {
-                try await viewModel.createAccountWithService(currentUserService)
+                do {
+                    try await viewModel.createAccountWithService(currentUserService)
+                } catch {
+                    debugprint("🛑 ERROR:  (View) Error creating User Account: \(error)")
+                    viewModel.error = error
+                }
             }
         }
     }
@@ -222,7 +231,6 @@ private extension SignUpInOutView {
                 } catch {
                     debugprint("🛑 ERROR:  (View) Error requesting password reset: \(error)")
                     viewModel.error = error
-                    throw error
                 }
                 showResetConfirmation = true
             }
@@ -244,8 +252,6 @@ private extension SignUpInOutView {
             currentUserService: currentUserService
         )
     }
-    .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
-    .environment(\.font, Font.body)
 }
 #Preview ("test-data signed-out") {
     let currentUserService = CurrentUserTestService.sharedSignedOut
@@ -255,8 +261,6 @@ private extension SignUpInOutView {
             currentUserService: currentUserService
         )
     }
-    .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
-    .environment(\.font, Font.body)
 }
 #Preview ("test-data creating-account") {
     let viewModel = UserAccountViewModel(createAccountMode: true)
@@ -267,7 +271,15 @@ private extension SignUpInOutView {
             currentUserService: currentUserService
         )
     }
-    .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
-    .environment(\.font, Font.body)
+}
+#Preview ("test-data incomplete-user-account") {
+    let viewModel = UserAccountViewModel()
+    let currentUserService = CurrentUserTestService.sharedIncompleteUserAccount
+    Form {
+        SignUpInOutView(
+            viewModel: viewModel,
+            currentUserService: currentUserService
+        )
+    }
 }
 #endif

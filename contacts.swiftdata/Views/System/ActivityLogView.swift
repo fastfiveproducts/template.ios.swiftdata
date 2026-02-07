@@ -82,7 +82,5 @@ struct ActivityLogView: View, DebugPrintable {
     
     return ActivityLogView()
         .modelContainer(container)
-        .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
-        .environment(\.font, Font.body)
 }
 #endif

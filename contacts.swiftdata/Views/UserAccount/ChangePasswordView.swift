@@ -21,7 +21,7 @@
 import SwiftUI
 
 struct ChangePasswordView: View, DebugPrintable {
-    @ObservedObject var viewModel : UserAccountViewModel
+    @ObservedObject var viewModel: UserAccountViewModel
     @ObservedObject var currentUserService: CurrentUserService
     @State private var showConfirmation = false
     
@@ -46,9 +46,9 @@ struct ChangePasswordView: View, DebugPrintable {
         Section(header: Text("Change Password")) {
             LabeledContent {
                 SecureField(text: $viewModel.capturedPasswordTextOld, prompt: Text("current password")) {}
-                    .autocapitalization(/*@START_MENU_TOKEN@*/.none/*@END_MENU_TOKEN@*/)
+                    .textInputAutocapitalization(.never)
                     .keyboardType(.emailAddress)
-                    .disableAutocorrection(true)
+                    .autocorrectionDisabled()
                     .focused($focusedField, equals: .passwordOld)
                     .onTapGesture { nextField() }
                     .onSubmit { nextField() }
@@ -57,9 +57,9 @@ struct ChangePasswordView: View, DebugPrintable {
             
             LabeledContent {
                 SecureField(text: $viewModel.capturedPasswordText, prompt: Text("new password")) {}
-                    .autocapitalization(/*@START_MENU_TOKEN@*/.none/*@END_MENU_TOKEN@*/)
+                    .textInputAutocapitalization(.never)
                     .keyboardType(.emailAddress)
-                    .disableAutocorrection(true)
+                    .autocorrectionDisabled()
                     .focused($focusedField, equals: .passwordNew)
                     .onTapGesture { nextField() }
                     .onSubmit { nextField() }
@@ -68,9 +68,9 @@ struct ChangePasswordView: View, DebugPrintable {
             
             LabeledContent {
                 SecureField(text: $viewModel.capturedPasswordMatchText, prompt: Text("new password")) {}
-                    .autocapitalization(/*@START_MENU_TOKEN@*/.none/*@END_MENU_TOKEN@*/)
+                    .textInputAutocapitalization(.never)
                     .keyboardType(.emailAddress)
-                    .disableAutocorrection(true)
+                    .autocorrectionDisabled()
                     .focused($focusedField, equals: .passwordAgain)
                     .onTapGesture { nextField() }
                     .onSubmit { nextField() }
@@ -79,7 +79,7 @@ struct ChangePasswordView: View, DebugPrintable {
             
             Button("Submit", action: changePassword)
                 .frame(maxWidth: .infinity)
-                .foregroundColor(.white)
+                .foregroundStyle(.white)
                 .listRowBackground(Color.accentColor)
                 .disabled(viewModel.capturedPasswordTextOld.isEmpty
                           || viewModel.capturedPasswordText.isEmpty
@@ -111,7 +111,6 @@ private extension ChangePasswordView {
                 } catch {
                     debugprint("🛑 ERROR:  (View) Error requesting password change: \(error)")
                     viewModel.error = error
-                    throw error
                 }
                 modelContext.insert(ActivityLogEntry("Password changed"))
                 showConfirmation = true
@@ -132,8 +131,6 @@ private extension ChangePasswordView {
                 currentUserService: currentUserService
             )
         }
-        .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
-        .environment(\.font, Font.body)
     }
 }
 #endif

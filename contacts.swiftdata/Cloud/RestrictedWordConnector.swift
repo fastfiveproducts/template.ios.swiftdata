@@ -2,8 +2,8 @@
 //  RestrictedWordConnector.swift
 //
 //  Template created by Pete Maiser, July 2024 through May 2025
-//  Modified by Pete Maiser, Fast Five Products LLC, on 10/23/25.
-//      Template v0.2.3 (updated) Fast Five Products LLC's public AGPL template.
+//  Modified by Pete Maiser, Fast Five Products LLC, on 2/5/26.
+//      Template v0.2.5 (updated) — Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025 Fast Five Products LLC. All rights reserved.
 //
@@ -28,10 +28,16 @@ import Foundation
 import FirebaseDataConnect
 import DefaultConnector
 
+// Connector Defaults:
+fileprivate let defaultFetchLimit: Int = 10000
+
+// Services:
 struct RestrictedWordConnector {
-    
-    func fetch() async throws -> [String] {
-        return ["badword", "worseword"]   // TODO: fetch the data we need to do restricted text functionality
+
+    func fetch(limit: Int = defaultFetchLimit) async throws -> [String] {
+        let queryRef = DataConnect.defaultConnector.listRestrictedWordsQuery.ref(limit: limit)
+        let operationResult = try await queryRef.execute()
+        return operationResult.data.restrictedWords.map { $0.word }
     }
 
 }

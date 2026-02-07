@@ -68,7 +68,7 @@ struct StoreListView<T: Listable, Content: View>: View {
         case let .loaded(objects):
             if objects.isEmpty {
                 Text("\(T.typeDescription)s: not found, try relaunching the app")
-                    .foregroundColor(ViewConfig.fgColor)    // danger:  customization for streems
+                    .foregroundStyle(ViewConfig.fgColor)    // danger:  customization for streems
                     .padding(.horizontal)
             } else {
                 
@@ -77,7 +77,7 @@ struct StoreListView<T: Listable, Content: View>: View {
                 
                 if filteredObjects.isEmpty {
                     Text("No \(T.typeDescription)s match the filter.")
-                        .foregroundColor(ViewConfig.bgColor)    // danger:  customization for streems
+                        .foregroundStyle(ViewConfig.bgColor)    // danger:  customization for streems
                 } else {
                     ForEach(filteredObjects.indices, id: \.self) { index in
                         let object = filteredObjects[index]
@@ -86,7 +86,7 @@ struct StoreListView<T: Listable, Content: View>: View {
                             if showBullets {
                                 Text("•")
                                     .font(.headline)
-                                    .foregroundColor(ViewConfig.bgColor)    // danger:  customization for streems
+                                    .foregroundStyle(ViewConfig.bgColor)    // danger:  customization for streems
                             }
                             
                             Group {
@@ -95,7 +95,7 @@ struct StoreListView<T: Listable, Content: View>: View {
                                 } else {
                                     VStack(alignment: .leading, spacing: 4) {
                                         Text(object.content)
-                                            .foregroundColor(.primary)
+                                            .foregroundStyle(.primary)
                                         if showDividers && index < filteredObjects.count - 1 {
                                             Divider().padding(.top, 6)
                                         }
@@ -112,7 +112,7 @@ struct StoreListView<T: Listable, Content: View>: View {
 
         case .none:
             Text("\(T.typeDescription)s: nothing here")
-                .foregroundColor(ViewConfig.fgColor)    // danger:  customization for streems
+                .foregroundStyle(ViewConfig.fgColor)    // danger:  customization for streems
         }
     }
 }
@@ -132,8 +132,6 @@ struct StoreListView<T: Listable, Content: View>: View {
         }
 
     }
-    .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
-    .environment(\.font, Font.body)
 }
 #Preview ("Form: Empty") {
     Form {
@@ -141,16 +139,12 @@ struct StoreListView<T: Listable, Content: View>: View {
             StoreListView(store: ListableStore<Announcement>.testEmpty(), showDividers: false)
         }
     }
-    .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
-    .environment(\.font, Font.body)
 }
 #Preview ("Bullets") {
     StoreListView(store: ListableStore<Announcement>.testLoaded(with: Announcement.testObjects),
                   showBullets: true,
                   showDividers: false
     )
-        .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
-        .environment(\.font, Font.body)
 }
 #Preview ("Custom Content: simple") {
     StoreListView(store: ListableStore<Announcement>.testLoaded(with: Announcement.testObjects)) { object in
@@ -158,8 +152,6 @@ struct StoreListView<T: Listable, Content: View>: View {
             Text(object.content)
         }
     }
-    .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
-    .environment(\.font, Font.body)
 }
 #Preview ("Custom Content: complex") {
     StoreListView(store: ListableStore<Announcement>.testLoaded(with: Announcement.testObjects)) {announcement in
@@ -179,10 +171,8 @@ struct StoreListView<T: Listable, Content: View>: View {
         }) {
             Text(announcement.content)
                 .font(.body)
-                .foregroundColor(.secondary)
+                .foregroundStyle(.secondary)
         }
     }
-    .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
-    .environment(\.font, Font.body)
 }
 #endif

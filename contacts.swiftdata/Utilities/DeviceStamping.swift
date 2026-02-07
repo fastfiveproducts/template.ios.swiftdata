@@ -50,5 +50,5 @@ func deviceTimestamp() -> String {
     print("deviceTimestamp() function returning: \(stamp)")
     #endif
     
-    return Date().description
+    return stamp
 }

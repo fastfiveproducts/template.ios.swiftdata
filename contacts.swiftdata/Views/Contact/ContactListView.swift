@@ -38,10 +38,10 @@ struct ContactListView: View {
                     } label: {
                         HStack {
                             Text("\(contact.firstName) \(contact.lastName)")
-                                .foregroundColor(.primary)
+                                .foregroundStyle(.primary)
                             Spacer()
                             Image(systemName: "chevron.right")
-                                .foregroundColor(.gray)
+                                .foregroundStyle(.gray)
                         }
                         .contentShape(Rectangle())
                     }
@@ -105,7 +105,7 @@ struct ContactListView: View {
         .padding()
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(Color(.systemGroupedBackground))
-        .cornerRadius(12)
+        .clipShape(RoundedRectangle(cornerRadius: 12))
         .padding(.horizontal)
     }
     

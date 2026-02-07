@@ -37,9 +37,9 @@ struct ContactDetailView: View {
         Form {
             LabeledContent {
                 TextField(text: $contact.firstName, prompt: Text("First Name")) {}
-                    .autocapitalization(.words)
+                    .textInputAutocapitalization(.words)
                     .keyboardType(.default)
-                    .disableAutocorrection(true)
+                    .autocorrectionDisabled()
                     .focused($focusedFieldIndex, equals: 0)
                     .onTapGesture { focusedFieldIndex = 0 }
                     .onSubmit { nextField() }
@@ -48,9 +48,9 @@ struct ContactDetailView: View {
             
             LabeledContent {
                 TextField(text: $contact.lastName, prompt: Text("Last Name")) {}
-                    .autocapitalization(.words)
+                    .textInputAutocapitalization(.words)
                     .keyboardType(.default)
-                    .disableAutocorrection(true)
+                    .autocorrectionDisabled()
                     .focused($focusedFieldIndex, equals: 1)
                     .onTapGesture { focusedFieldIndex = 1 }
                     .onSubmit { nextField() }
@@ -59,9 +59,9 @@ struct ContactDetailView: View {
 
             LabeledContent {
                 TextField(text: $contact.contact, prompt: Text("Contact Information")) {}
-                    .autocapitalization(.none)
+                    .textInputAutocapitalization(.never)
                     .keyboardType(.emailAddress)
-                    .disableAutocorrection(true)
+                    .autocorrectionDisabled()
                     .focused($focusedFieldIndex, equals: 2)
                     .onTapGesture { focusedFieldIndex = 2 }
                     .onSubmit { nextField() }
@@ -83,7 +83,7 @@ struct ContactDetailView: View {
             if !createMode {
                 Text("Created: \(contact.timestamp.formatted(date: .abbreviated, time: .shortened))")
                     .font(.caption)
-                    .foregroundColor(.secondary)
+                    .foregroundStyle(.secondary)
             }
 
         }

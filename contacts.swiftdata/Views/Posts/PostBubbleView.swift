@@ -44,10 +44,10 @@ struct PostBubbleView: View {
                     if isSent { Spacer() }
                     Text("From:")
                         .font(.caption)
-                        .foregroundColor(.secondary)
+                        .foregroundStyle(.secondary)
                     Text(post.from.displayName)
                         .font(.caption)
-                        .foregroundColor(.secondary)
+                        .foregroundStyle(.secondary)
                     if !isSent { Spacer() }
                 }
                 .frame(maxWidth: .infinity)
@@ -58,10 +58,10 @@ struct PostBubbleView: View {
                     if isSent { Spacer() }
                     Text("To:")
                         .font(.caption)
-                        .foregroundColor(.secondary)
+                        .foregroundStyle(.secondary)
                     Text(post.to.displayName)
                         .font(.caption)
-                        .foregroundColor(.secondary)
+                        .foregroundStyle(.secondary)
                     if !isSent { Spacer() }
                 }
                 .frame(maxWidth: .infinity)
@@ -71,23 +71,23 @@ struct PostBubbleView: View {
                 if !post.title.isEmpty {
                     Text(post.title)
                         .font(.headline)
-                        .foregroundColor(textColor)
+                        .foregroundStyle(textColor)
                 }
 
                 Text(post.content)
                     .font(.body)
-                    .foregroundColor(textColor)
+                    .foregroundStyle(textColor)
             }
             .padding(10)
             .background(bubbleColor)
-            .cornerRadius(12)
+            .clipShape(RoundedRectangle(cornerRadius: 12))
             .frame(maxWidth: .infinity, alignment: bubbleAlignment)
 
             HStack {
                 if isSent { Spacer() }
                 Text(post.timestamp.formatted(.dateTime))
                     .font(.caption2)
-                    .foregroundColor(.gray)
+                    .foregroundStyle(.gray)
                 if !isSent { Spacer() }
             }
             .padding(.horizontal, 10)
@@ -126,7 +126,5 @@ struct PostBubbleView: View {
         }
         .padding()
     }
-    .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
-    .environment(\.font, Font.body)
 }
 #endif

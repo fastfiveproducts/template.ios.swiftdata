@@ -24,11 +24,14 @@ struct UserAccountProfileView: View {
         Section {
             Text("User Account Profile goes here, when the user is signed-in!  And when it is implemented.")
         }
+        .styledView()
     }
 }
 
+#if DEBUG
 #Preview {
     Form {
         UserAccountProfileView()
     }
 }
+#endif

@@ -70,8 +70,7 @@ struct MainViewPreviewWrapper<Content: View>: View {
                 .navigationBarTitleDisplayMode(.inline)
             }
         }
-        .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
-        .environment(\.font, Font.body)
+        .styledView()
     }
 }
 #endif

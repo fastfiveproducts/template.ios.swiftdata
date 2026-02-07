@@ -2,8 +2,8 @@
 //  UserAccountViewModel.swift
 //
 //  Template created by Pete Maiser, July 2024 through August 2025
-//  Modified by Pete Maiser, Fast Five Products LLC, on 8/28/25.
-//      Template v0.2.2 (updated) Fast Five Products LLC's public AGPL template.
+//  Modified by Pete Maiser, Fast Five Products LLC, on 2/5/26.
+//      Template v0.2.5 (updated) — Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025 Fast Five Products LLC. All rights reserved.
 //
@@ -25,16 +25,19 @@ class UserAccountViewModel: ObservableObject, DebugPrintable
 {
     // Support Previews to jump-start into create-account or status-mode
     #if DEBUG
-    init(createAccountMode: Bool = false, showStatusMode: Bool = false) {
+    init(createAccountMode: Bool = false, showStatusMode: Bool = false, completeUserAccountMode: Bool = false) {
         self.createAccountMode = createAccountMode
         self.showStatusMode = showStatusMode
+        self.completeUserAccountMode = completeUserAccountMode
     }
     #endif
     
-    // MARK: -- Status
+    // Status
     @Published private(set) var statusText = ""
+    func clearStatus() { statusText = "" }
     @Published var error: Error?
     @Published var createAccountMode = false
+    @Published var completeUserAccountMode = false
     @Published var showStatusMode = false
     @Published var showSuccessMode = false
     @Published var changePasswordMode = false
@@ -53,7 +56,7 @@ class UserAccountViewModel: ObservableObject, DebugPrintable
     }
     var dislikesRobots: Bool = false
 
-    // MARK: -- Validation
+    // MARK: - Validation
     func isReadyToSignIn() -> Bool {
         statusText = ""
         var isReady = true
@@ -83,7 +86,7 @@ class UserAccountViewModel: ObservableObject, DebugPrintable
         }
         
         if RestrictedWordStore.shared.containsRestrictedWords(capturedDisplayNameText) {
-            statusText = "Display Name matched one or more keywords on our Restricted Text List. Please adjust.";
+            statusText = "Display Name matched one or more keywords on our Restricted Text List. Please adjust."
             isReady = false
         }
         return isReady
@@ -128,7 +131,7 @@ class UserAccountViewModel: ObservableObject, DebugPrintable
         return match
     }
     
-    // MARK: -- Reset Create Account
+    // MARK: - Reset Create Account
     func resetCreateAccount(withDelay delay: TimeInterval = 0.0) {
         if delay > 0 {
             Task { @MainActor in
@@ -147,8 +150,83 @@ class UserAccountViewModel: ObservableObject, DebugPrintable
             showSuccessMode = false
         }
     }
+
+    // MARK: - Complete User Account (recovery from incomplete account)
+    func isReadyToCompleteUserAccount() -> Bool {
+        statusText = ""
+        var isReady = true
+
+        if capturedDisplayNameText.isEmpty {
+            statusText = ("Please enter your display name")
+            isReady = false
+        }
+
+        if RestrictedWordStore.shared.containsRestrictedWords(capturedDisplayNameText) {
+            statusText = "Display Name matched one or more keywords on our Restricted Text List. Please adjust."
+            isReady = false
+        }
+        return isReady
+    }
+
+    func resetCompleteUserAccount(withDelay delay: TimeInterval = 0.0) {
+        if delay > 0 {
+            Task { @MainActor in
+                try? await Task.sleep(nanoseconds: UInt64(delay * 1_000_000_000))
+                self.resetCompleteUserAccount()
+            }
+        } else {
+            capturedDisplayNameText = ""
+            error = nil
+            completeUserAccountMode = false
+            showStatusMode = false
+            showSuccessMode = false
+        }
+    }
+
+    func completeUserAccountWithService(_ currentUserService: CurrentUserService) async throws {
+        showStatusMode = true
+
+        let userId = currentUserService.user.auth.uid
+        let email = currentUserService.user.auth.email
+        let candidate = UserAccountCandidate(uid: userId, displayName: capturedDisplayNameText, photoUrl: "")
+
+        // MARK:  create the user account in the Application system
+        // use the email address as the display name text to start,
+        // making the app functional even if the user's chosen display name is taken
+        do {
+            try await currentUserService.createUserAccount(candidate, displayNameTextOverride: email)
+        } catch {
+            debugprint("🛑 ERROR:  (View) User \(userId) Auth exists, but Cloud error creating User Account: \(error)")
+            self.error = AccountCreationError.userAccountCompletionFailed(error)
+            throw AccountCreationError.userAccountCompletionFailed(error)
+        }
+
+        // MARK:  the User Account has been sufficiently created such that we will no longer throw errors,
+        // do less-critical tasks and clean-up
+        defer {
+            currentUserService.clearIncompleteUserAccountState()
+            resetCompleteUserAccount(withDelay: 4)
+        }
+
+        // create the user's chosen Display Name
+        do {
+            try await currentUserService.createUserDisplayName(candidate.displayName)
+        } catch {
+            debugprint("🛑 ERROR:  (View) User \(userId) Account created, but Cloud error creating User Display Name: \(error)")
+            self.error = AccountCreationError.userDisplayNameCreationFailed
+        }
+
+        // set that chosen display name
+        do {
+            try await currentUserService.setUserDisplayName(candidate.displayName)
+            showSuccessMode = true
+        } catch {
+            debugprint("🛑 ERROR:  (View) User \(userId) Account created, Display Name created, but Cloud Error setting Display Name: \(error)")
+            self.error = AccountCreationError.setUserDisplayNameFailed
+        }
+    }
     
-    // MARK: -- Create Account
+    // MARK: - Create Account
     var createdUserId: String = ""
     var accountCandidate: UserAccountCandidate {
         return UserAccountCandidate(uid: createdUserId, displayName: capturedDisplayNameText, photoUrl: "")
@@ -181,8 +259,9 @@ class UserAccountViewModel: ObservableObject, DebugPrintable
         }
         
         // MARK:  the User Account has been sufficiently created such that we will no longer throw errors,
-        // do less-critial tasks and clean-up
+        // do less-critical tasks and clean-up
         defer {
+            currentUserService.clearIncompleteUserAccountState()
             resetCreateAccount(withDelay: 4)
         }
         
@@ -205,7 +284,7 @@ class UserAccountViewModel: ObservableObject, DebugPrintable
         
     }
         
-    // MARK: -- Reset Password
+    // MARK: - Reset Password
     func resetPasswordWithService(_ currentUserService: CurrentUserService) async throws {
         
         // request the Auth system send a password-reset email
@@ -220,7 +299,7 @@ class UserAccountViewModel: ObservableObject, DebugPrintable
         }
     }
 
-    // MARK: -- Change Password
+    // MARK: - Change Password
     func toggleChangePasswordMode() {
         capturedPasswordTextOld = ""
         capturedPasswordText = ""

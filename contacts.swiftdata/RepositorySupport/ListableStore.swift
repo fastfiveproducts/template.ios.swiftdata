@@ -161,7 +161,7 @@ class ListableStore<T: Listable>: SignInOutObserver  {
     fileprivate func cacheURL(named filename: String) -> URL {
         let dir = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
         try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
-        return dir.appendingPathComponent(filename)
+        return dir.appending(path: filename)
     }
 
     fileprivate func saveToCache(_ objects: [T], named filename: String) {

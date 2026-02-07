@@ -3,7 +3,7 @@
 //
 //  Template created by Pete Maiser, July 2024 through May 2025
 //  Renamed from HomeView by Pete Maiser, Fast Five Products LLC, on 10/23/25.
-//      Template v0.2.4 (updated) Fast Five Products LLC's public AGPL template.
+//      Template v0.2.5 (updated) — Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025 Fast Five Products LLC. All rights reserved.
 //
@@ -73,45 +73,43 @@ struct MainTabView: View {
 //                VideoBackgroundPlayer.shared.queuePlayer.pause()
 //            }
 //        }
-        .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
-        .environment(\.font, Font.body)
+        .styledView()
     }
 }
 
 extension MainTabView {
     @ToolbarContentBuilder
     var mainToolbar: some ToolbarContent {
-        if publicCommentStore.list.count > 0,
-           currentUserService.isSignedIn
+        if currentUserService.isSignedIn
+//          ,publicCommentStore.list.count > 0    // uncomment this to have comments display only if there already is one
         {
             ToolbarItem(placement: .navigationBarTrailing) {
                 NavigationLink(destination:
-                    CommentPostsStackView(
+                    CommentsMainView(
                         currentUserService: currentUserService,
                         store: publicCommentStore
                     ).onAppear { OverlayManager.shared.hide(.splash) })
                 {
-                    Label("Comments", systemImage: "bubble.left.and.bubble.right")
-                        .foregroundColor(.primary)
+                    Label("Comments", systemImage: "exclamationmark.bubble")
+                        .foregroundStyle(.primary)
                 }
                 .buttonStyle(BorderlessButtonStyle())
-                
+
             }
         }
-        
-        if privateMessageStore.list.count > 0,
-           currentUserService.isSignedIn
+
+        if currentUserService.isSignedIn
+//          ,privateMessageStore.list.count > 0   // uncomment this to have messages display only if there already is one
         {
             ToolbarItem(placement: .navigationBarTrailing) {
                 NavigationLink(destination:
-                    UserMessagePostsStackView(
-                        viewModel: UserPostViewModel<PrivateMessage>(),
+                    MessagesMainView(
                         currentUserService: currentUserService,
                         store: privateMessageStore
                     ).onAppear { OverlayManager.shared.hide(.splash) })
                 {
-                    Label("Messages", systemImage: "envelope")
-                        .foregroundColor(.primary)
+                    Label("Messages", systemImage: "bubble.left.and.bubble.right")
+                        .foregroundStyle(.primary)
                 }
                 .buttonStyle(BorderlessButtonStyle())
             }
@@ -143,8 +141,15 @@ extension MainTabView {
         privateMessageStore: PrivateMessageStore.testLoaded()
     )
     .modelContainer(container)
-    .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
-    .environment(\.font, Font.body)
+}
+#Preview ("no-data and signed-in") {
+    return MainTabView(
+        currentUserService: CurrentUserTestService.sharedSignedIn,
+        announcementStore: AnnouncementStore(),
+        publicCommentStore: PublicCommentStore(),
+        privateMessageStore: PrivateMessageStore()
+    )
+    .modelContainer(ModelContainerManager.emptyContainer)
 }
 #Preview ("no-data and signed-out") {
     return MainTabView(
@@ -154,7 +159,5 @@ extension MainTabView {
         privateMessageStore: PrivateMessageStore()
     )
     .modelContainer(ModelContainerManager.emptyContainer)
-    .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
-    .environment(\.font, Font.body)
 }
 #endif

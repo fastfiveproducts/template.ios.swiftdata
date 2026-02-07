@@ -8,6 +8,10 @@ xcuserdata/
 # Add this line if you want to avoid checking in source code from the Xcode workspace
 *.xcworkspace
 
+# Xcode build artifacts
+build/
+DerivedData/
+
 ## Obj-C/Swift specific
 *.hmap
 
@@ -34,3 +38,9 @@ dataconnect-generated
 
 # Custom template-diff output
 template_diff.txt
+
+# Claude Code session data and logs
+.claude/settings.local.json
+.claude/sessions/
+.claude/logs/
+.claude/tmp/

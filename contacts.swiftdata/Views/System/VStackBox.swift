@@ -79,7 +79,7 @@ struct VStackBox<Content: View>: View {
             alignment: .leading
         )
         .background(backgroundColor)
-        .cornerRadius(12)
+        .clipShape(RoundedRectangle(cornerRadius: 12))
         .padding(.horizontal)
     }
 }
@@ -108,14 +108,12 @@ enum VStackBoxWidthMode {
                 } label: {
                     Text("Text-Title")
                         .font(.caption)
-                        .foregroundColor(.accentColor)
+                        .foregroundStyle(Color.accentColor)
                 }
             }
         } content: {
             previewContent()
         }
-        .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
-        .environment(\.font, Font.body)
     }
 }
 #Preview ("List") {
@@ -126,15 +124,11 @@ enum VStackBoxWidthMode {
             Text("Hello, World!")
         }
     }
-    .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
-    .environment(\.font, Font.body)
 }
 #Preview ("Resize") {
     VStackBox(widthMode: .fitContent) {
         Text("Hello, World!")
     }
-    .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
-    .environment(\.font, Font.body)
 }
 @ViewBuilder
 func previewContent() -> some View {
@@ -145,7 +139,7 @@ func previewContent() -> some View {
         }
     } label: {
         Text("Click for Simple Example")
-            .foregroundColor(.accentColor)
+            .foregroundStyle(Color.accentColor)
     }
 }
 #endif

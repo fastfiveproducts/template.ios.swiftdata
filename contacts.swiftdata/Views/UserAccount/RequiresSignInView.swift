@@ -52,23 +52,19 @@ struct RequiresSignInView<Content: View>: View {
 #Preview ("test-data signed-in") {
     let currentUserService = CurrentUserTestService.sharedSignedIn
     RequiresSignInView(currentUserService: currentUserService) {
-        CommentPostsStackView(
+        CommentsMainView(
             currentUserService: currentUserService,
             store: PublicCommentStore.testLoaded()
         )
     }
-    .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
-    .environment(\.font, Font.body)
 }
 #Preview ("no-data and signed-out") {
     let currentUserService = CurrentUserTestService.sharedSignedOut
     RequiresSignInView(currentUserService: currentUserService) {
-        CommentPostsStackView(
+        CommentsMainView(
             currentUserService: currentUserService,
             store: PublicCommentStore()
         )
     }
-    .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
-    .environment(\.font, Font.body)
 }
 #endif

@@ -2,8 +2,8 @@
 //  UserPostViewModel.swift
 //
 //  Template created by Pete Maiser, July 2024 through May 2025
-//  Modified by Pete Maiser, Fast Five Products LLC, on 10/23/25.
-//      Template v0.2.3 (updated) Fast Five Products LLC's public AGPL template.
+//  Modified by Pete Maiser, Fast Five Products LLC, on 2/5/26.
+//      Template v0.2.5 (updated) Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025 Fast Five Products LLC. All rights reserved.
 //
@@ -25,16 +25,17 @@ class UserPostViewModel<T: Post>: ObservableObject, DebugPrintable {
     
     // Status
     @Published private(set) var statusText = ""
+    func clearStatus() { statusText = "" }
     @Published var error: Error?
     @Published var isWorking = false
 
     // Capture
     var toUser: UserKey = UserKey.blankUser
     var capturedTitleText = ""
-    var capturedContentText = ""
+    @Published var capturedContentText = ""
     
     // Validation
-    func isReadyToSubmitComment() -> Bool {
+    func isReadyToPost() -> Bool {
         statusText = ""
         var isReady = true
         
@@ -44,38 +45,13 @@ class UserPostViewModel<T: Post>: ObservableObject, DebugPrintable {
         }
         
         if RestrictedWordStore.shared.containsRestrictedWords(capturedContentText) {
-            statusText = "Content matched one or more keywords on our Restricted Text List. Please adjust.";
+            statusText = "Content matched one or more keywords on our Restricted Text List. Please adjust."
             isReady = false
         }
         
         return isReady
     }
-    
-    func isReadyToSendMessage() -> Bool {
-        statusText = ""
-        var isReady = true
         
-        if capturedTitleText.isEmpty {
-            statusText = ("No Subject Entered")
-            isReady = false
-        }
-        if capturedContentText.isEmpty {
-            statusText = ("No Content Entered")
-            isReady = false
-        }
-
-        if RestrictedWordStore.shared.containsRestrictedWords(capturedTitleText) {
-            statusText = "Subject matched one or more keywords on our Restricted Text List. Please adjust.";
-            isReady = false
-        }
-        if RestrictedWordStore.shared.containsRestrictedWords(capturedContentText) {
-            statusText = "Content matched one or more keywords on our Restricted Text List. Please adjust.";
-            isReady = false
-        }
-        
-        return isReady
-    }
-    
     // Create
     var postCandidate = PostCandidate.placeholder
     var createdPost = T.placeholder[0]
