@@ -49,7 +49,7 @@ struct UserPostsStackView<T: Post>: View, DebugPrintable {
     private enum Field: Hashable { case firstField }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 16) {
+        VStack(alignment: .leading, spacing: 0) {
 
             // MARK: - Past Posts
             VStack(alignment: .leading, spacing: 8) {
@@ -70,6 +70,8 @@ struct UserPostsStackView<T: Post>: View, DebugPrintable {
 
             // MARK: - Write
             Divider()
+                .padding(.top, 8)
+                .padding(.bottom, 12)
             VStackBox(title: composeTitle){
                 LabeledContent {
                     TextEditor(text: $viewModel.capturedContentText)
