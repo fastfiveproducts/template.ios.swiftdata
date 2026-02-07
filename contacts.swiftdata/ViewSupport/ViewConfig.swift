@@ -97,6 +97,14 @@ extension OverlayAnimation {
     }
 }
 
+extension View {
+    func styledView() -> some View {
+        self
+            .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
+            .environment(\.font, Font.body)
+    }
+}
+
 extension Color {
     init(hex: String) {
         let hex = hex.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
@@ -127,11 +135,11 @@ extension ViewConfig {
 #Preview ("Colors") {
     ScrollView {
         VStackBox {
-            Text("brandColor").foregroundColor(ViewConfig.brandColor)
-            Text("linkColor").foregroundColor(ViewConfig.linkColor)
+            Text("brandColor").foregroundStyle(ViewConfig.brandColor)
+            Text("linkColor").foregroundStyle(ViewConfig.linkColor)
         }
         VStackBox (backgroundColor: ViewConfig.bgColor) {
-            Text("fgColor on bgColor").foregroundColor(ViewConfig.fgColor)
+            Text("fgColor on bgColor").foregroundStyle(ViewConfig.fgColor)
         }
         VStackBox (backgroundColor: Color(.gray)) {
             ColorTest()
@@ -143,8 +151,7 @@ extension ViewConfig {
             ColorTest()
         }
     }
-    .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
-    .environment(\.font, Font.body)
+    .styledView()
 }
 
 #Preview ("Splash Text") {
@@ -153,18 +160,17 @@ extension ViewConfig {
         ViewConfig.SpashTextView()
             .font(.title)
             .fontWeight(.semibold)
-            .foregroundColor(ViewConfig.fgColor)
-            .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
-            .environment(\.font, Font.body)
+            .foregroundStyle(ViewConfig.fgColor)
+            .styledView()
     }
 }
 
 fileprivate struct ColorTest: View {
     var body: some View {
-        Text("brandColor").foregroundColor(ViewConfig.brandColor)
-        Text("linkColor").foregroundColor(ViewConfig.linkColor)
-        Text("bgColor").foregroundColor(ViewConfig.bgColor)
-        Text("fgColor").foregroundColor(ViewConfig.fgColor)
+        Text("brandColor").foregroundStyle(ViewConfig.brandColor)
+        Text("linkColor").foregroundStyle(ViewConfig.linkColor)
+        Text("bgColor").foregroundStyle(ViewConfig.bgColor)
+        Text("fgColor").foregroundStyle(ViewConfig.fgColor)
     }
 }
 #endif

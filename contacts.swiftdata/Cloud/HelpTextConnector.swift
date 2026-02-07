@@ -26,9 +26,9 @@ fileprivate let defaultFetchLimit: Int = 1000
 
 // Services:
 struct HelpTextConnector {
-    func fetch(limit: Int? = defaultFetchLimit) async throws -> [HelpText] {
+    func fetch(limit: Int = defaultFetchLimit) async throws -> [HelpText] {
         var list: [HelpText] = []
-        let queryRef = DataConnect.defaultConnector.listHelpTextQuery.ref(limit: limit!)
+        let queryRef = DataConnect.defaultConnector.listHelpTextQuery.ref(limit: limit)
         let operationResult = try await queryRef.execute()
         list = try operationResult.data.helpTexts.compactMap { firebaseResultRow in
             try makeHelpTextStruct(from: firebaseResultRow)

@@ -25,7 +25,8 @@ struct UserPostsStackView<T: Post>: View, DebugPrintable {
     @ObservedObject var currentUserService: CurrentUserService
     @ObservedObject var viewModel: UserPostViewModel<T>
     @ObservedObject var store: ListableStore<T>
-
+    @Environment(\.dismiss) private var dismiss
+    
     // Configuration
     let sectionTitle: String
     let composeTitle: String
@@ -35,11 +36,6 @@ struct UserPostsStackView<T: Post>: View, DebugPrintable {
 
     // Optional: for message conversations, filter to show only posts with this user
     var conversationWith: UserKey?
-
-    // Polling timer for active conversations
-    @State private var pollTimer: Timer?
-
-    @Environment(\.dismiss) private var dismiss
 
     @FocusState private var focusedField: Field?
     private func nextField() {
@@ -55,7 +51,7 @@ struct UserPostsStackView<T: Post>: View, DebugPrintable {
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
 
-            // MARK: -- Past Posts
+            // MARK: - Past Posts
             VStack(alignment: .leading, spacing: 8) {
                 Text(sectionTitle)
                     .font(.title3)
@@ -72,7 +68,7 @@ struct UserPostsStackView<T: Post>: View, DebugPrintable {
 
             Spacer(minLength: 0)
 
-            // MARK: -- Write
+            // MARK: - Write
             Divider()
             VStackBox(title: composeTitle){
                 LabeledContent {
@@ -91,7 +87,7 @@ struct UserPostsStackView<T: Post>: View, DebugPrintable {
 
                 if !viewModel.statusText.isEmpty {
                     Text(viewModel.statusText)
-                        .foregroundColor(.red)
+                        .foregroundStyle(.red)
                         .font(.footnote)
                 }
 
@@ -106,8 +102,8 @@ struct UserPostsStackView<T: Post>: View, DebugPrintable {
                 .disabled(viewModel.capturedContentText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
                 .padding()
                 .background(viewModel.capturedContentText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? Color.gray : Color.accentColor)
-                .foregroundColor(.white)
-                .cornerRadius(8)
+                .foregroundStyle(.white)
+                .clipShape(RoundedRectangle(cornerRadius: 8))
             }
             .onAppear {
                 if conversationWith == nil { focusedField = .firstField }
@@ -126,8 +122,7 @@ struct UserPostsStackView<T: Post>: View, DebugPrintable {
                 }
             }
         }
-        .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
-        .environment(\.font, Font.body)
+        .styledView()
         .disabled(viewModel.isWorking)
         .toolbar {
             ToolbarItemGroup(placement: .keyboard) {
@@ -139,17 +134,7 @@ struct UserPostsStackView<T: Post>: View, DebugPrintable {
             }
         }
         .alert("Error", error: $viewModel.error)
-        .onAppear {
-            pollTimer = Timer.scheduledTimer(withTimeInterval: 30, repeats: true) { _ in
-                Task { @MainActor in
-                    store.fetch()
-                }
-            }
-        }
-        .onDisappear {
-            pollTimer?.invalidate()
-            pollTimer = nil
-        }
+        .polling({ store.fetch() }, fetchOnAppear: false)
     }
 }
 

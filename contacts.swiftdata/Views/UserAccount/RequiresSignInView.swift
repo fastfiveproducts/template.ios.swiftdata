@@ -57,8 +57,6 @@ struct RequiresSignInView<Content: View>: View {
             store: PublicCommentStore.testLoaded()
         )
     }
-    .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
-    .environment(\.font, Font.body)
 }
 #Preview ("no-data and signed-out") {
     let currentUserService = CurrentUserTestService.sharedSignedOut
@@ -68,7 +66,5 @@ struct RequiresSignInView<Content: View>: View {
             store: PublicCommentStore()
         )
     }
-    .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
-    .environment(\.font, Font.body)
 }
 #endif

@@ -34,8 +34,8 @@ fileprivate let defaultFetchLimit: Int = 10000
 // Services:
 struct RestrictedWordConnector {
 
-    func fetch(limit: Int? = defaultFetchLimit) async throws -> [String] {
-        let queryRef = DataConnect.defaultConnector.listRestrictedWordsQuery.ref(limit: limit!)
+    func fetch(limit: Int = defaultFetchLimit) async throws -> [String] {
+        let queryRef = DataConnect.defaultConnector.listRestrictedWordsQuery.ref(limit: limit)
         let operationResult = try await queryRef.execute()
         return operationResult.data.restrictedWords.map { $0.word }
     }

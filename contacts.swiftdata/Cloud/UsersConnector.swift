@@ -37,7 +37,7 @@ struct UsersConnector {
             return account
         }
         if accounts.count == 1 { return accounts.first! }
-        else if accounts.count >= 1 { throw FetchDataError.userDataDuplicatesFound }
+        else if accounts.count > 1 { throw FetchDataError.userDataDuplicatesFound }
         else { throw FetchDataError.userDataNotFound }
     }
 

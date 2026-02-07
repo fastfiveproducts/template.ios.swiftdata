@@ -66,7 +66,7 @@ struct SignUpInLinkView: View {
                               : NavigationItem.profile.systemImage)
                         Text(trailingText)
                     }
-                    .foregroundColor(ViewConfig.linkColor)
+                    .foregroundStyle(ViewConfig.linkColor)
                 }
             }
             .buttonStyle(BorderlessButtonStyle())
@@ -97,8 +97,6 @@ struct SignUpInLinkView: View {
         }
         Spacer()
     }
-    .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
-    .environment(\.font, Font.body)
 }
 #Preview ("signed-out") {
     let currentUserService = CurrentUserTestService.sharedSignedOut
@@ -117,7 +115,5 @@ struct SignUpInLinkView: View {
         }
         Spacer()
     }
-    .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
-    .environment(\.font, Font.body)
 }
 #endif

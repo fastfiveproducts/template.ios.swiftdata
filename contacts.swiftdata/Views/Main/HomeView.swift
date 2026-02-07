@@ -70,8 +70,7 @@ struct HomeView: View {
             }
         }
         .padding(.vertical)
-        .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
-        .environment(\.font, Font.body)
+        .styledView()
     }
 }
 

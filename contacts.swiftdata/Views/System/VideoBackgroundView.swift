@@ -153,8 +153,6 @@ final class VideoBackgroundPlayer: ObservableObject, DebugPrintable {
             .onAppear{ OverlayManager.shared.show(.splash) }
         OverlayView()
     }
-    .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
-    .environment(\.font, Font.body)
 }
 #Preview("Tab Safe Area") {
     ZStack {
@@ -163,7 +161,5 @@ final class VideoBackgroundPlayer: ObservableObject, DebugPrintable {
         OverlayView()
     }
     .environment(\.tabSafeAreaBackground, true)
-    .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
-    .environment(\.font, Font.body)
 }
 #endif

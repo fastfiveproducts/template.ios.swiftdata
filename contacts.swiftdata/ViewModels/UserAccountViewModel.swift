@@ -56,7 +56,7 @@ class UserAccountViewModel: ObservableObject, DebugPrintable
     }
     var dislikesRobots: Bool = false
 
-    // MARK: -- Validation
+    // MARK: - Validation
     func isReadyToSignIn() -> Bool {
         statusText = ""
         var isReady = true
@@ -86,7 +86,7 @@ class UserAccountViewModel: ObservableObject, DebugPrintable
         }
         
         if RestrictedWordStore.shared.containsRestrictedWords(capturedDisplayNameText) {
-            statusText = "Display Name matched one or more keywords on our Restricted Text List. Please adjust.";
+            statusText = "Display Name matched one or more keywords on our Restricted Text List. Please adjust."
             isReady = false
         }
         return isReady
@@ -131,7 +131,7 @@ class UserAccountViewModel: ObservableObject, DebugPrintable
         return match
     }
     
-    // MARK: -- Reset Create Account
+    // MARK: - Reset Create Account
     func resetCreateAccount(withDelay delay: TimeInterval = 0.0) {
         if delay > 0 {
             Task { @MainActor in
@@ -151,7 +151,7 @@ class UserAccountViewModel: ObservableObject, DebugPrintable
         }
     }
 
-    // MARK: -- Complete User Account (recovery from incomplete account)
+    // MARK: - Complete User Account (recovery from incomplete account)
     func isReadyToCompleteUserAccount() -> Bool {
         statusText = ""
         var isReady = true
@@ -162,7 +162,7 @@ class UserAccountViewModel: ObservableObject, DebugPrintable
         }
 
         if RestrictedWordStore.shared.containsRestrictedWords(capturedDisplayNameText) {
-            statusText = "Display Name matched one or more keywords on our Restricted Text List. Please adjust.";
+            statusText = "Display Name matched one or more keywords on our Restricted Text List. Please adjust."
             isReady = false
         }
         return isReady
@@ -226,7 +226,7 @@ class UserAccountViewModel: ObservableObject, DebugPrintable
         }
     }
     
-    // MARK: -- Create Account
+    // MARK: - Create Account
     var createdUserId: String = ""
     var accountCandidate: UserAccountCandidate {
         return UserAccountCandidate(uid: createdUserId, displayName: capturedDisplayNameText, photoUrl: "")
@@ -284,7 +284,7 @@ class UserAccountViewModel: ObservableObject, DebugPrintable
         
     }
         
-    // MARK: -- Reset Password
+    // MARK: - Reset Password
     func resetPasswordWithService(_ currentUserService: CurrentUserService) async throws {
         
         // request the Auth system send a password-reset email
@@ -299,7 +299,7 @@ class UserAccountViewModel: ObservableObject, DebugPrintable
         }
     }
 
-    // MARK: -- Change Password
+    // MARK: - Change Password
     func toggleChangePasswordMode() {
         capturedPasswordTextOld = ""
         capturedPasswordText = ""

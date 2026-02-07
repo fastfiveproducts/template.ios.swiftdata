@@ -61,6 +61,30 @@ When creating a new file file:
 **Git Workflow**: Feature branches from `develop`, squash-merge to `develop`, then squash to `main` for releases
 
 
+## Code Review
+
+When asked to "do a code review", follow this process:
+
+### Categories to Evaluate
+1. **Bugs** — Logic errors, copy-paste mistakes, typos in code
+2. **Security** — Auth gaps, data exposure, input validation, secrets in source control
+3. **Error Handling** — Unhandled throws, force unwraps, silent failures, missing edge cases
+4. **Deprecated APIs** — Use of deprecated functions
+5. **Performance** — Redundant computation, missing caching, unbounded queries, expensive operations
+6. **Style** — Inconsistencies with the rest of the existing codebase
+7. **Licensing** — Attribution, copyright headers, commercial risks
+
+### Output Format
+Present findings as a numbered table with columns: ID, Category, Priority, Summary, and File(s). Use short IDs (e.g. B1, S1, E1, D1, P1, C1, L1) by category. Prioritize bugs and security issues first.
+
+### Workflow
+1. Explore the repo thoroughly, then present the full findings table
+2. Discuss each finding with the user — they will decide to fix, close, or defer each one
+3. For each fix: edit → build → commit → push
+4. After each commit, regenerate the tracking table with updated statuses
+5. Use `pbcopy` (with `sed 's/[[:space:]]*$//'`) when asked to copy tables to clipboard
+
+
 ## Testing
 - Manual testing only (no automated test suite)
 

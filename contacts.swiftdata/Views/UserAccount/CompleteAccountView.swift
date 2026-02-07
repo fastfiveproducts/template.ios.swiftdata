@@ -41,7 +41,7 @@ struct CompleteAccountView: View, DebugPrintable {
             Section(header: Text("Complete Your Account")) {
                 Text("Your sign-in was successful, but your account setup is incomplete. Please complete your account to continue.")
                     .font(.subheadline)
-                    .foregroundColor(.secondary)
+                    .foregroundStyle(.secondary)
 
                 LabeledContent {
                     Text(currentUserService.user.auth.email)
@@ -50,9 +50,9 @@ struct CompleteAccountView: View, DebugPrintable {
 
                 LabeledContent {
                     TextField(text: $viewModel.capturedDisplayNameText) {}
-                        .autocapitalization(.none)
+                        .textInputAutocapitalization(.never)
                         .keyboardType(.emailAddress)
-                        .disableAutocorrection(true)
+                        .autocorrectionDisabled()
                         .focused($focusedField, equals: .displayName)
                         .onTapGesture { nextField() }
                         .onSubmit { completeAccount() }
@@ -61,7 +61,7 @@ struct CompleteAccountView: View, DebugPrintable {
 
                 Button("Complete Account", action: completeAccount)
                     .frame(maxWidth: .infinity)
-                    .foregroundColor(.white)
+                    .foregroundStyle(.white)
                     .listRowBackground(Color.accentColor)
                     .disabled(viewModel.capturedDisplayNameText.isEmpty ||
                         currentUserService.isCreatingUserAccount ||
@@ -93,7 +93,7 @@ struct CompleteAccountView: View, DebugPrintable {
                     if viewModel.showSuccessMode {
                         HStack {
                             Image(systemName: "checkmark.circle.fill")
-                                .foregroundColor(.green)
+                                .foregroundStyle(.green)
                             Text("Account Setup Complete!")
                                 .fontWeight(.medium)
                         }
@@ -112,7 +112,12 @@ private extension CompleteAccountView {
         debugprint("completeAccount called")
         if viewModel.isReadyToCompleteUserAccount() {
             Task {
-                try await viewModel.completeUserAccountWithService(currentUserService)
+                do {
+                    try await viewModel.completeUserAccountWithService(currentUserService)
+                } catch {
+                    debugprint("🛑 ERROR:  (View) Error completing User Account: \(error)")
+                    viewModel.error = error
+                }
             }
         }
     }
@@ -121,12 +126,12 @@ private extension CompleteAccountView {
         HStack {
             if isDone {
                 Image(systemName: "checkmark.circle")
-                    .foregroundColor(.green)
+                    .foregroundStyle(.green)
             } else if isActive {
                 ProgressView()
             } else {
                 Image(systemName: "circle")
-                    .foregroundColor(.gray)
+                    .foregroundStyle(.gray)
             }
 
             Text(label + (isDone ? " DONE" : isActive ? "..." : ""))
@@ -147,8 +152,6 @@ private extension CompleteAccountView {
                 currentUserService: currentUserService
             )
         }
-        .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
-        .environment(\.font, Font.body)
     }
 }
 #Preview ("test-data showing status") {
@@ -161,8 +164,6 @@ private extension CompleteAccountView {
                 currentUserService: currentUserService
             )
         }
-        .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
-        .environment(\.font, Font.body)
 
         Spacer()
         Button("Next State", action: currentUserService.nextCreateState)

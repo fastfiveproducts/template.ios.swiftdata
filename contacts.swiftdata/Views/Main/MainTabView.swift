@@ -73,8 +73,7 @@ struct MainTabView: View {
 //                VideoBackgroundPlayer.shared.queuePlayer.pause()
 //            }
 //        }
-        .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
-        .environment(\.font, Font.body)
+        .styledView()
     }
 }
 
@@ -92,7 +91,7 @@ extension MainTabView {
                     ).onAppear { OverlayManager.shared.hide(.splash) })
                 {
                     Label("Comments", systemImage: "exclamationmark.bubble")
-                        .foregroundColor(.primary)
+                        .foregroundStyle(.primary)
                 }
                 .buttonStyle(BorderlessButtonStyle())
 
@@ -110,7 +109,7 @@ extension MainTabView {
                     ).onAppear { OverlayManager.shared.hide(.splash) })
                 {
                     Label("Messages", systemImage: "bubble.left.and.bubble.right")
-                        .foregroundColor(.primary)
+                        .foregroundStyle(.primary)
                 }
                 .buttonStyle(BorderlessButtonStyle())
             }
@@ -142,8 +141,6 @@ extension MainTabView {
         privateMessageStore: PrivateMessageStore.testLoaded()
     )
     .modelContainer(container)
-    .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
-    .environment(\.font, Font.body)
 }
 #Preview ("no-data and signed-in") {
     return MainTabView(
@@ -153,8 +150,6 @@ extension MainTabView {
         privateMessageStore: PrivateMessageStore()
     )
     .modelContainer(ModelContainerManager.emptyContainer)
-    .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
-    .environment(\.font, Font.body)
 }
 #Preview ("no-data and signed-out") {
     return MainTabView(
@@ -164,7 +159,5 @@ extension MainTabView {
         privateMessageStore: PrivateMessageStore()
     )
     .modelContainer(ModelContainerManager.emptyContainer)
-    .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
-    .environment(\.font, Font.body)
 }
 #endif

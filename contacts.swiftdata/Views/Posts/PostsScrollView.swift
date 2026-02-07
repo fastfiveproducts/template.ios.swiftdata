@@ -38,7 +38,72 @@ struct PostsScrollView<T: Post>: View {
     // Sort order: when true, displays newest first at top (like a feed); default is newest at bottom (like Messages app)
     var newestAtTop: Bool = false
 
-    // Apply filters and sort order
+    var body: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            switch store.list {
+            case .loading:
+                ProgressView("Loading...")
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .padding()
+
+            case .error(let error):
+                Text("Error loading content: \(error.localizedDescription)")
+                    .foregroundStyle(.red)
+                    .padding()
+
+            case .none:
+                Text("No Posts Yet.")
+                    .padding(.top, 10)
+
+            case .loaded:
+                let posts = filteredPosts
+                if posts.isEmpty {
+                    if hideWhenEmpty {
+                        EmptyView()
+                    } else {
+                        VStack(alignment: .leading) {
+                            Text("None!")
+                                .foregroundStyle(.secondary)
+                                .padding(.horizontal)
+                                .padding(.top, 10)
+                            Spacer(minLength: 0) // optional, to push empty state up
+                        }
+                    }
+                } else {
+                    ScrollViewReader { proxy in
+                        ScrollView {
+                            LazyVStack(spacing: 4) {
+                                ForEach(posts) { post in
+                                    PostBubbleView(
+                                        post: post,
+                                        isSent: post.from.uid == currentUserId,
+                                        showFromUser: showFromUser,
+                                        showToUser: showToUser
+                                    )
+                                    .id(post.id)
+                                }
+                            }
+                            .padding(.top, 10)
+                            .padding(.bottom, 4)
+                        }
+                        .scrollDismissesKeyboard(.interactively)
+                        .task {
+                            try? await Task.sleep(for: .milliseconds(500))
+                            scrollToBottom(posts, proxy: proxy, animated: false)
+                        }
+                        .onChange(of: posts.count) {
+                            scrollToBottom(posts, proxy: proxy)
+                        }
+                        .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardDidShowNotification)) { _ in
+                            scrollToBottom(posts, proxy: proxy, animated: false)
+                        }
+                    }
+                }
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .topLeading)
+    }
+    
     private var filteredPosts: [T] {
         guard case let .loaded(posts) = store.list else { return [] }
         let filtered = posts.filter { post in
@@ -59,87 +124,17 @@ struct PostsScrollView<T: Post>: View {
             return filtered.sorted { $0.timestamp < $1.timestamp }
         }
     }
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 0) {
-            switch store.list {
-            case .loading:
-                ProgressView("Loading...")
-                    .frame(maxWidth: .infinity, alignment: .center)
-                    .padding()
-
-            case .error(let error):
-                Text("Error loading content: \(error.localizedDescription)")
-                    .foregroundColor(.red)
-                    .padding()
-
-            case .none:
-                Text("No Posts Yet.")
-                    .padding(.top, 10)
-
-            case .loaded:
-                if filteredPosts.isEmpty {
-                    if hideWhenEmpty {
-                        EmptyView()
-                    } else {
-                        VStack(alignment: .leading) {
-                            Text("None!")
-                                .foregroundColor(.secondary)
-                                .padding(.horizontal)
-                                .padding(.top, 10)
-                            Spacer(minLength: 0) // optional, to push empty state up
-                        }
-                    }
-                } else {
-                    ScrollViewReader { proxy in
-                        ScrollView {
-                            LazyVStack(spacing: 4) {
-                                ForEach(filteredPosts) { post in
-                                    PostBubbleView(
-                                        post: post,
-                                        isSent: post.from.uid == currentUserId,
-                                        showFromUser: showFromUser,
-                                        showToUser: showToUser
-                                    )
-                                    .id(post.id)
-                                }
-                            }
-                            .padding(.top, 10)
-                            .padding(.bottom, 4)
-                        }
-                        .scrollDismissesKeyboard(.interactively)
-                        .onAppear {
-                            if !newestAtTop, let lastPost = filteredPosts.last {
-                                proxy.scrollTo(lastPost.id, anchor: .bottom)
-                            }
-                        }
-                        .task {
-                            try? await Task.sleep(for: .milliseconds(500))
-                            if !newestAtTop, let lastPost = filteredPosts.last {
-                                withAnimation {
-                                    proxy.scrollTo(lastPost.id, anchor: .bottom)
-                                }
-                            }
-                        }
-                        .onChange(of: filteredPosts.count) {
-                            if !newestAtTop, let lastPost = filteredPosts.last {
-                                withAnimation {
-                                    proxy.scrollTo(lastPost.id, anchor: .bottom)
-                                }
-                            }
-                        }
-                        .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardDidShowNotification)) { _ in
-                            if !newestAtTop, let lastPost = filteredPosts.last {
-                                withAnimation {
-                                    proxy.scrollTo(lastPost.id, anchor: .bottom)
-                                }
-                            }
-                        }
-                    }
+    
+    private func scrollToBottom(_ posts: [T], proxy: ScrollViewProxy, animated: Bool = true) {
+        if !newestAtTop, let lastPost = posts.last {
+            if animated {
+                withAnimation {
+                    proxy.scrollTo(lastPost.id, anchor: .bottom)
                 }
+            } else {
+                proxy.scrollTo(lastPost.id, anchor: .bottom)
             }
         }
-        .frame(maxWidth: .infinity, alignment: .topLeading)
     }
 }
 
@@ -177,8 +172,6 @@ struct PostsScrollView<T: Post>: View {
         }
         .padding()
     }
-    .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
-    .environment(\.font, Font.body)
 }
 
 #Preview ("Newest on Top") {
@@ -192,8 +185,6 @@ struct PostsScrollView<T: Post>: View {
             newestAtTop: true
         )
     }
-    .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
-    .environment(\.font, Font.body)
 }
 
 #Preview ("Empty") {
@@ -213,7 +204,5 @@ struct PostsScrollView<T: Post>: View {
             )
         }
     }
-    .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
-    .environment(\.font, Font.body)
 }
 #endif

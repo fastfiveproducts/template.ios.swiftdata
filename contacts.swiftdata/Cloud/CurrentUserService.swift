@@ -76,7 +76,7 @@ class CurrentUserService: ObservableObject, DebugPrintable {
         listener = auth.addStateDidChangeListener { [weak self] _, user in
             self?.userAuth = user.map(UserAuth.init(from:)) ?? UserAuth.blankUser
             if Auth.auth().currentUser != nil {
-                debugPrint( "[setupListener]: " + (self?.userAuth.uid ?? "no uid") )
+                self?.debugprint( "[setupListener]: " + (self?.userAuth.uid ?? "no uid") )
                 self?.postSignInSetup()
             } else {
                 self?.postSignOutCleanup()
@@ -169,7 +169,7 @@ class CurrentUserService: ObservableObject, DebugPrintable {
         defer { isSigningIn = false }
         do {
             let result = try await auth.signIn(withEmail: email, password: password)
-            if !result.user.uid.isEmpty {
+            if result.user.uid.isEmpty {
                 debugprint("⚠️ WARNING:  signIn - via signInOrCreateUser func - returned successful but user.uid is empty.")
                 self.error = AuthError.userIdNotFound
             }
@@ -301,7 +301,7 @@ extension CurrentUserService {
             do {
                 let result = try await auth.signIn(withEmail: email, link: url.absoluteString)
                 userId = result.user.uid
-                debugPrint("[completeCreateAccount]: " + result.user.uid)
+                debugprint("[completeCreateAccount]: " + result.user.uid)
                 postSignInSetup()
             } catch {
                 self.error = error
@@ -347,7 +347,7 @@ extension CurrentUserService {
                 displayNameTextLower: displayNameText.lowercased(),
                 photoUrl: profile.photoUrl
             )
-            let userProfile = UserAccount(uid: profile.uid, displayName: profile.displayName, photoUrl: profile.displayName)
+            let userProfile = UserAccount(uid: profile.uid, displayName: profile.displayName, photoUrl: profile.photoUrl)
             user.account = userProfile
         }
         catch {
@@ -402,7 +402,7 @@ extension CurrentUserService {
             return account
         }
         if accounts.count == 1 { return accounts.first! }
-        else if accounts.count >= 1 { throw FetchDataError.userDataDuplicatesFound }
+        else if accounts.count > 1 { throw FetchDataError.userDataDuplicatesFound }
         else { throw FetchDataError.userDataNotFound }
     }
     
@@ -553,7 +553,7 @@ class CurrentUserTestService: CurrentUserService {
     }
 
     private func loadIncompleteUser() {
-        user = User(auth: User.testObject.auth, account: UserAccount.blankUser)
+        user = User(auth: User.testObject.auth, account: UserAccount.blankUser)     // incomplete user
         isCreatingUser = false
         isSigningIn = false
         isSignedIn = true
