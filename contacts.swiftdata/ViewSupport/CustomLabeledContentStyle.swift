@@ -77,7 +77,7 @@ private struct TopLabelLabeledContentStylePreview: View {
         LabeledContent {
             TextField(promptText, text: $text)
                 .textInputAutocapitalization(.words)
-                .disableAutocorrection(true)
+                .autocorrectionDisabled()
                 .focused($focusedFieldIndex, equals: 0)
         } label: {
             Text(labelText)

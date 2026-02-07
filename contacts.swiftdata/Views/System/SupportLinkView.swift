@@ -62,7 +62,7 @@ struct SupportLinkView: View {
                               : NavigationItem.support.systemImage)
                         Text(trailingText)
                     }
-                    .foregroundColor(ViewConfig.linkColor)
+                    .foregroundStyle(ViewConfig.linkColor)
                 }
             }
             .buttonStyle(BorderlessButtonStyle())
@@ -85,7 +85,7 @@ struct SupportLinkView: View {
                               : NavigationItem.support.systemImage)
                         Text(trailingText)
                     }
-                    .foregroundColor(ViewConfig.linkColor)
+                    .foregroundStyle(ViewConfig.linkColor)
                 }
             }
             .buttonStyle(BorderlessButtonStyle())
@@ -113,8 +113,6 @@ struct SupportLinkView: View {
         }
         Spacer()
     }
-    .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
-    .environment(\.font, Font.body)
 }
 #Preview ("signed-out") {
     let currentUserService = CurrentUserTestService.sharedSignedOut
@@ -133,7 +131,5 @@ struct SupportLinkView: View {
         }
         Spacer()
     }
-    .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
-    .environment(\.font, Font.body)
 }
 #endif

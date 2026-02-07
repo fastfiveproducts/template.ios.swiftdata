@@ -48,12 +48,12 @@ struct LaunchView: View {
             OverlayView()
                 .zIndex(30)
         }
-        .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
-        .environment(\.font, Font.body)
+        .styledView()
         
-        // Initialize Cloud Repositories
+        // Initialize Repositories
         .task {
-            RestrictedWordStore.shared.enableRestrictedWordCheck()
+            RestrictedWordStore.shared.enableRestrictedWordCheck()                  // Load from server
+            // RestrictedWordStore.shared.enableRestrictedWordCheckWithBundledWords()  // Load from bundle
             HelpTextStore.shared.initialize()
             AnnouncementStore.shared.initialize()
             PublicCommentStore.shared.initialize()
