@@ -27,9 +27,9 @@ fileprivate let defaultFetchLimit: Int = 100
 // Services:
 struct PostsConnector {
     
-    func fetchPublicComments(limit: Int? = defaultFetchLimit) async throws -> [PublicComment] {
+    func fetchPublicComments(limit: Int = defaultFetchLimit) async throws -> [PublicComment] {
         var comments: [PublicComment] = []
-        let queryRef = DataConnect.defaultConnector.listPublicCommentsQuery.ref(limit: limit!)
+        let queryRef = DataConnect.defaultConnector.listPublicCommentsQuery.ref(limit: limit)
         let operationResult = try await queryRef.execute()
         comments = try operationResult.data.publicComments.compactMap { firebaseComment -> PublicComment? in
             let comment = try makePublicCommentStruct(from: firebaseComment)
@@ -39,9 +39,9 @@ struct PostsConnector {
         return comments
     }
     
-    func fetchMyPrivateMessages(limit: Int? = defaultFetchLimit) async throws -> [PrivateMessage] {
+    func fetchMyPrivateMessages(limit: Int = defaultFetchLimit) async throws -> [PrivateMessage] {
         var messages: [PrivateMessage] = []
-        let queryRef = DataConnect.defaultConnector.getMyPrivateMessagesQuery.ref(limit: limit!)
+        let queryRef = DataConnect.defaultConnector.getMyPrivateMessagesQuery.ref(limit: limit)
         let operationResult = try await queryRef.execute()
         messages = try operationResult.data.privateMessages.compactMap { firebaseMessage -> PrivateMessage? in
             let message = try makePrivateMessageStruct(from: firebaseMessage)
@@ -51,9 +51,9 @@ struct PostsConnector {
         return messages
     }
     
-    func fetchPublicCommentReferences(for commentId: UUID, limit: Int? = defaultFetchLimit) async throws -> [PostReference] {
+    func fetchPublicCommentReferences(for commentId: UUID, limit: Int = defaultFetchLimit) async throws -> [PostReference] {
         var references: [PostReference] = []
-        let queryRef = DataConnect.defaultConnector.getPublicCommentReferencesQuery.ref(commentId: commentId, limit: limit!)
+        let queryRef = DataConnect.defaultConnector.getPublicCommentReferencesQuery.ref(commentId: commentId, limit: limit)
         let operationResult = try await queryRef.execute()
         references = try operationResult.data.publicCommentReferences.compactMap { firebaseReference -> PostReference? in
             let reference = try makeMessageReferenceStruct(from: firebaseReference)
@@ -63,9 +63,9 @@ struct PostsConnector {
         return references
     }
         
-    func fetchMyPrivateMessageReferences(limit: Int? = defaultFetchLimit) async throws -> [PostReference] {
+    func fetchMyPrivateMessageReferences(limit: Int = defaultFetchLimit) async throws -> [PostReference] {
         var references: [PostReference] = []
-        let queryRef = DataConnect.defaultConnector.getMyPrivateMessageReferencesQuery.ref(limit: limit!)
+        let queryRef = DataConnect.defaultConnector.getMyPrivateMessageReferencesQuery.ref(limit: limit)
         let operationResult = try await queryRef.execute()
         references = try operationResult.data.privateMessageReferences.compactMap { firebaseReference -> PostReference? in
             let reference = try makeMessageReferenceStruct(from: firebaseReference)
@@ -75,9 +75,9 @@ struct PostsConnector {
         return references
     }
 
-    func fetchPrivateMessageReferences(for messageId: UUID, limit: Int? = defaultFetchLimit) async throws -> [PostReference] {
+    func fetchPrivateMessageReferences(for messageId: UUID, limit: Int = defaultFetchLimit) async throws -> [PostReference] {
         var references: [PostReference] = []
-        let queryRef = DataConnect.defaultConnector.getPrivateMessageReferencesQuery.ref(messageId: messageId, limit: limit!)
+        let queryRef = DataConnect.defaultConnector.getPrivateMessageReferencesQuery.ref(messageId: messageId, limit: limit)
         let operationResult = try await queryRef.execute()
         references = try operationResult.data.privateMessageReferences.compactMap { firebaseReference -> PostReference? in
             let reference = try makeMessageReferenceStruct(from: firebaseReference)
