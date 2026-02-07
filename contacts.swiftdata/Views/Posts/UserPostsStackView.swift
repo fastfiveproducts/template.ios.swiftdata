@@ -55,7 +55,7 @@ struct UserPostsStackView<T: Post>: View, DebugPrintable {
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
 
-            // MARK: -- Past Posts
+            // MARK: - Past Posts
             VStack(alignment: .leading, spacing: 8) {
                 Text(sectionTitle)
                     .font(.title3)
@@ -72,7 +72,7 @@ struct UserPostsStackView<T: Post>: View, DebugPrintable {
 
             Spacer(minLength: 0)
 
-            // MARK: -- Write
+            // MARK: - Write
             Divider()
             VStackBox(title: composeTitle){
                 LabeledContent {
