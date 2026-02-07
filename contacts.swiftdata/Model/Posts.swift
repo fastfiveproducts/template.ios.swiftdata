@@ -154,7 +154,7 @@ enum MessageStatusCode: String, Codable { case
 
 struct MessageStatus: Codable, Hashable {
     private(set) var timestamp: Date?
-    var uid: String!
+    var uid: String
     var status: MessageStatusCode
 }
 
