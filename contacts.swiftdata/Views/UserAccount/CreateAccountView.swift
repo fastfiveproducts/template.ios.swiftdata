@@ -144,7 +144,12 @@ private extension CreateAccountView {
         debugprint("createAccount called")
         if viewModel.isReadyToCreateAccount() {
             Task {
-                try await viewModel.createAccountWithService(currentUserService)
+                do {
+                    try await viewModel.createAccountWithService(currentUserService)
+                } catch {
+                    debugprint("🛑 ERROR:  (View) Error creating User Account: \(error)")
+                    viewModel.error = error
+                }
             }
         }
     }

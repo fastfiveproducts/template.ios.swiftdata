@@ -112,7 +112,12 @@ private extension CompleteAccountView {
         debugprint("completeAccount called")
         if viewModel.isReadyToCompleteUserAccount() {
             Task {
-                try await viewModel.completeUserAccountWithService(currentUserService)
+                do {
+                    try await viewModel.completeUserAccountWithService(currentUserService)
+                } catch {
+                    debugprint("🛑 ERROR:  (View) Error completing User Account: \(error)")
+                    viewModel.error = error
+                }
             }
         }
     }

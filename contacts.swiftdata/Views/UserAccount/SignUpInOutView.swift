@@ -202,7 +202,6 @@ private extension SignUpInOutView {
                     } else {
                         debugprint("🛑 ERROR:  (View) Error signing into User Account: \(error)")
                         viewModel.error = error
-                        throw error
                     }
                 }
             }
@@ -213,7 +212,12 @@ private extension SignUpInOutView {
         debugprint("createAccount called")
         if viewModel.isReadyToCreateAccount() {
             Task {
-                try await viewModel.createAccountWithService(currentUserService)
+                do {
+                    try await viewModel.createAccountWithService(currentUserService)
+                } catch {
+                    debugprint("🛑 ERROR:  (View) Error creating User Account: \(error)")
+                    viewModel.error = error
+                }
             }
         }
     }
@@ -227,7 +231,6 @@ private extension SignUpInOutView {
                 } catch {
                     debugprint("🛑 ERROR:  (View) Error requesting password reset: \(error)")
                     viewModel.error = error
-                    throw error
                 }
                 showResetConfirmation = true
             }

@@ -111,7 +111,6 @@ private extension ChangePasswordView {
                 } catch {
                     debugprint("🛑 ERROR:  (View) Error requesting password change: \(error)")
                     viewModel.error = error
-                    throw error
                 }
                 modelContext.insert(ActivityLogEntry("Password changed"))
                 showConfirmation = true
