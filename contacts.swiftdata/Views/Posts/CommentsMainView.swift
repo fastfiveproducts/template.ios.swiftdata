@@ -23,7 +23,6 @@ import SwiftUI
 struct CommentsMainView: View, DebugPrintable {
     @ObservedObject var currentUserService: CurrentUserService
     @ObservedObject var store: PublicCommentStore
-    @State private var pollTimer: Timer?
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -65,18 +64,7 @@ struct CommentsMainView: View, DebugPrintable {
         }
         .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
         .environment(\.font, Font.body)
-        .onAppear {
-            store.fetch()
-            pollTimer = Timer.scheduledTimer(withTimeInterval: 30, repeats: true) { _ in
-                Task { @MainActor in
-                    store.fetch()
-                }
-            }
-        }
-        .onDisappear {
-            pollTimer?.invalidate()
-            pollTimer = nil
-        }
+        .polling({ store.fetch() })
     }
 }
 

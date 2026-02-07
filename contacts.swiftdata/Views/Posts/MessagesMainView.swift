@@ -24,7 +24,6 @@ struct MessagesMainView: View, DebugPrintable {
     @ObservedObject var currentUserService: CurrentUserService
     @ObservedObject var store: PrivateMessageStore
     @StateObject private var viewModel = MessagesViewModel()
-    @State private var pollTimer: Timer?
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -41,18 +40,7 @@ struct MessagesMainView: View, DebugPrintable {
         .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
         .environment(\.font, Font.body)
         .alert("Search Error", error: $viewModel.error)
-        .onAppear {
-            store.fetch()
-            pollTimer = Timer.scheduledTimer(withTimeInterval: 30, repeats: true) { _ in
-                Task { @MainActor in
-                    store.fetch()
-                }
-            }
-        }
-        .onDisappear {
-            pollTimer?.invalidate()
-            pollTimer = nil
-        }
+        .polling({ store.fetch() })
     }
 
     // MARK: - Conversations List

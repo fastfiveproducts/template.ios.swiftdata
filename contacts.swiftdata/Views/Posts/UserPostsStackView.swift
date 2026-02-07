@@ -25,7 +25,8 @@ struct UserPostsStackView<T: Post>: View, DebugPrintable {
     @ObservedObject var currentUserService: CurrentUserService
     @ObservedObject var viewModel: UserPostViewModel<T>
     @ObservedObject var store: ListableStore<T>
-
+    @Environment(\.dismiss) private var dismiss
+    
     // Configuration
     let sectionTitle: String
     let composeTitle: String
@@ -35,11 +36,6 @@ struct UserPostsStackView<T: Post>: View, DebugPrintable {
 
     // Optional: for message conversations, filter to show only posts with this user
     var conversationWith: UserKey?
-
-    // Polling timer for active conversations
-    @State private var pollTimer: Timer?
-
-    @Environment(\.dismiss) private var dismiss
 
     @FocusState private var focusedField: Field?
     private func nextField() {
@@ -139,17 +135,7 @@ struct UserPostsStackView<T: Post>: View, DebugPrintable {
             }
         }
         .alert("Error", error: $viewModel.error)
-        .onAppear {
-            pollTimer = Timer.scheduledTimer(withTimeInterval: 30, repeats: true) { _ in
-                Task { @MainActor in
-                    store.fetch()
-                }
-            }
-        }
-        .onDisappear {
-            pollTimer?.invalidate()
-            pollTimer = nil
-        }
+        .polling({ store.fetch() }, fetchOnAppear: false)
     }
 }
 
