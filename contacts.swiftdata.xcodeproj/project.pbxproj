@@ -31,7 +31,7 @@
 		B59779B22EB93B9B00712D85 /* RestrictedWordStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59779672EB93B9B00712D85 /* RestrictedWordStore.swift */; };
 		B59779B32EB93B9B00712D85 /* SettingsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59779682EB93B9B00712D85 /* SettingsStore.swift */; };
 		B59779B42EB93B9B00712D85 /* ListableStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B597796A2EB93B9B00712D85 /* ListableStore.swift */; };
-		B59779B52EB93B9B00712D85 /* RepositoryConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = B597796B2EB93B9B00712D85 /* RepositoryConfig.swift */; };
+		B59779B52EB93B9B00712D85 /* ModelContainerConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = B597796B2EB93B9B00712D85 /* ModelContainerConfig.swift */; };
 		B59779B62EB93B9B00712D85 /* DebugLogging.swift in Sources */ = {isa = PBXBuildFile; fileRef = B597796D2EB93B9B00712D85 /* DebugLogging.swift */; };
 		B59779B72EB93B9B00712D85 /* DeviceStamping.swift in Sources */ = {isa = PBXBuildFile; fileRef = B597796E2EB93B9B00712D85 /* DeviceStamping.swift */; };
 		B59779B82EB93B9B00712D85 /* UserAccountViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59779702EB93B9B00712D85 /* UserAccountViewModel.swift */; };
@@ -116,7 +116,7 @@
 		B59779672EB93B9B00712D85 /* RestrictedWordStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestrictedWordStore.swift; sourceTree = "<group>"; };
 		B59779682EB93B9B00712D85 /* SettingsStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsStore.swift; sourceTree = "<group>"; };
 		B597796A2EB93B9B00712D85 /* ListableStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListableStore.swift; sourceTree = "<group>"; };
-		B597796B2EB93B9B00712D85 /* RepositoryConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepositoryConfig.swift; sourceTree = "<group>"; };
+		B597796B2EB93B9B00712D85 /* ModelContainerConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelContainerConfig.swift; sourceTree = "<group>"; };
 		B597796D2EB93B9B00712D85 /* DebugLogging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugLogging.swift; sourceTree = "<group>"; };
 		B597796E2EB93B9B00712D85 /* DeviceStamping.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceStamping.swift; sourceTree = "<group>"; };
 		B59779702EB93B9B00712D85 /* UserAccountViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAccountViewModel.swift; sourceTree = "<group>"; };
@@ -257,7 +257,7 @@
 			isa = PBXGroup;
 			children = (
 				B597796A2EB93B9B00712D85 /* ListableStore.swift */,
-				B597796B2EB93B9B00712D85 /* RepositoryConfig.swift */,
+				B597796B2EB93B9B00712D85 /* ModelContainerConfig.swift */,
 			);
 			path = RepositorySupport;
 			sourceTree = "<group>";
@@ -530,7 +530,7 @@
 				B59779B22EB93B9B00712D85 /* RestrictedWordStore.swift in Sources */,
 				B59779B32EB93B9B00712D85 /* SettingsStore.swift in Sources */,
 				B59779B42EB93B9B00712D85 /* ListableStore.swift in Sources */,
-				B59779B52EB93B9B00712D85 /* RepositoryConfig.swift in Sources */,
+				B59779B52EB93B9B00712D85 /* ModelContainerConfig.swift in Sources */,
 				B59779B62EB93B9B00712D85 /* DebugLogging.swift in Sources */,
 				B59779B72EB93B9B00712D85 /* DeviceStamping.swift in Sources */,
 				B59779B82EB93B9B00712D85 /* UserAccountViewModel.swift in Sources */,
