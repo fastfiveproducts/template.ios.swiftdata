@@ -2,7 +2,8 @@
 //  OverlayView.swift
 //
 //  Template file created by Pete Maiser, Fast Five Products LLC, on 10/29/25.
-//      Template v0.2.4 Fast Five Products LLC's public AGPL template.
+//  Modified by Pete Maiser, Fast Five Products LLC, on 2/9/26.
+//      Template v0.2.6 (updated) — Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025 Fast Five Products LLC. All rights reserved.
 //
@@ -60,7 +61,7 @@ struct OverlayView: View {
                 .foregroundStyle(ViewConfig.fgColor)
         case .loading:
             VStack {
-                ViewConfig.SpashTextView()
+                ViewConfig.SplashTextView()
                     .font(.title)
                     .fontWeight(.semibold)
                     .foregroundStyle(.clear)     // preserve layout between splash and loading with clear text
@@ -89,7 +90,7 @@ struct OverlayView: View {
 struct SplashView: View {
     var body: some View {
         GeometryReader { geo in
-            ViewConfig.SpashTextView()
+            ViewConfig.SplashTextView()
                 .padding(.horizontal)
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
                 .ignoresSafeArea()

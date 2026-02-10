@@ -2,7 +2,8 @@
 //  ModelContainerManager.swift
 //
 //  Template file created by Pete Maiser, Fast Five Products LLC, in October 2025.
-//      Template v0.2.4 (updated) Fast Five Products LLC's public AGPL template.
+//  Modified by Pete Maiser, Fast Five Products LLC, on 2/9/26.
+//      Template v0.2.6 (updated) — Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025 Fast Five Products LLC. All rights reserved.
 //
@@ -59,7 +60,7 @@ final class ModelContainerManager: ObservableObject, DebugPrintable {
     func loadContainer(for userId: String?) {
         do {
             // Define schema for the container from the static value set in configuration
-            let schema = RepositoryConfig.modelContainerSchema
+            let schema = ModelContainerConfig.modelContainerSchema
             let config = ModelConfiguration(
                 "LocalModelContainer",
                 schema: schema,
@@ -85,7 +86,7 @@ final class ModelContainerManager: ObservableObject, DebugPrintable {
     }
     private func makeURL(for userId: String?) -> URL {
         let owner = userId.map { "user_\($0)" } ?? "guest"
-        return baseDirectory.appending(path: "\(owner)_streems.sqlite")
+        return baseDirectory.appending(path: "\(owner)_\(ModelContainerConfig.modelContainerName).sqlite")
     }
     static var emptyContainer: ModelContainer {
         let schema = Schema([])
@@ -101,24 +102,24 @@ extension ModelContainerManager {
     // Pulls the latest user data from Cloud
     // and writes it into the local SwiftData container.
     //
-    // - Parameter userId: The signed-in user’s UID.
+    // - Parameter userId: The signed-in user's UID.
     // - Important:  Call this after `loadContainer(for:)` completes.
     @MainActor
     func syncFromCloud(for userId: String) async {
         // TODO:
         // 1. Use the Cloud connectors to fetch
-        //    the current user's Streems (and any other synced models).
+        //    the current user's models (and any other synced models).
         // 2. Compare with local SwiftData records (by id or timestamp).
         // 3. Insert or update changed objects in container.mainContext.
         // 4. Save the context.
         //
         // Example (pseudocode):
-        //   let cloudStreems = try await StreemConnector.shared.fetch(for: userId)
-        //   for cloud in cloudStreems {
+        //   let cloudModels = try await MyModelConnector.shared.fetch(for: userId)
+        //   for cloud in cloudModels {
         //       if let local = try? context.fetch(byID: cloud.id) {
         //           local.update(from: cloud)
         //       } else {
-        //           context.insert(Streem(fromCloud: cloud))
+        //           context.insert(MyModel(fromCloud: cloud))
         //       }
         //   }
         //   try? context.save()
@@ -128,23 +129,23 @@ extension ModelContainerManager {
 
     // Pushes local changes from SwiftData container up to Cloud.
     //
-    // - Parameter userId: The signed-in user’s UID.
+    // - Parameter userId: The signed-in user's UID.
     // - Important:  Call this on sign-out or periodically if you
     //               want background syncing.
     @MainActor
     func syncToCloud(for userId: String) async {
         // TODO:
-        // 1. Fetch locally changed / new Streem records from container.mainContext.
+        // 1. Fetch locally changed / new records from container.mainContext.
         // 2. Use the Cloud connectors to update the cloud.
         // 3. Optionally mark records as "synced" via a local flag or timestamp.
         //
         // Example (pseudocode):
-        //   let unsynced = try context.fetch(FetchDescriptor<Streem>(
+        //   let unsynced = try context.fetch(FetchDescriptor<MyModel>(
         //       predicate: #Predicate { !$0.isSynced }
         //   ))
-        //   for streem in unsynced {
-        //       try await DataConnect.defaultConnector.upsertStreemMutation.execute(...)
-        //       streem.isSynced = true
+        //   for model in unsynced {
+        //       try await DataConnect.defaultConnector.upsertMyModelMutation.execute(...)
+        //       model.isSynced = true
         //   }
         //   try? context.save()
         //
@@ -157,8 +158,8 @@ extension ModelContainerManager {
 extension ModelContainerManager {
     func makePreviewContainer() -> ModelContainer {
         let config = ModelConfiguration(isStoredInMemoryOnly: true)
-        let container = try! ModelContainer(for: RepositoryConfig.modelContainerSchema, configurations: config)
-        RepositoryConfig.injectPreviewData(into: container)
+        let container = try! ModelContainer(for: ModelContainerConfig.modelContainerSchema, configurations: config)
+        ModelContainerConfig.injectPreviewData(into: container)
         return container
     }
     func injectPreviewContainer(_ container: ModelContainer) {

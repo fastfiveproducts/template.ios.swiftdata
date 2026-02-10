@@ -1,9 +1,9 @@
 //
 //  SupportLinkView.swift
-//  Streems
 //
 //  Template file created by Pete Maiser, Fast Five Products LLC, on 10/31/25.
-//      Template v0.2.4 Fast Five Products LLC's public AGPL template.
+//  Modified by Pete Maiser, Fast Five Products LLC, on 2/9/26.
+//      Template v0.2.6 (updated) — Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025 Fast Five Products LLC. All rights reserved.
 //
