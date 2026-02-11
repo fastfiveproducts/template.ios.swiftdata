@@ -2,7 +2,8 @@
 //  UsersConnector.swift
 //
 //  Created by Pete Maiser, Fast Five Products LLC, on 2/4/26.
-//      Template v0.2.5 — Fast Five Products LLC's public AGPL template.
+//  Modified by Pete Maiser, Fast Five Products LLC, on 2/9/26.
+//      Template v0.2.6 (updated) — Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2026 Fast Five Products LLC. All rights reserved.
 //
@@ -36,9 +37,10 @@ struct UsersConnector {
             guard account.isValid else { throw FetchDataError.invalidCloudData }
             return account
         }
-        if accounts.count == 1 { return accounts.first! }
-        else if accounts.count > 1 { throw FetchDataError.userDataDuplicatesFound }
-        else { throw FetchDataError.userDataNotFound }
+        guard let account = accounts.first, accounts.count == 1 else {
+            throw accounts.count > 1 ? FetchDataError.userDataDuplicatesFound : FetchDataError.userDataNotFound
+        }
+        return account
     }
 
     func searchUsers(byDisplayName searchText: String, limit: Int = defaultSearchLimit) async throws -> [UserKey] {

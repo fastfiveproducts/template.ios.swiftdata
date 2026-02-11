@@ -1,8 +1,10 @@
 //
-//  RepositoryConfig.swift
+//  ModelContainerConfig.swift
 //
-//  Template file created by Pete Maiser, Fast Five Products LLC, on 11/2/25.
-//      Template v0.2.4 Fast Five Products LLC's public AGPL template.
+//  Template file created as RepositoryConfig.swift by Pete Maiser, Fast Five Products LLC, on 11/2/25.
+//  Renamed to ModelContainerConfig.swift by Pete Maiser, Fast Five Products LLC, on 2/9/26.
+//  Updated by Pete Maiser, Fast Five Products LLC, on 2/9/26.
+//      Template v0.2.6 (updated) — Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025 Fast Five Products LLC. All rights reserved.
 //
@@ -20,12 +22,16 @@
 import Foundation
 import SwiftData
 
-struct RepositoryConfig {
-    
+struct ModelContainerConfig {
+
+    // Name used for the per-user SQLite file on disk (e.g. "user_<uid>_contacts.sqlite").
+    // Change this when seeding a new project from the template:
+    static let modelContainerName = "contacts"
+
     // Define schema for the container.
     // Other SwiftData-compatible models can be added here:
     static let modelContainerSchema = Schema(
-        [Contact.self,
+        [Contact.self,      // template sample as template is based on 'contacts'
          ActivityLogEntry.self,
 //         otherLocalData.self, draftData.self
         ]
@@ -34,11 +40,12 @@ struct RepositoryConfig {
 
 
 #if DEBUG
-extension RepositoryConfig {
+extension ModelContainerConfig {
     // Enable Test Data
     @MainActor static func injectPreviewData(into container: ModelContainer) {
         let context = container.mainContext
 
+        // template sample as template is based on 'contacts'
         for contact in Contact.testObjects  {
             context.insert(contact)
         }

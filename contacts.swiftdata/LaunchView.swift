@@ -2,7 +2,8 @@
 //  LaunchView.swift
 //
 //  Template file created by Pete Maiser, Fast Five Products LLC, in October 2025.
-//      Template v0.2.4 (updated) Fast Five Products LLC's public AGPL template.
+//  Modified by Pete Maiser, Fast Five Products LLC, on 2/11/26.
+//      Template v0.2.6 (updated) — Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025 Fast Five Products LLC. All rights reserved.
 //
@@ -24,32 +25,34 @@ struct LaunchView: View {
     @ObservedObject var modelContainerManager: ModelContainerManager
 
     @State private var showMain = false
-    
+
     var body: some View {
         ZStack {
             // Brand Color behind
             ViewConfig.brandColor.ignoresSafeArea()
                 .zIndex(10)
-                        
+
             // Main App
-            MainMenuView(
-//            MainTabView(
-                currentUserService: currentUserService,
-                announcementStore: AnnouncementStore.shared,
-                publicCommentStore: PublicCommentStore.shared,
-                privateMessageStore: PrivateMessageStore.shared,
-                
-            )
-            .modelContainer(modelContainerManager.container ?? ModelContainerManager.emptyContainer)
-            .opacity(showMain ? 1 : 0)
-            .zIndex(20)
+            if showMain {
+                MainMenuView(
+//                MainTabView(
+                    currentUserService: currentUserService,
+                    announcementStore: AnnouncementStore.shared,
+                    publicCommentStore: PublicCommentStore.shared,
+                    privateMessageStore: PrivateMessageStore.shared,
+
+                )
+                .modelContainer(modelContainerManager.container ?? ModelContainerManager.emptyContainer)
+                .transition(.opacity)
+                .zIndex(20)
+            }
 
             // Global Overlays
             OverlayView()
                 .zIndex(30)
         }
         .styledView()
-        
+
         // Initialize Repositories
         .task {
             RestrictedWordStore.shared.enableRestrictedWordCheck()                  // Load from server
@@ -59,24 +62,30 @@ struct LaunchView: View {
             PublicCommentStore.shared.initialize()
             PrivateMessageStore.shared.initialize()
         }
-        
-        // Show Splash on Appear; set clock for loading-check
+
         .onAppear {
+            // Show Splash overlay on Appear
             OverlayManager.shared.show(.splash)
 
-            // if still loading after some time has passed, tell the user about it
-            DispatchQueue.main.asyncAfter(deadline: .now() + ViewConfig.delayLoadingMessageInterval) {
+            // Fade-out Splash after splashDuration
+            DispatchQueue.main.asyncAfter(deadline: .now() + ViewConfig.splashDuration) {
+                OverlayManager.shared.hide(.splash,
+                    animation: .custom(.easeInOut(duration: ViewConfig.splashFadeDuration)))
+            }
+
+            // If still loading after some time has passed, show Loading overlay
+            DispatchQueue.main.asyncAfter(deadline: .now() + ViewConfig.loadingOverlayDelay) {
                 if modelContainerManager.container == nil {
                     OverlayManager.shared.show(.loading)
                 }
             }
         }
-        
+
         // Fade-in Main when Loaded
         .onChange(of: modelContainerManager.container) { _, newValue in
             if newValue != nil {
                 OverlayManager.shared.hide(.loading)
-                withAnimation(.easeIn(duration: ViewConfig.fadeMainViewInterval)) {
+                withAnimation(.easeIn(duration: ViewConfig.mainFadeDuration)) {
                     showMain = true
                 }
             }
@@ -95,7 +104,7 @@ struct LaunchView: View {
         modelContainerManager: modelContainerManager
     )
     .onAppear {
-        DispatchQueue.main.asyncAfter(deadline: .now() + ViewConfig.delayLoadingMessageInterval*2) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + ViewConfig.loadingOverlayDelay+0.5) {
             let container = modelContainerManager.makePreviewContainer()
             modelContainerManager.injectPreviewContainer(container)
         }

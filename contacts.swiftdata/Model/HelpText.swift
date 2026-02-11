@@ -2,7 +2,8 @@
 //  HelpText.swift
 //
 //  Template file created by Pete Maiser, Fast Five Products LLC, in October 2025.
-//      Template v0.2.3 Fast Five Products LLC's public AGPL template.
+//  Modified by Pete Maiser, Fast Five Products LLC, on 2/9/26.
+//      Template v0.2.6 (updated) — Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025 Fast Five Products LLC. All rights reserved.
 //
@@ -36,10 +37,8 @@ extension HelpText {    // to conform to Listable:
     
     static let usePlaceholder = true
     static var placeholder: [HelpText] = [
-        HelpText(code: "incomeTypeGuidance", text: "Maximize what you earn with all seven types of Income:"),
-        HelpText(code: "corePrincipleGuidance", text: "Own your future with the Streems Core Principles:"),
-        HelpText(code: "proResourceGuidance", text: "These Professionsal Resources can help you plan and manage your Income:"),
-        HelpText(code: "onlineResourceGuidance", text: "These Online Resources can help you build additional Streems of Income!")
+        HelpText(code: "testKey", text: "value of lorem ipsum dolor sit amet, consectetur adipiscing elit."),
+        HelpText(code: "testKeyAnother", text: "another value of lorem ipsum")
     ]
 }
 

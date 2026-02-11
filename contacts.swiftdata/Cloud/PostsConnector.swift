@@ -2,7 +2,8 @@
 //  PostsConnector.swift
 //
 //  Template created by Pete Maiser, July 2024 through May 2025
-//      Template v0.1.1 Fast Five Products LLC's public AGPL template.
+//  Modified by Pete Maiser, Fast Five Products LLC, on 2/9/26.
+//      Template v0.2.6 (updated) — Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025 Fast Five Products LLC. All rights reserved.
 //
@@ -101,7 +102,7 @@ struct PostsConnector {
         let localComment = makePublicCommentStruct(from: comment, withId: commentId)
         if !comment.references.isEmpty {
             for rid in comment.references {
-                _ = try await createPublicCommentReference(commentId: commentId, referenceId: rid)
+                let _ = try await createPublicCommentReference(commentId: commentId, referenceId: rid)
             }
         }
         return localComment
@@ -121,14 +122,14 @@ struct PostsConnector {
         let localMessage = makePrivateMessageStruct(from: message, withId: messageId)
         if !message.references.isEmpty {
             for rid in message.references {
-                _ = try await createPrivateMessageReference(messageId: messageId, referenceId: rid)
+                let _ = try await createPrivateMessageReference(messageId: messageId, referenceId: rid)
             }
         }
         return localMessage
     }
                          
     func createPublicCommentReference(commentId: UUID, referenceId: UUID) async throws {
-        _ = try await DataConnect.defaultConnector.createPublicCommentReferenceMutation.execute(
+        let _ = try await DataConnect.defaultConnector.createPublicCommentReferenceMutation.execute(
                     publicCommentId: commentId,
                     referenceId: referenceId
                 )
@@ -136,14 +137,14 @@ struct PostsConnector {
     }
     
     func createPrivateMessageReference(messageId: UUID, referenceId: UUID) async throws {
-        _ = try await DataConnect.defaultConnector.createPrivateMessageReferenceMutation.execute(
+        let _ = try await DataConnect.defaultConnector.createPrivateMessageReferenceMutation.execute(
             privateMessageId: messageId,
             referenceId: referenceId
         )
     }
     
     func createPrivateMessageStatus(messageId: UUID, status: MessageStatusCode) async throws {
-        _ = try await DataConnect.defaultConnector.createPrivateMessageStatusMutation.execute(
+        let _ = try await DataConnect.defaultConnector.createPrivateMessageStatusMutation.execute(
             privateMessageId: messageId,
             status: status.rawValue
         )

@@ -2,8 +2,8 @@
 //  ChangePasswordView.swift
 //
 //  Template file created by Pete Maiser, Fast Five Products LLC, on 8/20/25.
-//  Modified by Pete Maiser, Fast Five Products LLC, on 8/28/25.
-//      Template v0.2.2 (updated) Fast Five Products LLC's public AGPL template.
+//  Modified by Pete Maiser, Fast Five Products LLC, on 2/9/26.
+//      Template v0.2.6 (updated) — Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025 Fast Five Products LLC. All rights reserved.
 //
@@ -33,7 +33,7 @@ struct ChangePasswordView: View, DebugPrintable {
             case .passwordOld:
                 focusedField = .passwordNew
             case .passwordNew:
-                focusedField = .passwordOld
+                focusedField = .passwordAgain
             case .passwordAgain:
                 focusedField = .none
             case .none:

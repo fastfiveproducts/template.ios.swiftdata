@@ -2,8 +2,8 @@
 //  Posts.swift
 //
 //  Template created by Pete Maiser, July 2024 through May 2025
-//  Modified by Pete Maiser, Fast Five Products LLC, on 10/23/25.
-//      Template v0.2.3 (updated) Fast Five Products LLC's public AGPL template.
+//  Modified by Pete Maiser, Fast Five Products LLC, on 2/9/26.
+//      Template v0.2.6 (updated) — Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025 Fast Five Products LLC. All rights reserved.
 //
@@ -92,7 +92,7 @@ struct PublicComment: Post, Listable {
     let content: String
     var references: Set<UUID> = []
     
-    // to conform to Post, establich a short displayable type description
+    // to conform to Post, establish a short displayable type description
     static let typeDisplayName: String = "Comment"
        
     // to conform to Listable, use known data to describe the object
@@ -122,7 +122,7 @@ struct PrivateMessage: Post, Listable  {
     var references: Set<UUID> = []
     var status: [MessageStatus] = []
     
-    // to conform to Post, establich a short displayable type description
+    // to conform to Post, establish a short displayable type description
     static let typeDisplayName: String = "Message"
     
     // to conform to Listable, use known data to describe the object
@@ -250,6 +250,6 @@ extension PublicComment {
         title: "",
         content: "tO comment"
     )
-    static let testObjects: [PublicComment] = [.testObject, .testObjectAnother, testObjectTiny]
+    static let testObjects: [PublicComment] = [.testObject, .testObjectAnother, .testObjectTiny]
 }
 #endif

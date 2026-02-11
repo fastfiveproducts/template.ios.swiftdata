@@ -3,7 +3,8 @@
 //
 //  Template created by Pete Maiser, July 2024 through May 2025
 //  Renamed from HomeView by Pete Maiser, Fast Five Products LLC, on 10/23/25.
-//      Template v0.2.5 (updated) — Fast Five Products LLC's public AGPL template.
+//  Modified by Pete Maiser, Fast Five Products LLC, on 2/11/26.
+//      Template v0.2.6 (updated) — Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025 Fast Five Products LLC. All rights reserved.
 //
@@ -22,15 +23,15 @@ import SwiftUI
 
 struct MainTabView: View {
     @Environment(\.scenePhase) private var scenePhase
-    
+
     @ObservedObject var currentUserService: CurrentUserService
     @ObservedObject var announcementStore: AnnouncementStore
     @ObservedObject var publicCommentStore: PublicCommentStore
     @ObservedObject var privateMessageStore: PrivateMessageStore
-    
-    
+
+
     @State private var selectedTabItem: NavigationItem = .home
-    
+
     var body: some View {
         NavigationStack {
             TabView(selection: $selectedTabItem) {
@@ -38,27 +39,27 @@ struct MainTabView: View {
                     currentUserService: currentUserService,
                     announcementStore: announcementStore
                 )
-                .onAppear{ OverlayManager.shared.show(.splash, animation: OverlayAnimation.fast) }
+                .onAppear{ OverlayManager.shared.show(.brand, animation: .fast) }
                 .tabItem { NavigationItem.home.labelView }
                 .tag(NavigationItem.home)
-                
+
                 RequiresSignInView(currentUserService: currentUserService) {
                     ContactListView(currentUserService: currentUserService)
                 }
                 .tabItem { NavigationItem.contacts.labelView }
                 .tag(NavigationItem.contacts)
-                
+
                 ActivityLogView()
                     .tabItem { NavigationItem.activity.labelView }
                     .tag(NavigationItem.activity)
-                
+
                 SettingsView()
                     .tabItem { NavigationItem.settings.labelView }
                     .tag(NavigationItem.settings)
             }
             .onChange(of: selectedTabItem) {
                 if selectedTabItem != .home {
-                    OverlayManager.shared.hide(.splash)
+                    OverlayManager.shared.hide(.brand)
                 }
             }
             .environment(\.tabSafeAreaBackground, true)
@@ -88,7 +89,7 @@ extension MainTabView {
                     CommentsMainView(
                         currentUserService: currentUserService,
                         store: publicCommentStore
-                    ).onAppear { OverlayManager.shared.hide(.splash) })
+                    ).onAppear { OverlayManager.shared.hide(.brand) })
                 {
                     Label("Comments", systemImage: "exclamationmark.bubble")
                         .foregroundStyle(.primary)
@@ -106,7 +107,7 @@ extension MainTabView {
                     MessagesMainView(
                         currentUserService: currentUserService,
                         store: privateMessageStore
-                    ).onAppear { OverlayManager.shared.hide(.splash) })
+                    ).onAppear { OverlayManager.shared.hide(.brand) })
                 {
                     Label("Messages", systemImage: "bubble.left.and.bubble.right")
                         .foregroundStyle(.primary)
@@ -114,12 +115,12 @@ extension MainTabView {
                 .buttonStyle(BorderlessButtonStyle())
             }
         }
-        
+
         ToolbarItem(placement: .navigationBarTrailing) {
             SignUpInLinkView(
                 currentUserService: currentUserService,
                 inToolbar: true,
-                onNavigate: { OverlayManager.shared.hide(.splash) }
+                onNavigate: { OverlayManager.shared.hide(.brand) }
             )
         }
     }
@@ -128,36 +129,37 @@ extension MainTabView {
 
 #if DEBUG
 #Preview ("test-data signed-in") {
-    let currentUserService: CurrentUserService = CurrentUserTestService.sharedSignedIn
-    let modelContainerManager = ModelContainerManager(currentUserService: currentUserService)
-    let container = modelContainerManager.makePreviewContainer()
-    modelContainerManager.injectPreviewContainer(container)
-    
-    return MainTabView(
-        currentUserService: currentUserService,
-        announcementStore: AnnouncementStore.testLoaded(),
-//        announcementStore: AnnouncementStore.testTiny(),
-        publicCommentStore: PublicCommentStore.testLoaded(),
-        privateMessageStore: PrivateMessageStore.testLoaded()
-    )
-    .modelContainer(container)
+    return ZStack {
+        MainTabView(
+            currentUserService: CurrentUserTestService.sharedSignedIn,
+            announcementStore: AnnouncementStore.testLoaded(),
+//            announcementStore: AnnouncementStore.testTiny(),
+            publicCommentStore: PublicCommentStore.testLoaded(),
+            privateMessageStore: PrivateMessageStore.testLoaded()
+        )
+        OverlayView()
+    }
 }
 #Preview ("no-data and signed-in") {
-    return MainTabView(
-        currentUserService: CurrentUserTestService.sharedSignedIn,
-        announcementStore: AnnouncementStore(),
-        publicCommentStore: PublicCommentStore(),
-        privateMessageStore: PrivateMessageStore()
-    )
-    .modelContainer(ModelContainerManager.emptyContainer)
+    return ZStack {
+        MainTabView(
+            currentUserService: CurrentUserTestService.sharedSignedIn,
+            announcementStore: AnnouncementStore(),
+            publicCommentStore: PublicCommentStore(),
+            privateMessageStore: PrivateMessageStore()
+        )
+        OverlayView()
+    }
 }
 #Preview ("no-data and signed-out") {
-    return MainTabView(
-        currentUserService: CurrentUserTestService.sharedSignedOut,
-        announcementStore: AnnouncementStore(),
-        publicCommentStore: PublicCommentStore(),
-        privateMessageStore: PrivateMessageStore()
-    )
-    .modelContainer(ModelContainerManager.emptyContainer)
+    return ZStack {
+        MainTabView(
+            currentUserService: CurrentUserTestService.sharedSignedOut,
+            announcementStore: AnnouncementStore(),
+            publicCommentStore: PublicCommentStore(),
+            privateMessageStore: PrivateMessageStore()
+        )
+        OverlayView()
+    }
 }
 #endif

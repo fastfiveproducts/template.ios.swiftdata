@@ -2,8 +2,8 @@
 //  CurrentUserService.swift
 //
 //  Template created by Pete Maiser, July 2024 through August 2025
-//  Modified by Pete Maiser, Fast Five Products LLC, on 2/3/26.
-//      Template v0.2.5 (updated) — Fast Five Products LLC's public AGPL template.
+//  Modified by Pete Maiser, Fast Five Products LLC, on 2/9/26.
+//      Template v0.2.6 (updated) — Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025 Fast Five Products LLC. All rights reserved.
 //
@@ -36,7 +36,7 @@ class CurrentUserService: ObservableObject, DebugPrintable {
     @Published var isSignedIn = false
     
     // because Auth masters users, creating a User in the Authententication system is "creating a user"
-    // even if the user is not compplete until the Account is created and complete
+    // even if the user is not complete until the Account is created and complete
     @Published var isCreatingUser = false
     
     // no user is complete without the 'account' in the Application system
@@ -215,16 +215,17 @@ class CurrentUserService: ObservableObject, DebugPrintable {
     }
 
     func reAuthenticateUser(email: String, password: String) async throws {
+        guard let user = auth.currentUser else { throw AuthError.invalidInput }
+        
         guard !email.isEmpty, !password.isEmpty else {
             throw AuthError.invalidInput
         }
-
         let credential = EmailAuthProvider.credential(withEmail: email, password: password)
 
         isReAuthenticatingUser = true
         defer { isReAuthenticatingUser = false }
         do {
-            try await auth.currentUser?.reauthenticate(with: credential)
+            try await user.reauthenticate(with: credential)
         } catch {
             debugprint("🛑 ERROR:  Reauthentication error: \(error)")
             self.error = error
@@ -233,6 +234,8 @@ class CurrentUserService: ObservableObject, DebugPrintable {
     }
 
     func changeUserPassword(newPassword: String) async throws {
+        guard let user = auth.currentUser else { throw AuthError.invalidInput }
+        
         guard !newPassword.isEmpty else {
             throw AuthError.invalidInput
         }
@@ -240,7 +243,7 @@ class CurrentUserService: ObservableObject, DebugPrintable {
         isChangingPassword = true
         defer { isChangingPassword = false }
         do {
-            try await auth.currentUser?.updatePassword(to: newPassword)
+            try await user.updatePassword(to: newPassword)
         } catch {
             let nsError = error as NSError
             if nsError.code == AuthErrorCode.requiresRecentLogin.rawValue {
@@ -269,14 +272,15 @@ extension CurrentUserService {
         }
         
         isCreatingUser = true
+        isWaitingOnEmailVerification = true
         do {
-            isWaitingOnEmailVerification = true
             UserDefaults.standard.set(email, forKey: "emailForSignIn")
             let actionCodeSettings = ActionCodeSettings()
             actionCodeSettings.url = URL(string: "https://placeholder.page.link/ios")
             actionCodeSettings.handleCodeInApp = true
             try await auth.sendSignInLink(toEmail: email, actionCodeSettings: actionCodeSettings)
         } catch {
+            isWaitingOnEmailVerification = false
             isCreatingUser = false
             throw error
         }
@@ -401,9 +405,10 @@ extension CurrentUserService {
             guard account.isValid else { throw FetchDataError.invalidCloudData }
             return account
         }
-        if accounts.count == 1 { return accounts.first! }
-        else if accounts.count > 1 { throw FetchDataError.userDataDuplicatesFound }
-        else { throw FetchDataError.userDataNotFound }
+        guard let account = accounts.first, accounts.count == 1 else {
+            throw accounts.count > 1 ? FetchDataError.userDataDuplicatesFound : FetchDataError.userDataNotFound
+        }
+        return account
     }
     
 }

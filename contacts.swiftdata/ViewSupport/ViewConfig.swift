@@ -2,8 +2,8 @@
 //  ViewConfig.swift
 //
 //  Template created by Pete Maiser, July 2024 through May 2025
-//  Modified by Pete Maiser, Fast Five Products LLC, on 10/23/25.
-//      Template v0.2.4 (updated) Fast Five Products LLC's public AGPL template.
+//  Modified by Pete Maiser, Fast Five Products LLC, on 2/11/26.
+//      Template v0.2.6 (updated) — Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025 Fast Five Products LLC. All rights reserved.
 //
@@ -20,112 +20,79 @@
 
 import SwiftUI
 
-// The "ViewConfig" ("View Configuration") struct contains smallish settings, config, and ref data
-// specific to SwiftUI and this application that are generally hard-coded
-// here or inferred quickly upon app startup
+// The "ViewConfig" ("View Configuration") struct contains branding,
+// settings, config, and reference data specific to this implementation
+
 struct ViewConfig {
     static let dynamicSizeMax = DynamicTypeSize.xxxLarge
-    
+
     // App-Specific Strings
     static let brandName = "Template App"
-    
+
     static let privacyText = "Privacy Policy"
     static let privacyURL = URL(string: "https://www.fastfiveproducts.llc/")!
 
     static let supportText = "\(brandName) Support"
     static let supportURL = URL(string: "https://www.fastfiveproducts.llc/")!
-    
+
     static let backgroundVideoName = ""
     static let backgroundVideoExtension = "mp4"
-    
-    // Launch Screen
-    static let fadeMainViewInterval: TimeInterval = 1.25
-    static let delayLoadingMessageInterval: TimeInterval = 1.25
-    
+
+    // Launch Sequence - Splash
+    static let splashDuration: TimeInterval = 1.25          // time before splash image begins fade-out
+    static let splashFadeDuration: TimeInterval = 1.25      // fade-out duration (0 = no fade-out)
+
+    // Launch Sequence - Main View
+    static let mainFadeDelay: TimeInterval = 1.25           // time before fade-in starts
+    static let mainFadeDuration: TimeInterval = 1.25        // fade-in duration (0 = no fade-in)
+
+    // Launch Sequence - Background Task Overlays (if needed)
+    static let loadingOverlayDelay: TimeInterval = 1.25     // show "loading" overlay if still loading after this time
+
     // Home Screen
     static let topHalfSpaceRatio: CGFloat = 0.6     // Top ratio when splitting screen top-to-bottom
     static let bottomTabBarSpace: CGFloat = 48      // Leave space for Tab Bar (if applicable)
-    
+
     // Fixed Colors
     static let brandColor: Color =
         Color(.opaqueSeparator)
-    
+
     static let linkColor: Color =
         Color.accentColor
-    
+
     static let bgColor: Color =
         Color(UIColor.systemBackground)
-    
+
     static let fgColor =
         Color(.label)
-    
+
 }
 
-extension ViewConfig {
-    struct SpashTextView: View {
-        var body: some View {
-            let lineOne = ViewConfig.brandName
-            let lineTwo = ""
-            Text(lineOne + lineTwo)
-                .multilineTextAlignment(.center)
-                .minimumScaleFactor(0.6)
-                .lineLimit(nil)
+struct SplashView: View {
+    var body: some View {
+        GeometryReader { geo in
+            BrandTextView()
+                .padding(.horizontal)
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+                .ignoresSafeArea()
+                .id(geo.size)   // forces rebuild when size changes (e.g. iPad rotation)
         }
     }
 }
 
-extension OverlayState {
-    var defaultAnimation: OverlayAnimation {
-        switch self {
-        case .splash: return .none
-        case .loading: return .none
-        case .custom: return .slow
-        case .hidden: return .none
-        }
-    }
-}
-
-extension OverlayAnimation {
-    var swiftUIAnimation: Animation? {
-        switch self {
-        case .none: return nil
-        case .fast: return .easeInOut(duration: 0.5)
-        case .slow: return .easeInOut(duration: 2.0)
-        case .slideUp: return .spring(response: 0.6, dampingFraction: 0.8)
-        case .custom(let anim): return anim
-        }
-    }
-}
-
-extension View {
-    func styledView() -> some View {
-        self
-            .dynamicTypeSize(...ViewConfig.dynamicSizeMax)
-            .environment(\.font, Font.body)
-    }
-}
-
-extension Color {
-    init(hex: String) {
-        let hex = hex.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
-        var int = UInt64()
-        Scanner(string: hex).scanHexInt64(&int)
-        let r, g, b: UInt64
-        (r, g, b) = ((int >> 16) & 0xFF, (int >> 8) & 0xFF, int & 0xFF)
-        self.init(
-            .sRGB,
-            red: Double(r) / 255,
-            green: Double(g) / 255,
-            blue: Double(b) / 255,
-            opacity: 1
-        )
+struct BrandTextView: View {
+    var body: some View {
+        let lineOne = ViewConfig.brandName
+        let lineTwo = ""
+        Text(lineOne + lineTwo)
+            .multilineTextAlignment(.center)
+            .minimumScaleFactor(0.6)
+            .lineLimit(nil)
     }
 }
 
 
 #if DEBUG
-var isPreview: Bool { return ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] == "1" }
-
 extension ViewConfig {
     // set the style for previews (MainViewPreviewWrapper)
     static let mainViewStyle: MainViewStyle = .menu
@@ -154,14 +121,99 @@ extension ViewConfig {
     .styledView()
 }
 
-#Preview ("Splash Text") {
-    ZStack {
+#Preview ("Splash") {
+    let manager = OverlayManager.shared
+    manager.overlays = [
+        OverlayManager.OverlayItem(
+            state: .splash,
+            view: nil,
+            animation: .none,
+            zIndex: 10
+        )
+    ]
+    return ZStack {
         ViewConfig.brandColor.ignoresSafeArea()
-        ViewConfig.SpashTextView()
-            .font(.title)
-            .fontWeight(.semibold)
-            .foregroundStyle(ViewConfig.fgColor)
-            .styledView()
+        OverlayView()
+    }
+}
+#Preview ("Brand Text") {
+    let manager = OverlayManager.shared
+    manager.overlays = [
+        OverlayManager.OverlayItem(
+            state: .brand,
+            view: nil,
+            animation: .none,
+            zIndex: 10
+        )
+    ]
+    return ZStack {
+        ViewConfig.brandColor.ignoresSafeArea()
+        OverlayView()
+    }
+}
+#Preview ("Splash + Brand Text") {
+    let manager = OverlayManager.shared
+    manager.overlays = [
+        OverlayManager.OverlayItem(
+            state: .splash,
+            view: nil,
+            animation: .none,
+            zIndex: 10
+        ),
+        OverlayManager.OverlayItem(
+            state: .brand,
+            view: nil,
+            animation: .none,
+            zIndex: 20
+        )
+    ]
+    return ZStack {
+        ViewConfig.brandColor.ignoresSafeArea()
+        OverlayView()
+    }
+}
+
+#Preview ("Splash + Brand + Loading") {
+    let manager = OverlayManager.shared
+    manager.overlays = [
+        OverlayManager.OverlayItem(
+            state: .splash,
+            view: nil,
+            animation: .none,
+            zIndex: 10
+        ),
+        OverlayManager.OverlayItem(
+            state: .brand,
+            view: nil,
+            animation: .none,
+            zIndex: 20
+        ),
+        OverlayManager.OverlayItem(
+            state: .loading,
+            view: nil,
+            animation: .none,
+            zIndex: 30
+        )
+    ]
+    return ZStack {
+        ViewConfig.brandColor.ignoresSafeArea()
+        OverlayView()
+    }
+}
+
+#Preview ("Live Launch") {
+    let currentUserService: CurrentUserService = CurrentUserTestService.sharedSignedIn
+    let modelContainerManager = ModelContainerManager(currentUserService: currentUserService)
+
+    LaunchView(
+        currentUserService: currentUserService,
+        modelContainerManager: modelContainerManager
+    )
+    .onAppear {
+        DispatchQueue.main.asyncAfter(deadline: .now() + ViewConfig.loadingOverlayDelay+0.5) {
+            let container = modelContainerManager.makePreviewContainer()
+            modelContainerManager.injectPreviewContainer(container)
+        }
     }
 }
 
