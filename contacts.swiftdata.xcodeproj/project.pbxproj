@@ -31,7 +31,7 @@
 		B59779B22EB93B9B00712D85 /* RestrictedWordStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59779672EB93B9B00712D85 /* RestrictedWordStore.swift */; };
 		B59779B32EB93B9B00712D85 /* SettingsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59779682EB93B9B00712D85 /* SettingsStore.swift */; };
 		B59779B42EB93B9B00712D85 /* ListableStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B597796A2EB93B9B00712D85 /* ListableStore.swift */; };
-		B59779B52EB93B9B00712D85 /* RepositoryConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = B597796B2EB93B9B00712D85 /* RepositoryConfig.swift */; };
+		B59779B52EB93B9B00712D85 /* ModelContainerConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = B597796B2EB93B9B00712D85 /* ModelContainerConfig.swift */; };
 		B59779B62EB93B9B00712D85 /* DebugLogging.swift in Sources */ = {isa = PBXBuildFile; fileRef = B597796D2EB93B9B00712D85 /* DebugLogging.swift */; };
 		B59779B72EB93B9B00712D85 /* DeviceStamping.swift in Sources */ = {isa = PBXBuildFile; fileRef = B597796E2EB93B9B00712D85 /* DeviceStamping.swift */; };
 		B59779B82EB93B9B00712D85 /* UserAccountViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59779702EB93B9B00712D85 /* UserAccountViewModel.swift */; };
@@ -68,6 +68,7 @@
 		B59779E52F56789000712D85 /* PollingViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59779E42F56789000712D85 /* PollingViewModifier.swift */; };
 		B59779D62EB93B9B00712D85 /* NavigationItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59779952EB93B9B00712D85 /* NavigationItem.swift */; };
 		B59779D72EB93B9B00712D85 /* ViewConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59779962EB93B9B00712D85 /* ViewConfig.swift */; };
+		B59779E62F5B9A0000712D85 /* ViewHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59779E72F5B9A0000712D85 /* ViewHelpers.swift */; };
 		B59779D82EB93B9B00712D85 /* LaunchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B597799B2EB93B9B00712D85 /* LaunchView.swift */; };
 		B59779D92EB93B9B00712D85 /* templateApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B597799D2EB93B9B00712D85 /* templateApp.swift */; };
 		B59779DA2EB93B9B00712D85 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B59779982EB93B9B00712D85 /* Assets.xcassets */; };
@@ -116,7 +117,7 @@
 		B59779672EB93B9B00712D85 /* RestrictedWordStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestrictedWordStore.swift; sourceTree = "<group>"; };
 		B59779682EB93B9B00712D85 /* SettingsStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsStore.swift; sourceTree = "<group>"; };
 		B597796A2EB93B9B00712D85 /* ListableStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListableStore.swift; sourceTree = "<group>"; };
-		B597796B2EB93B9B00712D85 /* RepositoryConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepositoryConfig.swift; sourceTree = "<group>"; };
+		B597796B2EB93B9B00712D85 /* ModelContainerConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelContainerConfig.swift; sourceTree = "<group>"; };
 		B597796D2EB93B9B00712D85 /* DebugLogging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugLogging.swift; sourceTree = "<group>"; };
 		B597796E2EB93B9B00712D85 /* DeviceStamping.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceStamping.swift; sourceTree = "<group>"; };
 		B59779702EB93B9B00712D85 /* UserAccountViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAccountViewModel.swift; sourceTree = "<group>"; };
@@ -153,6 +154,7 @@
 		B59779E42F56789000712D85 /* PollingViewModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PollingViewModifier.swift; sourceTree = "<group>"; };
 		B59779952EB93B9B00712D85 /* NavigationItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationItem.swift; sourceTree = "<group>"; };
 		B59779962EB93B9B00712D85 /* ViewConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewConfig.swift; sourceTree = "<group>"; };
+		B59779E72F5B9A0000712D85 /* ViewHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewHelpers.swift; sourceTree = "<group>"; };
 		B59779982EB93B9B00712D85 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B59779992EB93B9B00712D85 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		B597799A2EB93B9B00712D85 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -257,7 +259,7 @@
 			isa = PBXGroup;
 			children = (
 				B597796A2EB93B9B00712D85 /* ListableStore.swift */,
-				B597796B2EB93B9B00712D85 /* RepositoryConfig.swift */,
+				B597796B2EB93B9B00712D85 /* ModelContainerConfig.swift */,
 			);
 			path = RepositorySupport;
 			sourceTree = "<group>";
@@ -365,6 +367,7 @@
 				B59779E42F56789000712D85 /* PollingViewModifier.swift */,
 				B59779952EB93B9B00712D85 /* NavigationItem.swift */,
 				B59779962EB93B9B00712D85 /* ViewConfig.swift */,
+			B59779E72F5B9A0000712D85 /* ViewHelpers.swift */,
 			);
 			path = ViewSupport;
 			sourceTree = "<group>";
@@ -530,7 +533,7 @@
 				B59779B22EB93B9B00712D85 /* RestrictedWordStore.swift in Sources */,
 				B59779B32EB93B9B00712D85 /* SettingsStore.swift in Sources */,
 				B59779B42EB93B9B00712D85 /* ListableStore.swift in Sources */,
-				B59779B52EB93B9B00712D85 /* RepositoryConfig.swift in Sources */,
+				B59779B52EB93B9B00712D85 /* ModelContainerConfig.swift in Sources */,
 				B59779B62EB93B9B00712D85 /* DebugLogging.swift in Sources */,
 				B59779B72EB93B9B00712D85 /* DeviceStamping.swift in Sources */,
 				B59779B82EB93B9B00712D85 /* UserAccountViewModel.swift in Sources */,
@@ -568,6 +571,7 @@
 				B59779E52F56789000712D85 /* PollingViewModifier.swift in Sources */,
 				B59779D62EB93B9B00712D85 /* NavigationItem.swift in Sources */,
 				B59779D72EB93B9B00712D85 /* ViewConfig.swift in Sources */,
+				B59779E62F5B9A0000712D85 /* ViewHelpers.swift in Sources */,
 				B59779D82EB93B9B00712D85 /* LaunchView.swift in Sources */,
 				B59779D92EB93B9B00712D85 /* templateApp.swift in Sources */,
 				B59779DF2EB98A9900712D85 /* MainTabView.swift in Sources */,

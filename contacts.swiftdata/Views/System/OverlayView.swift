@@ -2,7 +2,8 @@
 //  OverlayView.swift
 //
 //  Template file created by Pete Maiser, Fast Five Products LLC, on 10/29/25.
-//      Template v0.2.4 Fast Five Products LLC's public AGPL template.
+//  Modified by Pete Maiser, Fast Five Products LLC, on 2/11/26.
+//      Template v0.2.6 (updated) — Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025 Fast Five Products LLC. All rights reserved.
 //
@@ -21,6 +22,7 @@ import SwiftUI
 
 enum OverlayState: Equatable {
     case splash
+    case brand
     case loading
     case custom
     case hidden
@@ -49,28 +51,45 @@ struct OverlayView: View {
         }
         .styledView()
     }
-    
+
     @ViewBuilder
     func overlayContent(for overlay: OverlayManager.OverlayItem) -> some View {
         switch overlay.state {
         case .splash:
-            SplashView()
-                .font(.title)
-                .fontWeight(.semibold)
-                .foregroundStyle(ViewConfig.fgColor)
-        case .loading:
-            VStack {
-                ViewConfig.SpashTextView()
+            GeometryReader { geo in
+                SplashView()
                     .font(.title)
                     .fontWeight(.semibold)
-                    .foregroundStyle(.clear)     // preserve layout between splash and loading with clear text
+                    .foregroundStyle(ViewConfig.fgColor)
+                    .padding(.horizontal)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+                    .ignoresSafeArea()
+                    .id(geo.size)   // forces rebuild when size changes (e.g. iPad rotation)
+            }
+        case .brand:
+            GeometryReader { geo in
+                BrandTextView()
+                    .font(.title)
+                    .fontWeight(.semibold)
+                    .foregroundStyle(ViewConfig.fgColor)
+                    .padding(.horizontal)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+                    .ignoresSafeArea()
+                    .id(geo.size)   // forces rebuild when size changes (e.g. iPad rotation)
+            }
+        case .loading:
+            VStack {
+                BrandTextView()
+                    .font(.title)
+                    .fontWeight(.semibold)
+                    .foregroundStyle(.clear)     // invisible; preserves layout so loading indicator sits below brand center
                 Text("\n")
                     .font(.title)
                     .fontWeight(.semibold)
                 HStack(spacing: 8) {
                     ProgressView()
                         .progressViewStyle(CircularProgressViewStyle(tint: ViewConfig.fgColor))
-                    Text("Loading local data…")
+                    Text("loading data…")
                         .foregroundStyle(ViewConfig.fgColor)
                 }
                     .font(.title3)
@@ -82,18 +101,6 @@ struct OverlayView: View {
             if let custom = overlay.view { custom }
         case .hidden:
             EmptyView()
-        }
-    }
-}
-
-struct SplashView: View {
-    var body: some View {
-        GeometryReader { geo in
-            ViewConfig.SpashTextView()
-                .padding(.horizontal)
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
-                .ignoresSafeArea()
-                .id(geo.size)   // forces rebuid when size changes
         }
     }
 }
@@ -159,6 +166,21 @@ final class OverlayManager: ObservableObject {
         OverlayView()
     }
 }
+#Preview("Brand") {
+    let manager = OverlayManager.shared
+    manager.overlays = [
+        OverlayManager.OverlayItem(
+            state: .brand,
+            view: nil,
+            animation: .none,
+            zIndex: 10
+        )
+    ]
+    return ZStack {
+        ViewConfig.brandColor.ignoresSafeArea()
+        OverlayView()
+    }
+}
 #Preview("Loading") {
     let manager = OverlayManager.shared
     manager.overlays = [
@@ -174,13 +196,13 @@ final class OverlayManager: ObservableObject {
         OverlayView()
     }
 }
-#Preview("Multiple") {
+#Preview("Brand + Loading") {
     let manager = OverlayManager.shared
     manager.overlays = [
         OverlayManager.OverlayItem(
-            state: .splash,
+            state: .brand,
             view: nil,
-            animation: .slow,
+            animation: .none,
             zIndex: 10
         ),
         OverlayManager.OverlayItem(
@@ -188,6 +210,33 @@ final class OverlayManager: ObservableObject {
             view: nil,
             animation: .none,
             zIndex: 20
+        )
+    ]
+    return ZStack {
+        ViewConfig.brandColor.ignoresSafeArea()
+        OverlayView()
+    }
+}
+#Preview("Splash + Brand + Loading") {
+    let manager = OverlayManager.shared
+    manager.overlays = [
+        OverlayManager.OverlayItem(
+            state: .splash,
+            view: nil,
+            animation: .none,
+            zIndex: 10
+        ),
+        OverlayManager.OverlayItem(
+            state: .brand,
+            view: nil,
+            animation: .none,
+            zIndex: 20
+        ),
+        OverlayManager.OverlayItem(
+            state: .loading,
+            view: nil,
+            animation: .none,
+            zIndex: 30
         )
     ]
     return ZStack {

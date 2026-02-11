@@ -3,7 +3,8 @@
 //
 //  Template created by Pete Maiser, July 2024 through May 2025
 //  Split from MenuView ~restored by Pete Maiser, Fast Five Products LLC, on 10/23/25.
-//      Template v0.2.4 (updated) Fast Five Products LLC's public AGPL template.
+//  Modified by Pete Maiser, Fast Five Products LLC, on 2/11/26.
+//      Template v0.2.6 (updated) — Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025 Fast Five Products LLC. All rights reserved.
 //
@@ -23,28 +24,29 @@ import SwiftUI
 struct HomeView: View {
     @ObservedObject var currentUserService: CurrentUserService
     @ObservedObject var announcementStore: AnnouncementStore
-      
+
     var body: some View {
         GeometryReader { geo in
             ZStack(alignment: .top) {
-                // MARK: Background
-                ConditionalVideoBackgroundView()
                 
-                // MARK: Announcements
+                // Background
+                ConditionalVideoBackgroundView()
+
+                // Announcements; manufacture Support and Sign-in 'announcements' of appropriate
                 VStack {
                     Spacer()
                         .frame(height: geo.size.height * ViewConfig.topHalfSpaceRatio + 20)
-                    
+
                     VStackBox() {
                         ViewThatFits(in: .vertical) {
                             VStack(alignment: .leading, spacing: 8) {
                                 announcementStore.list.count > 0 ? StoreListView(store: announcementStore) : nil
                                 SupportLinkView(currentUserService: currentUserService,
                                                 showDivider: announcementStore.list.count > 0 ? true : false,
-                                                onNavigate: { OverlayManager.shared.hide(.splash) }
+                                                onNavigate: { OverlayManager.shared.hide(.brand) }
                                 )
                                 SignUpInLinkView(currentUserService: currentUserService,
-                                                 onNavigate: { OverlayManager.shared.hide(.splash) }
+                                                 onNavigate: { OverlayManager.shared.hide(.brand) }
                                 )
                             }
                             ScrollView {
@@ -52,10 +54,10 @@ struct HomeView: View {
                                     announcementStore.list.count > 0 ? StoreListView(store: announcementStore) : nil
                                     SupportLinkView(currentUserService: currentUserService,
                                                     showDivider: announcementStore.list.count > 0 ? true : false,
-                                                    onNavigate: { OverlayManager.shared.hide(.splash) }
+                                                    onNavigate: { OverlayManager.shared.hide(.brand) }
                                     )
                                     SignUpInLinkView(currentUserService: currentUserService,
-                                                     onNavigate: { OverlayManager.shared.hide(.splash) }
+                                                     onNavigate: { OverlayManager.shared.hide(.brand) }
                                     )
                                 }
                                 .padding(.bottom, 8)
@@ -83,19 +85,19 @@ struct HomeView: View {
             currentUserService: cuts,
             announcementStore: AnnouncementStore.testLoaded()
         )
-        .onAppear{ OverlayManager.shared.show(.splash) }
+        .onAppear{ OverlayManager.shared.show(.brand) }
         OverlayView()
     }
 }
 #Preview ("test-data signed-in") {
     let cuts = CurrentUserTestService.sharedSignedIn
     ZStack {
-        MainViewPreviewWrapper(currentUserService: cuts) {
+        NavigationStack {
             HomeView(
                 currentUserService: cuts,
                 announcementStore: AnnouncementStore.testLoaded()
             )
-            .onAppear{ OverlayManager.shared.show(.splash) }
+            .onAppear{ OverlayManager.shared.show(.brand) }
         }
         OverlayView()
     }
@@ -103,12 +105,12 @@ struct HomeView: View {
 #Preview ("tiny announcement signed-out") {
     let cuts = CurrentUserTestService.sharedSignedOut
     ZStack {
-        MainViewPreviewWrapper(currentUserService: cuts) {
+        NavigationStack {
             HomeView(
                 currentUserService: cuts,
                 announcementStore: AnnouncementStore.testTiny()
             )
-            .onAppear{ OverlayManager.shared.show(.splash) }
+            .onAppear{ OverlayManager.shared.show(.brand) }
         }
         OverlayView()
     }
@@ -116,12 +118,12 @@ struct HomeView: View {
 #Preview ("no announcements") {
     let cuts = CurrentUserTestService.sharedSignedIn
     ZStack {
-        MainViewPreviewWrapper(currentUserService: cuts) {
+        NavigationStack {
             HomeView(
                 currentUserService: cuts,
                 announcementStore: AnnouncementStore()
             )
-            .onAppear{ OverlayManager.shared.show(.splash) }
+            .onAppear{ OverlayManager.shared.show(.brand) }
         }
         OverlayView()
     }

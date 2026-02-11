@@ -3,7 +3,8 @@
 //
 //  Template created by Pete Maiser, July 2024 through May 2025
 //  Renamed from HomeView by Pete Maiser, Fast Five Products LLC, on 10/23/25.
-//      Template v0.2.5 (updated) — Fast Five Products LLC's public AGPL template.
+//  Modified by Pete Maiser, Fast Five Products LLC, on 2/11/26.
+//      Template v0.2.6 (updated) — Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025 Fast Five Products LLC. All rights reserved.
 //
@@ -22,21 +23,21 @@ import SwiftUI
 
 struct MainMenuView: View {
     @Environment(\.scenePhase) private var scenePhase
-    
+
     @ObservedObject var currentUserService: CurrentUserService
     @ObservedObject var announcementStore: AnnouncementStore
     @ObservedObject var publicCommentStore: PublicCommentStore
     @ObservedObject var privateMessageStore: PrivateMessageStore
-    
+
     @State private var showMenu = false
     @State private var selectedMenuItem: NavigationItem?
-    
+
     var body: some View {
         NavigationStack {
             VStack(alignment: .leading, spacing: 24) {
                 if selectedMenuItem == nil {
                     HomeView(currentUserService: currentUserService, announcementStore: announcementStore)
-                        .onAppear{ OverlayManager.shared.show(.splash, animation: OverlayAnimation.fast) }
+                        .onAppear{ OverlayManager.shared.show(.brand, animation: .fast) }
                 } else {
                     self.destinationView
                 }
@@ -61,7 +62,7 @@ extension MainMenuView {
         ToolbarItem(placement: .navigationBarLeading) {
             self.menuView
         }
-        
+
         if currentUserService.isSignedIn
 //          ,publicCommentStore.list.count > 0    // uncomment this to have comments display only if there already is one
           ,self.selectedMenuItem != .comments
@@ -71,7 +72,7 @@ extension MainMenuView {
                     CommentsMainView(
                         currentUserService: currentUserService,
                         store: publicCommentStore
-                    ).onAppear { OverlayManager.shared.hide(.splash) })
+                    ).onAppear { OverlayManager.shared.hide(.brand) })
                 {
                     Label("Comments", systemImage: "exclamationmark.bubble")
                         .foregroundStyle(.primary)
@@ -90,7 +91,7 @@ extension MainMenuView {
                     MessagesMainView(
                         currentUserService: currentUserService,
                         store: privateMessageStore
-                    ).onAppear { OverlayManager.shared.hide(.splash) })
+                    ).onAppear { OverlayManager.shared.hide(.brand) })
                 {
                     Label("Messages", systemImage: "bubble.left.and.bubble.right")
                         .foregroundStyle(.primary)
@@ -98,13 +99,13 @@ extension MainMenuView {
                 .buttonStyle(BorderlessButtonStyle())
             }
         }
-        
+
         if self.selectedMenuItem != .profile {
             ToolbarItem(placement: .navigationBarTrailing) {
                 SignUpInLinkView(
                     currentUserService: currentUserService,
                     inToolbar: true,
-                    onNavigate: { OverlayManager.shared.hide(.splash) }
+                    onNavigate: { OverlayManager.shared.hide(.brand) }
                 )
             }
         }
@@ -142,7 +143,7 @@ extension MainMenuView {
             Label("Menu", systemImage: "line.3.horizontal")
         }
     }
-    
+
     @ViewBuilder
     func menuLabel(_ item: NavigationItem) -> some View {
         if item == .profile {
@@ -151,22 +152,22 @@ extension MainMenuView {
             Label(item.label, systemImage: item.systemImage)
         }
     }
-    
+
     @ViewBuilder
     var destinationView: some View {
         switch self.selectedMenuItem {
         case .home:
             HomeView(currentUserService: currentUserService, announcementStore: announcementStore)
-                .onAppear{ OverlayManager.shared.show(.splash, animation: OverlayAnimation.fast) }
-            
+                .onAppear{ OverlayManager.shared.show(.brand, animation: .fast) }
+
         case .contacts:
             RequiresSignInView(currentUserService: currentUserService) {
                 ContactListView(currentUserService: currentUserService)
             }
             .padding(.vertical)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-            .onAppear { OverlayManager.shared.hide(.splash) }
-            
+            .onAppear { OverlayManager.shared.hide(.brand) }
+
         case .announcements:
             VStackBox {
                 StoreListView(store: announcementStore)
@@ -176,15 +177,15 @@ extension MainMenuView {
             }
             .padding(.vertical)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-            .onAppear { OverlayManager.shared.hide(.splash) }
-                        
+            .onAppear { OverlayManager.shared.hide(.brand) }
+
         case .profile:
             UserAccountView(
                 viewModel: UserAccountViewModel(),
                 currentUserService: currentUserService
             )
-            .onAppear { OverlayManager.shared.hide(.splash) }
-            
+            .onAppear { OverlayManager.shared.hide(.brand) }
+
         case .messages:
             RequiresSignInView(currentUserService: currentUserService) {
                 MessagesMainView(
@@ -192,7 +193,7 @@ extension MainMenuView {
                     store: privateMessageStore
                 )
             }
-            .onAppear { OverlayManager.shared.hide(.splash) }
+            .onAppear { OverlayManager.shared.hide(.brand) }
 
         case .comments:
             RequiresSignInView(currentUserService: currentUserService) {
@@ -201,23 +202,23 @@ extension MainMenuView {
                     store: publicCommentStore
                 )
             }
-            .onAppear { OverlayManager.shared.hide(.splash) }
-            
+            .onAppear { OverlayManager.shared.hide(.brand) }
+
         case .activity:
             ActivityLogView()
-                .onAppear { OverlayManager.shared.hide(.splash) }
-            
+                .onAppear { OverlayManager.shared.hide(.brand) }
+
         case .support:
             SupportView()
-                .onAppear { OverlayManager.shared.hide(.splash) }
-            
+                .onAppear { OverlayManager.shared.hide(.brand) }
+
         case .settings:
             SettingsView()
-                .onAppear { OverlayManager.shared.hide(.splash) }
-            
+                .onAppear { OverlayManager.shared.hide(.brand) }
+
         case .none:
             EmptyView()
-                .onAppear { OverlayManager.shared.hide(.splash) }
+                .onAppear { OverlayManager.shared.hide(.brand) }
         }
     }
 }
@@ -225,36 +226,37 @@ extension MainMenuView {
 
 #if DEBUG
 #Preview ("test-data signed-in") {
-    let currentUserService: CurrentUserService = CurrentUserTestService.sharedSignedIn
-    let modelContainerManager = ModelContainerManager(currentUserService: currentUserService)
-    let container = modelContainerManager.makePreviewContainer()
-    modelContainerManager.injectPreviewContainer(container)
-
-    return MainMenuView(
-        currentUserService: currentUserService,
-        announcementStore: AnnouncementStore.testLoaded(),
-//        announcementStore: AnnouncementStore.testTiny(),
-        publicCommentStore: PublicCommentStore.testLoaded(),
-        privateMessageStore: PrivateMessageStore.testLoaded()
-    )
-    .modelContainer(container)
+    return ZStack {
+        MainMenuView(
+            currentUserService: CurrentUserTestService.sharedSignedIn,
+            announcementStore: AnnouncementStore.testLoaded(),
+//            announcementStore: AnnouncementStore.testTiny(),
+            publicCommentStore: PublicCommentStore.testLoaded(),
+            privateMessageStore: PrivateMessageStore.testLoaded()
+        )
+        OverlayView()
+    }
 }
 #Preview ("no-data and signed-in") {
-    return MainMenuView(
-        currentUserService: CurrentUserTestService.sharedSignedIn,
-        announcementStore: AnnouncementStore(),
-        publicCommentStore: PublicCommentStore(),
-        privateMessageStore: PrivateMessageStore()
-    )
-    .modelContainer(ModelContainerManager.emptyContainer)
+    return ZStack {
+        MainMenuView(
+            currentUserService: CurrentUserTestService.sharedSignedIn,
+            announcementStore: AnnouncementStore(),
+            publicCommentStore: PublicCommentStore(),
+            privateMessageStore: PrivateMessageStore()
+        )
+        OverlayView()
+    }
 }
 #Preview ("no-data and signed-out") {
-    return MainMenuView(
-        currentUserService: CurrentUserTestService.sharedSignedOut,
-        announcementStore: AnnouncementStore(),
-        publicCommentStore: PublicCommentStore(),
-        privateMessageStore: PrivateMessageStore()
-    )
-    .modelContainer(ModelContainerManager.emptyContainer)
+    return ZStack {
+        MainMenuView(
+            currentUserService: CurrentUserTestService.sharedSignedOut,
+            announcementStore: AnnouncementStore(),
+            publicCommentStore: PublicCommentStore(),
+            privateMessageStore: PrivateMessageStore()
+        )
+        OverlayView()
+    }
 }
 #endif

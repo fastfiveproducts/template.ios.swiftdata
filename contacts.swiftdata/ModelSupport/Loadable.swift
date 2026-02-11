@@ -2,7 +2,8 @@
 //  Loadable.swift
 //
 //  Template created by Pete Maiser, July 2024 through May 2025
-//      Template v0.1.1 Fast Five Products LLC's public AGPL template.
+//  Modified by Pete Maiser, Fast Five Products LLC, on 2/9/26.
+//      Template v0.2.6 (updated) — Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025 Fast Five Products LLC. All rights reserved.
 //
@@ -97,7 +98,7 @@ extension Loadable {
         switch self {
             case .loading:
                 try await Task.sleep(nanoseconds: 5 * 1_000_000_000)
-                fatalError("Expeced Error: timeout exceeded for “loading” case preview")
+                fatalError("Expected Error: timeout exceeded for “loading” case preview")
             case let .error(error):
                 throw error
             case let .loaded(value):
