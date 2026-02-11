@@ -150,14 +150,14 @@ final class VideoBackgroundPlayer: ObservableObject, DebugPrintable {
 #Preview("Plain") {
     ZStack {
         VideoBackgroundView()
-            .onAppear{ OverlayManager.shared.show(.splash) }
+            .onAppear{ OverlayManager.shared.show(.brand) }
         OverlayView()
     }
 }
 #Preview("Tab Safe Area") {
     ZStack {
         VideoBackgroundView()
-            .onAppear{ OverlayManager.shared.show(.splash) }
+            .onAppear{ OverlayManager.shared.show(.brand) }
         OverlayView()
     }
     .environment(\.tabSafeAreaBackground, true)
