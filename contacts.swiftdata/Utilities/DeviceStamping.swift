@@ -22,9 +22,10 @@ import Foundation
 import UIKit
 
 #if DEBUG
-var deviceIdentifierstampLogged: Bool = false
+nonisolated(unsafe) var deviceIdentifierstampLogged: Bool = false
 #endif
 
+@MainActor
 func deviceIdentifierstamp() -> String {
     
     // DEPENDENCY: this function accesses the Device ID; this should be considered in Privacy declarations and/or statements

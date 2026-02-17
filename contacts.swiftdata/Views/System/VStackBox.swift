@@ -130,7 +130,7 @@ enum VStackBoxWidthMode {
         Text("Hello, World!")
     }
 }
-@ViewBuilder
+@MainActor @ViewBuilder
 func previewContent() -> some View {
     Text("Hello World!")
     NavigationLink {

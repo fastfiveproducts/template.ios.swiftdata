@@ -24,6 +24,7 @@ struct SupportLinkView: View {
     @ObservedObject var currentUserService: CurrentUserService
     
     var inToolbar: Bool = false
+    var inList: Bool = false
     var showDivider: Bool = true
     var onNavigate: (() -> Void)? = nil
     
@@ -46,7 +47,23 @@ struct SupportLinkView: View {
     }
     
     var body: some View {
-        if inToolbar {
+        if inList {
+
+            ZStack {
+                NavigationLink {
+                    SupportView()
+                        .onAppear { onNavigate?() }
+                } label: { EmptyView() }
+                .opacity(0)
+                HStack {
+                    Spacer()
+                    Text(leadingText)
+                    Spacer()
+                }
+                .foregroundStyle(ViewConfig.linkColor)
+            }
+
+        } else if inToolbar {
             
             NavigationLink {
                 SupportView()
@@ -130,6 +147,16 @@ struct SupportLinkView: View {
             }
         }
         Spacer()
+    }
+}
+#Preview ("Form-List signed-out") {
+    let currentUserService = CurrentUserTestService.sharedSignedOut
+    NavigationStack {
+        Form {
+            Section(header: Text("Form-List Preview")) {
+                SupportLinkView(currentUserService: currentUserService, inList: true)
+            }
+        }
     }
 }
 #endif

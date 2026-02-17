@@ -20,7 +20,7 @@
 
 import Foundation
 import Combine
-import FirebaseAuth
+@preconcurrency import FirebaseAuth
 import FirebaseDataConnect
 import DefaultConnector
 
@@ -276,7 +276,7 @@ extension CurrentUserService {
         do {
             UserDefaults.standard.set(email, forKey: "emailForSignIn")
             let actionCodeSettings = ActionCodeSettings()
-            actionCodeSettings.url = URL(string: "https://placeholder.page.link/ios")
+            actionCodeSettings.url = URL(string: "https://placeholder.page.link/ios")  // TODO: replace with your app's Dynamic Link URL
             actionCodeSettings.handleCodeInApp = true
             try await auth.sendSignInLink(toEmail: email, actionCodeSettings: actionCodeSettings)
         } catch {
@@ -568,7 +568,6 @@ class CurrentUserTestService: CurrentUserService {
 
     private func loadBlankUser() {
         self.user = User.blankUser
-        user = User.testObject
         isCreatingUser = false
         isSigningIn = false
         isSignedIn = false

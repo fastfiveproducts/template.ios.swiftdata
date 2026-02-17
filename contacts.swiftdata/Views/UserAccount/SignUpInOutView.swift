@@ -57,14 +57,10 @@ struct SignUpInOutView: View, DebugPrintable {
                     .labeledContentStyle(TopLabeledContentStyle())
                 
                 // display name
-                // TODO:  (user profile) code below just hides displayName
-                // this is a work-around until the user profile fetch is more robust
-                if !currentUserService.user.account.displayName.isEmpty {
-                    LabeledContent {
-                        Text(currentUserService.user.account.displayName)
-                    } label: { Text("display name:") }
-                        .labeledContentStyle(TopLabeledContentStyle())
-                }
+                LabeledContent {
+                    Text(currentUserService.user.account.displayName)
+                } label: { Text("display name:") }
+                    .labeledContentStyle(TopLabeledContentStyle())
                 
                 // action
                 Button(action: toggleSignUpInOut) {
@@ -228,11 +224,11 @@ private extension SignUpInOutView {
             Task {
                 do {
                     try await viewModel.resetPasswordWithService(currentUserService)
+                    showResetConfirmation = true
                 } catch {
                     debugprint("🛑 ERROR:  (View) Error requesting password reset: \(error)")
                     viewModel.error = error
                 }
-                showResetConfirmation = true
             }
         }
     }

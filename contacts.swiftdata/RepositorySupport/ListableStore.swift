@@ -59,8 +59,9 @@ class ListableStore<T: Listable>: SignInOutObserver  {
     
     // Startup
     func initialize() {
-        // Skip if already loaded
+        // Skip if already loaded or already loading
         if case .loaded = list { return }
+        if case .loading = list { return }
 
         // 1️⃣ Try cache first
         if let cacheFilename,

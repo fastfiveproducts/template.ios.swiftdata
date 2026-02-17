@@ -24,6 +24,7 @@ struct SignUpInLinkView: View {
     @ObservedObject var currentUserService: CurrentUserService
     
     var inToolbar: Bool = false
+    var inList: Bool = false
     var showDivider: Bool = true
     var onNavigate: (() -> Void)? = nil
     
@@ -46,10 +47,30 @@ struct SignUpInLinkView: View {
     }
     
     var body: some View {
-        if inToolbar || !currentUserService.isSignedIn {
-            
+        if inList, !currentUserService.isSignedIn {
+
+            ZStack {
+                NavigationLink {
+                    UserAccountView(
+                        viewModel: UserAccountViewModel(),
+                        currentUserService: currentUserService)
+                    .onAppear { onNavigate?() }
+                } label: { EmptyView() }
+                .opacity(0)
+                HStack {
+                    Spacer()
+                    Text(leadingText)
+                    Image(systemName: NavigationItem.profile.systemImage)
+                    Text(trailingText)
+                    Spacer()
+                }
+                .foregroundStyle(ViewConfig.linkColor)
+            }
+
+        } else if inToolbar || !currentUserService.isSignedIn {
+
             if !inToolbar, !currentUserService.isSignedIn, showDivider { Divider() }
-            
+
             NavigationLink {
                 UserAccountView(
                     viewModel: UserAccountViewModel(),
@@ -114,6 +135,16 @@ struct SignUpInLinkView: View {
             }
         }
         Spacer()
+    }
+}
+#Preview ("Form-List signed-out") {
+    let currentUserService = CurrentUserTestService.sharedSignedOut
+    NavigationStack {
+        Form {
+            Section(header: Text("Form-List Preview")) {
+                SignUpInLinkView(currentUserService: currentUserService, inList: true)
+            }
+        }
     }
 }
 #endif

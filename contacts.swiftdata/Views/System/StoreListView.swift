@@ -68,7 +68,7 @@ struct StoreListView<T: Listable, Content: View>: View {
         case let .loaded(objects):
             if objects.isEmpty {
                 Text("\(T.typeDescription)s: not found, try relaunching the app")
-                    .foregroundStyle(ViewConfig.fgColor)    // danger:  customization for streems
+                    .foregroundStyle(.secondary)
                     .padding(.horizontal)
             } else {
                 
@@ -77,7 +77,7 @@ struct StoreListView<T: Listable, Content: View>: View {
                 
                 if filteredObjects.isEmpty {
                     Text("No \(T.typeDescription)s match the filter.")
-                        .foregroundStyle(ViewConfig.bgColor)    // danger:  customization for streems
+                        .foregroundStyle(.secondary)
                 } else {
                     ForEach(filteredObjects.indices, id: \.self) { index in
                         let object = filteredObjects[index]
@@ -86,7 +86,7 @@ struct StoreListView<T: Listable, Content: View>: View {
                             if showBullets {
                                 Text("•")
                                     .font(.headline)
-                                    .foregroundStyle(ViewConfig.bgColor)    // danger:  customization for streems
+                                    .foregroundStyle(.secondary)
                             }
                             
                             Group {
@@ -112,7 +112,7 @@ struct StoreListView<T: Listable, Content: View>: View {
 
         case .none:
             Text("\(T.typeDescription)s: nothing here")
-                .foregroundStyle(ViewConfig.fgColor)    // danger:  customization for streems
+                .foregroundStyle(.secondary)
         }
     }
 }

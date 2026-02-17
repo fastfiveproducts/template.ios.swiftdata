@@ -46,7 +46,7 @@ struct TopLabeledContentStyle: LabeledContentStyle {
 
 // environment plumbing for the trailing accessory
 private struct LabeledContentTrailingKey: EnvironmentKey {
-    static let defaultValue: AnyView? = nil
+    nonisolated(unsafe) static let defaultValue: AnyView? = nil
 }
 
 extension EnvironmentValues {

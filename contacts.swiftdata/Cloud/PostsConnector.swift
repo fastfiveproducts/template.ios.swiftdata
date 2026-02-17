@@ -27,7 +27,9 @@ fileprivate let defaultFetchLimit: Int = 100
 
 // Services:
 struct PostsConnector {
-    
+
+    // MARK: - Public Comments
+
     func fetchPublicComments(limit: Int = defaultFetchLimit) async throws -> [PublicComment] {
         var comments: [PublicComment] = []
         let queryRef = DataConnect.defaultConnector.listPublicCommentsQuery.ref(limit: limit)
@@ -39,7 +41,9 @@ struct PostsConnector {
         }
         return comments
     }
-    
+
+    // MARK: - Private Messages
+
     func fetchMyPrivateMessages(limit: Int = defaultFetchLimit) async throws -> [PrivateMessage] {
         var messages: [PrivateMessage] = []
         let queryRef = DataConnect.defaultConnector.getMyPrivateMessagesQuery.ref(limit: limit)
@@ -51,7 +55,9 @@ struct PostsConnector {
         }
         return messages
     }
-    
+
+    // MARK: - References
+
     func fetchPublicCommentReferences(for commentId: UUID, limit: Int = defaultFetchLimit) async throws -> [PostReference] {
         var references: [PostReference] = []
         let queryRef = DataConnect.defaultConnector.getPublicCommentReferencesQuery.ref(commentId: commentId, limit: limit)
@@ -87,7 +93,9 @@ struct PostsConnector {
         }
         return references
     }
-    
+
+    // MARK: - Create Mutations
+
     func createPublicComment(_ comment: PostCandidate) async throws -> PublicComment {
         guard comment.isValid else { throw UpsertDataError.invalidFunctionInput }
         let operationResult = try await DataConnect.defaultConnector.createPublicCommentMutation.execute(
@@ -127,7 +135,9 @@ struct PostsConnector {
         }
         return localMessage
     }
-                         
+
+    // MARK: - Reference Mutations
+
     func createPublicCommentReference(commentId: UUID, referenceId: UUID) async throws {
         let _ = try await DataConnect.defaultConnector.createPublicCommentReferenceMutation.execute(
                     publicCommentId: commentId,
@@ -142,7 +152,9 @@ struct PostsConnector {
             referenceId: referenceId
         )
     }
-    
+
+    // MARK: - Status Mutation
+
     func createPrivateMessageStatus(messageId: UUID, status: MessageStatusCode) async throws {
         let _ = try await DataConnect.defaultConnector.createPrivateMessageStatusMutation.execute(
             privateMessageId: messageId,

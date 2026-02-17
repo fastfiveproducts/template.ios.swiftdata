@@ -41,11 +41,6 @@ class SignInOutObserver: ObservableObject, DebugPrintable {
          }
     }
     
-    deinit {
-        signInPublisher?.cancel()
-        signOutPublisher?.cancel()
-    }
-    
     // conforming classes override this to perform functions immediately after sign-in
     func postSignInSetup() { }
     

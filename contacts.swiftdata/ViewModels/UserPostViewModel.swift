@@ -44,7 +44,7 @@ class UserPostViewModel<T: Post>: ObservableObject, DebugPrintable {
             isReady = false
         }
         
-        if RestrictedWordStore.shared.containsRestrictedWords(capturedContentText) {
+        else if RestrictedWordStore.shared.containsRestrictedWords(capturedContentText) {
             statusText = "Content matched one or more keywords on our Restricted Text List. Please adjust."
             isReady = false
         }

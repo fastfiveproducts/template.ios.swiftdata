@@ -34,7 +34,7 @@ extension DebugPrintable {
     
     func debugprint(_ str: String) {
         if Self.debug {
-            print("\(String(describing: self.self)) \(str)")
+            print("\(String(describing: type(of: self))) \(str)")
         }
     }
 }

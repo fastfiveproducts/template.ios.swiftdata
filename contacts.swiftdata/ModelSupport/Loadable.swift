@@ -79,6 +79,8 @@ extension Loadable where Value: RangeReplaceableCollection {
 extension Loadable: Equatable where Value: Equatable {
     static func == (lhs: Loadable<Value>, rhs: Loadable<Value>) -> Bool {
         switch (lhs, rhs) {
+            case (.none, .none):
+                return true
             case (.loading, .loading):
                 return true
             case let (.error(error1), .error(error2)):
