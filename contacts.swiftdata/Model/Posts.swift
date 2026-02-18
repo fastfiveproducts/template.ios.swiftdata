@@ -5,7 +5,7 @@
 //  Modified by Pete Maiser, Fast Five Products LLC, on 2/9/26.
 //      Template v0.2.6 (updated) — Fast Five Products LLC's public AGPL template.
 //
-//  Copyright © 2025 Fast Five Products LLC. All rights reserved.
+//  Copyright © 2025, 2026 Fast Five Products LLC. All rights reserved.
 //
 //  This file is part of a project licensed under the GNU Affero General Public License v3.0.
 //  See the LICENSE file at the root of this repository for full terms.
@@ -52,7 +52,6 @@ struct PostCandidate: DebugPrintable {
     }
 }
 
-
 // optional reference to any other object:
 struct PostReference {
     let id: UUID
@@ -62,7 +61,6 @@ struct PostReference {
         id != referenceId
     }
 }
-
 
 // search
 extension Post {
@@ -79,7 +77,6 @@ extension Post {
         return !matches.isEmpty
     }
 }
-
 
 // subtype of "public comment" (one-to-everyone, public)
 // also supports to one-to-everyone with a 'to' for replies or callout

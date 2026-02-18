@@ -5,7 +5,7 @@
 //  Modified by Pete Maiser, Fast Five Products LLC, on 2/3/26.
 //      Template v0.2.5 (updated) — Fast Five Products LLC's public AGPL template.
 //
-//  Copyright © 2025 Fast Five Products LLC. All rights reserved.
+//  Copyright © 2025, 2026 Fast Five Products LLC. All rights reserved.
 //
 //  This file is part of a project licensed under the GNU Affero General Public License v3.0.
 //  See the LICENSE file at the root of this repository for full terms.
@@ -57,14 +57,10 @@ struct SignUpInOutView: View, DebugPrintable {
                     .labeledContentStyle(TopLabeledContentStyle())
                 
                 // display name
-                // TODO:  (user profile) code below just hides displayName
-                // this is a work-around until the user profile fetch is more robust
-                if !currentUserService.user.account.displayName.isEmpty {
-                    LabeledContent {
-                        Text(currentUserService.user.account.displayName)
-                    } label: { Text("display name:") }
-                        .labeledContentStyle(TopLabeledContentStyle())
-                }
+                LabeledContent {
+                    Text(currentUserService.user.account.displayName)
+                } label: { Text("display name:") }
+                    .labeledContentStyle(TopLabeledContentStyle())
                 
                 // action
                 Button(action: toggleSignUpInOut) {
@@ -228,11 +224,11 @@ private extension SignUpInOutView {
             Task {
                 do {
                     try await viewModel.resetPasswordWithService(currentUserService)
+                    showResetConfirmation = true
                 } catch {
                     debugprint("🛑 ERROR:  (View) Error requesting password reset: \(error)")
                     viewModel.error = error
                 }
-                showResetConfirmation = true
             }
         }
     }

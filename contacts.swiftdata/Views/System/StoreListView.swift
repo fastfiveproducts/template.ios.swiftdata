@@ -2,10 +2,10 @@
 //  StoreListView.swift
 //
 //  Template created by Pete Maiser, July 2024 through May 2025
-//  Modified by Pete Maiser, Fast Five Products LLC, on 10/23/25.
-//      Template v0.2.3 (updated) Fast Five Products LLC's public AGPL template.
+//  Modified by Pete Maiser, Fast Five Products LLC, on 2/17/26.
+//      Template v0.2.7 (updated) — Fast Five Products LLC's public AGPL template.
 //
-//  Copyright © 2025 Fast Five Products LLC. All rights reserved.
+//  Copyright © 2025, 2026 Fast Five Products LLC. All rights reserved.
 //
 //  This file is part of a project licensed under the GNU Affero General Public License v3.0.
 //  See the LICENSE file at the root of this repository for full terms.
@@ -68,7 +68,7 @@ struct StoreListView<T: Listable, Content: View>: View {
         case let .loaded(objects):
             if objects.isEmpty {
                 Text("\(T.typeDescription)s: not found, try relaunching the app")
-                    .foregroundStyle(ViewConfig.fgColor)    // danger:  customization for streems
+                    .foregroundStyle(.secondary)
                     .padding(.horizontal)
             } else {
                 
@@ -77,7 +77,7 @@ struct StoreListView<T: Listable, Content: View>: View {
                 
                 if filteredObjects.isEmpty {
                     Text("No \(T.typeDescription)s match the filter.")
-                        .foregroundStyle(ViewConfig.bgColor)    // danger:  customization for streems
+                        .foregroundStyle(.secondary)
                 } else {
                     ForEach(filteredObjects.indices, id: \.self) { index in
                         let object = filteredObjects[index]
@@ -86,7 +86,7 @@ struct StoreListView<T: Listable, Content: View>: View {
                             if showBullets {
                                 Text("•")
                                     .font(.headline)
-                                    .foregroundStyle(ViewConfig.bgColor)    // danger:  customization for streems
+                                    .foregroundStyle(.secondary)
                             }
                             
                             Group {
@@ -112,7 +112,7 @@ struct StoreListView<T: Listable, Content: View>: View {
 
         case .none:
             Text("\(T.typeDescription)s: nothing here")
-                .foregroundStyle(ViewConfig.fgColor)    // danger:  customization for streems
+                .foregroundStyle(.secondary)
         }
     }
 }

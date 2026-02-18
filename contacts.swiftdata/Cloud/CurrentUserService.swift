@@ -2,10 +2,10 @@
 //  CurrentUserService.swift
 //
 //  Template created by Pete Maiser, July 2024 through August 2025
-//  Modified by Pete Maiser, Fast Five Products LLC, on 2/9/26.
-//      Template v0.2.6 (updated) — Fast Five Products LLC's public AGPL template.
+//  Modified by Pete Maiser, Fast Five Products LLC, on 2/17/26.
+//      Template v0.2.7 (updated) — Fast Five Products LLC's public AGPL template.
 //
-//  Copyright © 2025 Fast Five Products LLC. All rights reserved.
+//  Copyright © 2025, 2026 Fast Five Products LLC. All rights reserved.
 //
 //  This file is part of a project licensed under the GNU Affero General Public License v3.0.
 //  See the LICENSE file at the root of this repository for full terms.
@@ -20,7 +20,7 @@
 
 import Foundation
 import Combine
-import FirebaseAuth
+@preconcurrency import FirebaseAuth
 import FirebaseDataConnect
 import DefaultConnector
 
@@ -276,7 +276,7 @@ extension CurrentUserService {
         do {
             UserDefaults.standard.set(email, forKey: "emailForSignIn")
             let actionCodeSettings = ActionCodeSettings()
-            actionCodeSettings.url = URL(string: "https://placeholder.page.link/ios")
+            actionCodeSettings.url = URL(string: "https://placeholder.page.link/ios")  // TODO: replace with your app's Dynamic Link URL
             actionCodeSettings.handleCodeInApp = true
             try await auth.sendSignInLink(toEmail: email, actionCodeSettings: actionCodeSettings)
         } catch {
@@ -568,7 +568,6 @@ class CurrentUserTestService: CurrentUserService {
 
     private func loadBlankUser() {
         self.user = User.blankUser
-        user = User.testObject
         isCreatingUser = false
         isSigningIn = false
         isSignedIn = false

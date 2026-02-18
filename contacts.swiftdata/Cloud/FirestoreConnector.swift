@@ -21,7 +21,6 @@ import Foundation
 import FirebaseFirestore
 
 struct FirestoreConnector: DebugPrintable {
-
     func fetchAnnouncements() async throws -> [Announcement] {
         let today = Date()
         let startOfDay = Calendar.current.startOfDay(for: today)
@@ -45,7 +44,6 @@ struct FirestoreConnector: DebugPrintable {
         }
         return data
     }
-
 }
 
 // Extend Firebase Firestore DocumentReference to wrap it with async/await functionality
