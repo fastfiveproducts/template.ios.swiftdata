@@ -77,16 +77,16 @@ class ListableStore<T: Listable>: SignInOutObserver  {
             debugprint("loaded \(cached.count) \(storeTypeDescription)(s) from cache ✅.")
         }
 
-        // 2️⃣ If nothing cached, use placeholder if available
-        else if T.usePlaceholder {
-            list = .loaded(T.placeholder)
-            debugprint("loaded \(T.placeholder.count) \(storeTypeDescription) placeholder(s) 🪣.")
+        // 2️⃣ If nothing cached, use bundled defaults if available
+        else if T.useBundledDefaults {
+            list = .loaded(T.bundledDefaults)
+            debugprint("loaded \(T.bundledDefaults.count) \(storeTypeDescription) bundled default(s) 🪣.")
         }
 
         // 3️⃣ Fallback to .loading
         else {
             list = .loading
-            debugprint("no cache or placeholder \(storeTypeDescription)s available ⚠️.")
+            debugprint("no cache or bundled default \(storeTypeDescription)s available ⚠️.")
         }
 
         // 4️⃣ Always kick off a background fetch to refresh

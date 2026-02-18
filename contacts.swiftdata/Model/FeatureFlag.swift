@@ -34,8 +34,8 @@ extension FeatureFlag {    // to conform to Listable:
         !code.trimmingCharacters(in: .whitespaces).isEmpty
     }
 
-    static let usePlaceholder = true
-    static var placeholder: [FeatureFlag] { ViewConfig.bundledFeatureFlags }
+    static let useBundledDefaults = true
+    static var bundledDefaults: [FeatureFlag] { ViewConfig.bundledFeatureFlags }
 }
 
 

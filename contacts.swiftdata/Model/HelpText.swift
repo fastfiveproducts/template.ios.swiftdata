@@ -2,8 +2,8 @@
 //  HelpText.swift
 //
 //  Template file created by Pete Maiser, Fast Five Products LLC, in October 2025.
-//  Modified by Pete Maiser, Fast Five Products LLC, on 2/9/26.
-//      Template v0.2.6 (updated) — Fast Five Products LLC's public AGPL template.
+//  Modified by Pete Maiser, Fast Five Products LLC, on 2/18/26.
+//      Template v0.2.8 (updated) — Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025, 2026 Fast Five Products LLC. All rights reserved.
 //
@@ -35,8 +35,8 @@ extension HelpText {    // to conform to Listable:
         !code.trimmingCharacters(in: .whitespaces).isEmpty
     }
     
-    static let usePlaceholder = true
-    static var placeholder: [HelpText] = [
+    static let useBundledDefaults = false
+    static var bundledDefaults: [HelpText] = [
         HelpText(code: "testKey", text: "value of lorem ipsum dolor sit amet, consectetur adipiscing elit."),
         HelpText(code: "testKeyAnother", text: "another value of lorem ipsum")
     ]
@@ -44,5 +44,5 @@ extension HelpText {    // to conform to Listable:
 
 
 #if DEBUG
-extension HelpText { static var testObjects: [HelpText] { placeholder } }
+extension HelpText { static var testObjects: [HelpText] { bundledDefaults } }
 #endif
