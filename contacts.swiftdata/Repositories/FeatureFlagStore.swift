@@ -26,13 +26,21 @@ final class FeatureFlagStore: ListableStore<FeatureFlag> {
     // this is also how to 'get' the singleton store
     static let shared = FeatureFlagStore()
 
-    // no caching — if the server is unreachable, all flags default to false (fail-safe)
+    // no caching — bundled flags (from ViewConfig) are used as the initial placeholder,
+    // then the server fetch replaces them. If the server is unreachable, bundled values persist.
 
     // override ListableStore func below to set how to fetch data into the store
     override var fetchFromService: () async throws -> [FeatureFlag] {
         {
             try await FeatureFlagConnector().fetch()
         }
+    }
+
+    // use bundled flags only (no server fetch) for local-only apps
+    func initializeWithBundledFlags() {
+        if case .loaded = list { return }
+        list = .loaded(ViewConfig.bundledFeatureFlags)
+        debugprint("loaded \(list.count) Feature Flags from bundle")
     }
 
     // MARK: - Convenience

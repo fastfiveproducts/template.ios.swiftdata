@@ -49,6 +49,20 @@ struct ViewConfig {
     // Launch Sequence - Background Task Overlays (if needed)
     static let loadingOverlayDelay: TimeInterval = 1.25     // show "loading" overlay if still loading after this time
 
+    // Bundled Feature Flags
+    // These are the default feature flags used when the server is unreachable,
+    // or when using initializeWithBundledFlags() for local-only apps.
+    // Apps that use this template should configure these for their needs.
+    static let bundledFeatureFlags: [FeatureFlag] = [
+        FeatureFlag(code: "publicComments", enabled: false),
+        FeatureFlag(code: "privateMessages", enabled: false),
+        FeatureFlag(code: "activityLog", enabled: false),
+        FeatureFlag(code: "settings", enabled: false),
+        FeatureFlag(code: "userAccountProfile", enabled: false),
+        FeatureFlag(code: "userAssociations", enabled: false),
+        FeatureFlag(code: "userDemographics", enabled: false),
+    ]
+
     // Home Screen
     static let topHalfSpaceRatio: CGFloat = 0.6     // Top ratio when splitting screen top-to-bottom
     static let bottomTabBarSpace: CGFloat = 48      // Leave space for Tab Bar (if applicable)
