@@ -3,7 +3,7 @@
 //
 //  Template created by Pete Maiser, July 2024 through May 2025
 //  Modified by Pete Maiser, Fast Five Products LLC, on 2/18/26.
-//      Template v0.2.8 (updated) — Fast Five Products LLC's public AGPL template.
+//      Template v0.2.9 (updated) — Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025, 2026 Fast Five Products LLC. All rights reserved.
 //
@@ -62,6 +62,7 @@ final class PrivateMessageStore: ListableStore<PrivateMessage> {
     static let shared = PrivateMessageStore()
 
     override var requiresSignIn: Bool { true }
+    override var requiresRealUser: Bool { true }
 
     // override SignInOutObserver func below to fetch data into the store immediately after sign-in
     override func postSignInSetup() {

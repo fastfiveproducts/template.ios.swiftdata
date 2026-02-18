@@ -3,7 +3,7 @@
 //
 //  Template created by Pete Maiser, July 2024 through May 2025
 //  Modified by Pete Maiser, Fast Five Products LLC, on 2/18/26.
-//      Template v0.2.8 (updated) — Fast Five Products LLC's public AGPL template.
+//      Template v0.2.9 (updated) — Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025, 2026 Fast Five Products LLC. All rights reserved.
 //
@@ -59,11 +59,15 @@ class ListableStore<T: Listable>: SignInOutObserver  {
 
     // override to true for stores that require a signed-in user
     var requiresSignIn: Bool { false }
+
+    // override to true for stores that require a real (non-anonymous) user
+    var requiresRealUser: Bool { false }
     
     // Startup
     func initialize() {
         // Skip if auth is required but no user is signed in
         if requiresSignIn && !CurrentUserService.shared.isSignedIn { return }
+        if requiresRealUser && !CurrentUserService.shared.isRealUser { return }
 
         // Skip if already loaded or already loading
         if case .loaded = list { return }
@@ -96,6 +100,7 @@ class ListableStore<T: Listable>: SignInOutObserver  {
     // fetch, check cache and refresh it if appropriate
     func fetch() {
         if requiresSignIn && !CurrentUserService.shared.isSignedIn { return }
+        if requiresRealUser && !CurrentUserService.shared.isRealUser { return }
         Task {
             do {
                 let result = try await fetchFromService()
@@ -130,6 +135,7 @@ class ListableStore<T: Listable>: SignInOutObserver  {
     // async/await fetch with a callback return, list cleared and set to "loading" to indicate we are waiting
     func fetchAndReturn() async -> Loadable<[T]> {
         if requiresSignIn && !CurrentUserService.shared.isSignedIn { return .none }
+        if requiresRealUser && !CurrentUserService.shared.isRealUser { return .none }
         list = .loading
         do {
             let result = try await fetchFromService()
@@ -147,7 +153,7 @@ class ListableStore<T: Listable>: SignInOutObserver  {
     
     // clear user-specific data on sign-out
     override func postSignOutCleanup() {
-        guard requiresSignIn else { return }
+        guard requiresSignIn || requiresRealUser else { return }
         list = .none
         clearCache()
     }

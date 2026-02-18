@@ -4,7 +4,7 @@
 //  Template created by Pete Maiser, July 2024 through May 2025
 //  Renamed from HomeView by Pete Maiser, Fast Five Products LLC, on 10/23/25.
 //  Modified by Pete Maiser, Fast Five Products LLC, on 2/18/26.
-//      Template v0.2.8 (updated) — Fast Five Products LLC's public AGPL template.
+//      Template v0.2.9 (updated) — Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025, 2026 Fast Five Products LLC. All rights reserved.
 //
@@ -83,7 +83,7 @@ extension MainMenuView {
             }
         }
 
-        if currentUserService.isSignedIn
+        if currentUserService.isRealUser
           ,FeatureFlagStore.shared.isEnabled("privateMessages")
 //          ,privateMessageStore.list.count > 0   // uncomment this to have messages display only if there already is one
           ,self.selectedMenuItem != .messages
@@ -149,7 +149,7 @@ extension MainMenuView {
     @ViewBuilder
     func menuLabel(_ item: NavigationItem) -> some View {
         if item == .profile {
-            Label(item.label, systemImage: currentUserService.isSignedIn ? "\(item.systemImage).fill" : item.systemImage)
+            Label(item.label, systemImage: currentUserService.isRealUser ? "\(item.systemImage).fill" : item.systemImage)
         } else {
             Label(item.label, systemImage: item.systemImage)
         }
@@ -163,7 +163,7 @@ extension MainMenuView {
                 .onAppear{ OverlayManager.shared.show(.brand, animation: .fast) }
 
         case .contacts:
-            RequiresSignInView(currentUserService: currentUserService) {
+            RequiresSignInView(currentUserService: currentUserService, requiresRealUser: true) {
                 ContactListView(currentUserService: currentUserService)
             }
             .padding(.vertical)
@@ -173,7 +173,7 @@ extension MainMenuView {
         case .announcements:
             VStackBox {
                 StoreListView(store: announcementStore)
-                if !currentUserService.isSignedIn {
+                if !currentUserService.isRealUser {
                     SignUpInLinkView(currentUserService: currentUserService)
                 }
             }
@@ -189,7 +189,7 @@ extension MainMenuView {
             .onAppear { OverlayManager.shared.hide(.brand) }
 
         case .messages:
-            RequiresSignInView(currentUserService: currentUserService) {
+            RequiresSignInView(currentUserService: currentUserService, requiresRealUser: true) {
                 MessagesMainView(
                     currentUserService: currentUserService,
                     store: privateMessageStore
@@ -198,12 +198,10 @@ extension MainMenuView {
             .onAppear { OverlayManager.shared.hide(.brand) }
 
         case .comments:
-            RequiresSignInView(currentUserService: currentUserService) {
-                CommentsMainView(
-                    currentUserService: currentUserService,
-                    store: publicCommentStore
-                )
-            }
+            CommentsMainView(
+                currentUserService: currentUserService,
+                store: publicCommentStore
+            )
             .onAppear { OverlayManager.shared.hide(.brand) }
 
         case .activity:

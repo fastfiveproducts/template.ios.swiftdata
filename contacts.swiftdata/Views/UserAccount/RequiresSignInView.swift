@@ -2,9 +2,10 @@
 //  RequiresSignInView.swift
 //
 //  Template file created by Pete Maiser, Fast Five Products LLC, on 11/3/25.
-//      Template v0.2.4 Fast Five Products LLC's public AGPL template.
+//  Modified by Pete Maiser, Fast Five Products LLC, on 2/18/26.
+//      Template v0.2.9 (updated) — Fast Five Products LLC's public AGPL template.
 //
-//  Copyright © 2025 Fast Five Products LLC. All rights reserved.
+//  Copyright © 2025, 2026 Fast Five Products LLC. All rights reserved.
 //
 //  This file is part of a project licensed under the GNU Affero General Public License v3.0.
 //  See the LICENSE file at the root of this repository for full terms.
@@ -21,24 +22,27 @@ import SwiftUI
 
 struct RequiresSignInView<Content: View>: View {
     @ObservedObject var currentUserService: CurrentUserService
+    var requiresRealUser: Bool = false
     let content: () -> Content
 
     init(
         currentUserService: CurrentUserService,
+        requiresRealUser: Bool = false,
         @ViewBuilder content: @escaping () -> Content
     ) {
         self.currentUserService = currentUserService
+        self.requiresRealUser = requiresRealUser
         self.content = content
     }
 
     var body: some View {
         Group {
-            if currentUserService.isSignedIn {
+            if requiresRealUser ? currentUserService.isRealUser : currentUserService.isSignedIn {
                 AnyView(content())
             } else {
                 AnyView(
                     VStackBox {
-                        Text("Not Signed In!")
+                        Text(requiresRealUser ? "Sign In Required" : "Not Signed In!")
                         SignUpInLinkView(currentUserService: currentUserService)
                     }
                 )

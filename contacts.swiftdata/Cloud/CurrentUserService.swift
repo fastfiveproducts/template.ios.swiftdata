@@ -2,8 +2,8 @@
 //  CurrentUserService.swift
 //
 //  Template created by Pete Maiser, July 2024 through August 2025
-//  Modified by Pete Maiser, Fast Five Products LLC, on 2/17/26.
-//      Template v0.2.7 (updated) — Fast Five Products LLC's public AGPL template.
+//  Modified by Pete Maiser, Fast Five Products LLC, on 2/18/26.
+//      Template v0.2.9 (updated) — Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025, 2026 Fast Five Products LLC. All rights reserved.
 //
@@ -56,6 +56,7 @@ class CurrentUserService: ObservableObject, DebugPrintable {
     // ***** User *****
     @Published var user: User = User.blankUser
     var userKey: UserKey { UserKey(uid: user.auth.uid, displayName: user.account.displayName) }
+    var isRealUser: Bool { isSignedIn && !user.auth.isAnonymous }
     
     
     // ***** Cloud Auth *****
@@ -79,12 +80,37 @@ class CurrentUserService: ObservableObject, DebugPrintable {
                 self?.debugprint( "[setupListener]: " + (self?.userAuth.uid ?? "no uid") )
                 self?.postSignInSetup()
             } else {
-                self?.postSignOutCleanup()
+                if self?.isSignedIn == true {
+                    self?.postSignOutCleanup()
+                }
+                self?.debugprint("[setupListener]: no current user, attempting anonymous sign-in")
+                self?.signInAnonymously()
+            }
+        }
+    }
+
+    private func signInAnonymously() {
+        Task {
+            do {
+                try await auth.signInAnonymously()
+                debugprint("anonymous sign-in initiated")
+            } catch {
+                debugprint("⚠️ WARNING: anonymous sign-in failed: \(error)")
+                postSignOutCleanup()
             }
         }
     }
     
     private func postSignInSetup() {
+        if userAuth.isAnonymous {
+            user = User(auth: userAuth, account: UserAccount.blankUser)
+            isSigningIn = false
+            isSignedIn = true
+            isIncompleteUserAccount = false
+            debugprint("setup after anonymous sign-in; publishing sign-in")
+            signInPublisher.send()
+            return
+        }
         if isCreatingUser {
             user = User(auth: userAuth, account: UserAccount.blankUser)
             isSigningIn = false
@@ -137,7 +163,7 @@ class CurrentUserService: ObservableObject, DebugPrintable {
         guard !email.isEmpty, !password.isEmpty else {
             throw AuthError.invalidInput
         }
-        
+
         isSigningIn = true
         defer { isSigningIn = false }
         do {
@@ -145,6 +171,13 @@ class CurrentUserService: ObservableObject, DebugPrintable {
             if result.user.uid.isEmpty {
                 debugprint("⚠️ WARNING:  signIn returned successful but user.uid is empty.")
                 self.error = AuthError.userIdNotFound
+            }
+            // Auth listener may not fire if signing in as the same UID (e.g. after link),
+            // so update state manually to ensure the UI reflects the real user
+            let updatedAuth = UserAuth(from: result.user)
+            if updatedAuth.uid == userAuth.uid && userAuth.isAnonymous && !updatedAuth.isAnonymous {
+                userAuth = updatedAuth
+                postSignInSetup()
             }
             return result.user.uid          // user existed + sign-in successful = we are done
         } catch {
@@ -164,9 +197,33 @@ class CurrentUserService: ObservableObject, DebugPrintable {
         guard !email.isEmpty, !password.isEmpty else {
             throw AuthError.invalidInput
         }
-        
+
         isSigningIn = true
         defer { isSigningIn = false }
+
+        // If anonymous, try linking first
+        if let currentUser = auth.currentUser, currentUser.isAnonymous {
+            let credential = EmailAuthProvider.credential(withEmail: email, password: password)
+            do {
+                let result = try await currentUser.link(with: credential)
+                debugprint("anonymous user linked to email account: \(result.user.uid)")
+                // Auth listener may not fire after link (same UID), so update state manually
+                userAuth = UserAuth(from: result.user)
+                isCreatingUser = true
+                postSignInSetup()
+                return result.user.uid
+            } catch {
+                let nsError = error as NSError
+                if nsError.code == AuthErrorCode.credentialAlreadyInUse.rawValue ||
+                   nsError.code == AuthErrorCode.emailAlreadyInUse.rawValue {
+                    debugprint("link failed (email in use), falling through to sign-in")
+                } else {
+                    self.error = error
+                    throw error
+                }
+            }
+        }
+
         do {
             let result = try await auth.signIn(withEmail: email, password: password)
             if result.user.uid.isEmpty {
@@ -257,6 +314,10 @@ class CurrentUserService: ObservableObject, DebugPrintable {
     }
     
     func signOut() throws {
+        guard !user.auth.isAnonymous else {
+            debugprint("user is already anonymous, ignoring sign-out request")
+            return
+        }
         try auth.signOut()
     }
 }
@@ -421,6 +482,7 @@ private extension UserAuth {
         self.uid = firebaseUser.uid
         self.email = firebaseUser.email ?? ""
         self.phoneNumber = firebaseUser.phoneNumber ?? ""
+        self.isAnonymous = firebaseUser.isAnonymous
     }
 }
 
@@ -455,15 +517,18 @@ class CurrentUserTestService: CurrentUserService {
     let startSignedIn: Bool
     let startCreatingUser: Bool
     let startIncompleteUserAccount: Bool
+    let startAnonymous: Bool
 
-    init(startSignedIn: Bool, startCreatingUser: Bool = false, startIncompleteUserAccount: Bool = false) {
+    init(startSignedIn: Bool, startCreatingUser: Bool = false, startIncompleteUserAccount: Bool = false, startAnonymous: Bool = false) {
         self.startSignedIn = startSignedIn
         self.startCreatingUser = startCreatingUser
         self.startIncompleteUserAccount = startIncompleteUserAccount
+        self.startAnonymous = startAnonymous
     }
 
     static let sharedSignedIn = CurrentUserTestService(startSignedIn: true) // as CurrentUserService
     static let sharedSignedOut = CurrentUserTestService(startSignedIn: false) // as CurrentUserService
+    static let sharedAnonymous = CurrentUserTestService(startSignedIn: false, startAnonymous: true) // as CurrentUserService
     static let sharedCreatingUser = CurrentUserTestService(startSignedIn: false, startCreatingUser: true) // as CurrentUserService
     static let sharedIncompleteUserAccount = CurrentUserTestService(startSignedIn: true, startIncompleteUserAccount: true) // as CurrentUserService
     
@@ -528,6 +593,8 @@ class CurrentUserTestService: CurrentUserService {
             } else {
                 loadTestUser()
             }
+        } else if startAnonymous {
+            loadAnonymousUser()
         } else {
             loadBlankUser()
         }
@@ -545,9 +612,19 @@ class CurrentUserTestService: CurrentUserService {
     }
         
     override func signOut() throws {
-        loadBlankUser()
+        loadAnonymousUser()
     }
-    
+
+    private func loadAnonymousUser() {
+        let anonAuth = UserAuth(uid: "anon-00000000-0000-0000-0000-000000000000", email: "", phoneNumber: "", isAnonymous: true)
+        user = User(auth: anonAuth, account: UserAccount.blankUser)
+        isCreatingUser = false
+        isSigningIn = false
+        isSignedIn = true
+        isCreatingUserAccount = false
+        isIncompleteUserAccount = false
+    }
+
     private func loadTestUser() {
         user = User.testObject
         isCreatingUser = false

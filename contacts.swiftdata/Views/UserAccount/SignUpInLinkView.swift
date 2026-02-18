@@ -2,8 +2,8 @@
 //  SignUpInLinkView.swift
 //
 //  Created by Pete Maiser, Fast Five Products LLC, on 7/15/25.
-//  Modified by Pete Maiser, Fast Five Products LLC, on 2/17/26.
-//      Template v0.2.7 (updated)  — Fast Five Products LLC's public AGPL template.
+//  Modified by Pete Maiser, Fast Five Products LLC, on 2/18/26.
+//      Template v0.2.9 (updated) — Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025, 2026 Fast Five Products LLC. All rights reserved.
 //
@@ -29,9 +29,9 @@ struct SignUpInLinkView: View {
     var onNavigate: (() -> Void)? = nil
     
     var leadingText: String {
-        if inToolbar, currentUserService.isSignedIn {
+        if inToolbar, currentUserService.isRealUser {
             return ""
-        } else if !inToolbar, !currentUserService.isSignedIn {
+        } else if !inToolbar, !currentUserService.isRealUser {
             return "Tap Here or"
         } else {
             return ""
@@ -47,7 +47,7 @@ struct SignUpInLinkView: View {
     }
     
     var body: some View {
-        if inList, !currentUserService.isSignedIn {
+        if inList, !currentUserService.isRealUser {
 
             ZStack {
                 NavigationLink {
@@ -67,9 +67,9 @@ struct SignUpInLinkView: View {
                 .foregroundStyle(ViewConfig.linkColor)
             }
 
-        } else if inToolbar || !currentUserService.isSignedIn {
+        } else if inToolbar || !currentUserService.isRealUser {
 
-            if !inToolbar, !currentUserService.isSignedIn, showDivider { Divider() }
+            if !inToolbar, !currentUserService.isRealUser, showDivider { Divider() }
 
             NavigationLink {
                 UserAccountView(
@@ -77,12 +77,12 @@ struct SignUpInLinkView: View {
                     currentUserService: currentUserService)
                 .onAppear { onNavigate?() }
             } label: {
-                if inToolbar && currentUserService.isSignedIn {
+                if inToolbar && currentUserService.isRealUser {
                     Label("Account Profile", systemImage: "\(NavigationItem.profile.systemImage).fill")
                 } else {
                     HStack {
                         Text(leadingText)
-                        Image(systemName: currentUserService.isSignedIn
+                        Image(systemName: currentUserService.isRealUser
                               ? "\(NavigationItem.profile.systemImage).fill"
                               : NavigationItem.profile.systemImage)
                         Text(trailingText)
