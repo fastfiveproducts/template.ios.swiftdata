@@ -2,8 +2,8 @@
 //  PostStores.swift
 //
 //  Template created by Pete Maiser, July 2024 through May 2025
-//  Modified by Pete Maiser, Fast Five Products LLC, on 2/4/26.
-//      Template v0.2.5 (updated) — Fast Five Products LLC's public AGPL template.
+//  Modified by Pete Maiser, Fast Five Products LLC, on 2/18/26.
+//      Template v0.2.8 (updated) — Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025, 2026 Fast Five Products LLC. All rights reserved.
 //
@@ -21,11 +21,13 @@
 import Foundation
 
 final class PublicCommentStore: ListableStore<PublicComment> {
-    
+
     // initiate this store as a Swift Singleton
     // this is also how to 'get' the singleton store
     static let shared = PublicCommentStore()
-    
+
+    override var requiresSignIn: Bool { true }
+
     // override SignInOutObserver func below to fetch data into the store immediately after sign-in
     override func postSignInSetup() {
         initialize()
@@ -54,11 +56,13 @@ final class PublicCommentStore: ListableStore<PublicComment> {
 
 
 final class PrivateMessageStore: ListableStore<PrivateMessage> {
-    
+
     // initiate this store as a Swift Singleton
     // this is also how to 'get' the singleton store
     static let shared = PrivateMessageStore()
-    
+
+    override var requiresSignIn: Bool { true }
+
     // override SignInOutObserver func below to fetch data into the store immediately after sign-in
     override func postSignInSetup() {
         initialize()
