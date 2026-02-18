@@ -2,8 +2,8 @@
 //  UsersConnector.swift
 //
 //  Created by Pete Maiser, Fast Five Products LLC, on 2/4/26.
-//  Modified by Pete Maiser, Fast Five Products LLC, on 2/9/26.
-//      Template v0.2.6 (updated) — Fast Five Products LLC's public AGPL template.
+//  Modified by Pete Maiser, Fast Five Products LLC, on 2/17/26.
+//      Template v0.2.7 (updated) — Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2026 Fast Five Products LLC. All rights reserved.
 //
