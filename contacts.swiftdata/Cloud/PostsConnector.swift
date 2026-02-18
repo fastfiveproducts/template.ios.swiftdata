@@ -2,10 +2,10 @@
 //  PostsConnector.swift
 //
 //  Template created by Pete Maiser, July 2024 through May 2025
-//  Modified by Pete Maiser, Fast Five Products LLC, on 2/9/26.
-//      Template v0.2.6 (updated) — Fast Five Products LLC's public AGPL template.
+//  Modified by Pete Maiser, Fast Five Products LLC, on 2/17/26.
+//      Template v0.2.7 (updated)  — Fast Five Products LLC's public AGPL template.
 //
-//  Copyright © 2025 Fast Five Products LLC. All rights reserved.
+//  Copyright © 2025, 2026 Fast Five Products LLC. All rights reserved.
 //
 //  This file is part of a project licensed under the GNU Affero General Public License v3.0.
 //  See the LICENSE file at the root of this repository for full terms.
@@ -27,7 +27,9 @@ fileprivate let defaultFetchLimit: Int = 100
 
 // Services:
 struct PostsConnector {
-    
+
+    // MARK: - Public Comments
+
     func fetchPublicComments(limit: Int = defaultFetchLimit) async throws -> [PublicComment] {
         var comments: [PublicComment] = []
         let queryRef = DataConnect.defaultConnector.listPublicCommentsQuery.ref(limit: limit)
@@ -39,7 +41,9 @@ struct PostsConnector {
         }
         return comments
     }
-    
+
+    // MARK: - Private Messages
+
     func fetchMyPrivateMessages(limit: Int = defaultFetchLimit) async throws -> [PrivateMessage] {
         var messages: [PrivateMessage] = []
         let queryRef = DataConnect.defaultConnector.getMyPrivateMessagesQuery.ref(limit: limit)
@@ -51,7 +55,9 @@ struct PostsConnector {
         }
         return messages
     }
-    
+
+    // MARK: - References
+
     func fetchPublicCommentReferences(for commentId: UUID, limit: Int = defaultFetchLimit) async throws -> [PostReference] {
         var references: [PostReference] = []
         let queryRef = DataConnect.defaultConnector.getPublicCommentReferencesQuery.ref(commentId: commentId, limit: limit)
@@ -87,7 +93,9 @@ struct PostsConnector {
         }
         return references
     }
-    
+
+    // MARK: - Create Mutations
+
     func createPublicComment(_ comment: PostCandidate) async throws -> PublicComment {
         guard comment.isValid else { throw UpsertDataError.invalidFunctionInput }
         let operationResult = try await DataConnect.defaultConnector.createPublicCommentMutation.execute(
@@ -127,7 +135,9 @@ struct PostsConnector {
         }
         return localMessage
     }
-                         
+
+    // MARK: - Reference Mutations
+
     func createPublicCommentReference(commentId: UUID, referenceId: UUID) async throws {
         let _ = try await DataConnect.defaultConnector.createPublicCommentReferenceMutation.execute(
                     publicCommentId: commentId,
@@ -142,7 +152,9 @@ struct PostsConnector {
             referenceId: referenceId
         )
     }
-    
+
+    // MARK: - Status Mutation
+
     func createPrivateMessageStatus(messageId: UUID, status: MessageStatusCode) async throws {
         let _ = try await DataConnect.defaultConnector.createPrivateMessageStatusMutation.execute(
             privateMessageId: messageId,

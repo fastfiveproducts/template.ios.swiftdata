@@ -2,10 +2,10 @@
 //  SignUpInLinkView.swift
 //
 //  Created by Pete Maiser, Fast Five Products LLC, on 7/15/25.
-//  Modified by Pete Maiser, Fast Five Products LLC, on 10/23/25.
-//      Template v0.2.4 (updated) Fast Five Products LLC's public AGPL template.
+//  Modified by Pete Maiser, Fast Five Products LLC, on 2/17/26.
+//      Template v0.2.7 (updated)  — Fast Five Products LLC's public AGPL template.
 //
-//  Copyright © 2025 Fast Five Products LLC. All rights reserved.
+//  Copyright © 2025, 2026 Fast Five Products LLC. All rights reserved.
 //
 //  This file is part of a project licensed under the GNU Affero General Public License v3.0.
 //  See the LICENSE file at the root of this repository for full terms.
@@ -24,6 +24,7 @@ struct SignUpInLinkView: View {
     @ObservedObject var currentUserService: CurrentUserService
     
     var inToolbar: Bool = false
+    var inList: Bool = false
     var showDivider: Bool = true
     var onNavigate: (() -> Void)? = nil
     
@@ -46,15 +47,35 @@ struct SignUpInLinkView: View {
     }
     
     var body: some View {
-        if inToolbar || !currentUserService.isSignedIn {
-            
+        if inList, !currentUserService.isSignedIn {
+
+            ZStack {
+                NavigationLink {
+                    UserAccountView(
+                        viewModel: UserAccountViewModel(),
+                        currentUserService: currentUserService)
+                    .onAppear { onNavigate?() }
+                } label: { EmptyView() }
+                .opacity(0)
+                HStack {
+                    Spacer()
+                    Text(leadingText)
+                    Image(systemName: NavigationItem.profile.systemImage)
+                    Text(trailingText)
+                    Spacer()
+                }
+                .foregroundStyle(ViewConfig.linkColor)
+            }
+
+        } else if inToolbar || !currentUserService.isSignedIn {
+
             if !inToolbar, !currentUserService.isSignedIn, showDivider { Divider() }
-            
+
             NavigationLink {
                 UserAccountView(
                     viewModel: UserAccountViewModel(),
                     currentUserService: currentUserService)
-                .onAppear { onNavigate?() } 
+                .onAppear { onNavigate?() }
             } label: {
                 if inToolbar && currentUserService.isSignedIn {
                     Label("Account Profile", systemImage: "\(NavigationItem.profile.systemImage).fill")
@@ -114,6 +135,16 @@ struct SignUpInLinkView: View {
             }
         }
         Spacer()
+    }
+}
+#Preview ("Form-List signed-out") {
+    let currentUserService = CurrentUserTestService.sharedSignedOut
+    NavigationStack {
+        Form {
+            Section(header: Text("Form-List Preview")) {
+                SignUpInLinkView(currentUserService: currentUserService, inList: true)
+            }
+        }
     }
 }
 #endif

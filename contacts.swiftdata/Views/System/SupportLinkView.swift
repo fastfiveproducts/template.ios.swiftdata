@@ -2,10 +2,10 @@
 //  SupportLinkView.swift
 //
 //  Template file created by Pete Maiser, Fast Five Products LLC, on 10/31/25.
-//  Modified by Pete Maiser, Fast Five Products LLC, on 2/9/26.
-//      Template v0.2.6 (updated) — Fast Five Products LLC's public AGPL template.
+//  Modified by Pete Maiser, Fast Five Products LLC, on 2/16/26.
+//      Template v0.2.7 (updated) — Fast Five Products LLC's public AGPL template.
 //
-//  Copyright © 2025 Fast Five Products LLC. All rights reserved.
+//  Copyright © 2025, 2026 Fast Five Products LLC. All rights reserved.
 //
 //  This file is part of a project licensed under the GNU Affero General Public License v3.0.
 //  See the LICENSE file at the root of this repository for full terms.
@@ -24,6 +24,7 @@ struct SupportLinkView: View {
     @ObservedObject var currentUserService: CurrentUserService
     
     var inToolbar: Bool = false
+    var inList: Bool = false
     var showDivider: Bool = true
     var onNavigate: (() -> Void)? = nil
     
@@ -46,8 +47,24 @@ struct SupportLinkView: View {
     }
     
     var body: some View {
-        if inToolbar {
-            
+        if inList {
+
+            ZStack {
+                NavigationLink {
+                    SupportView()
+                        .onAppear { onNavigate?() }
+                } label: { EmptyView() }
+                .opacity(0)
+                HStack {
+                    Spacer()
+                    Text(leadingText)
+                    Spacer()
+                }
+                .foregroundStyle(ViewConfig.linkColor)
+            }
+
+        } else if inToolbar {
+
             NavigationLink {
                 SupportView()
                     .onAppear { onNavigate?() }
@@ -130,6 +147,16 @@ struct SupportLinkView: View {
             }
         }
         Spacer()
+    }
+}
+#Preview ("Form-List signed-out") {
+    let currentUserService = CurrentUserTestService.sharedSignedOut
+    NavigationStack {
+        Form {
+            Section(header: Text("Form-List Preview")) {
+                SupportLinkView(currentUserService: currentUserService, inList: true)
+            }
+        }
     }
 }
 #endif

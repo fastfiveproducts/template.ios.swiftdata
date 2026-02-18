@@ -2,10 +2,10 @@
 //  Loadable.swift
 //
 //  Template created by Pete Maiser, July 2024 through May 2025
-//  Modified by Pete Maiser, Fast Five Products LLC, on 2/9/26.
-//      Template v0.2.6 (updated) — Fast Five Products LLC's public AGPL template.
+//  Modified by Pete Maiser, Fast Five Products LLC, on 2/17/26.
+//      Template v0.2.7 (updated) — Fast Five Products LLC's public AGPL template.
 //
-//  Copyright © 2025 Fast Five Products LLC. All rights reserved.
+//  Copyright © 2025, 2026 Fast Five Products LLC. All rights reserved.
 //
 //  This file is part of a project licensed under the GNU Affero General Public License v3.0.
 //  See the LICENSE file at the root of this repository for full terms.
@@ -79,6 +79,8 @@ extension Loadable where Value: RangeReplaceableCollection {
 extension Loadable: Equatable where Value: Equatable {
     static func == (lhs: Loadable<Value>, rhs: Loadable<Value>) -> Bool {
         switch (lhs, rhs) {
+            case (.none, .none):
+                return true
             case (.loading, .loading):
                 return true
             case let (.error(error1), .error(error2)):
