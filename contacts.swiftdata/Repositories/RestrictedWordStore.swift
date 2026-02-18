@@ -21,8 +21,6 @@
 //
 //  Keywords: bad words, objectional words, swear words, blocked words, restricted text
 //
-//      Template v0.2.1
-//
 
 
 import Foundation
