@@ -54,8 +54,8 @@ enum NavigationItem: String, CaseIterable, Identifiable {
         case .contacts: return (1,2)
         case .messages: return (1,3)    // visibility driven by feature flag
         case .comments: return (1,4)    // visibility driven by feature flag
-        case .activity: return (2,0)
-        case .settings: return (2,1)
+        case .activity: return (2,0)    // visibility driven by feature flag
+        case .settings: return (2,1)    // visibility driven by feature flag
         case .support: return (2,2)
         case .profile: return (-1,0)    // hide
         }
@@ -65,6 +65,8 @@ enum NavigationItem: String, CaseIterable, Identifiable {
         switch self {
         case .comments: return "publicComments"
         case .messages: return "privateMessages"
+        case .activity: return "activityLog"
+        case .settings: return "settings"
         default: return nil
         }
     }

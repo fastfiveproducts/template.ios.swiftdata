@@ -31,9 +31,15 @@ struct UserAccountView: View {
             Form {
                 SignUpInOutView(viewModel: viewModel, currentUserService: currentUserService)
                 if currentUserService.isSignedIn && !viewModel.showStatusMode {
-                    UserAccountProfileView()
-                    UserAssociationView()
-                    UserDemographicsView()
+                    if FeatureFlagStore.shared.isEnabled("userAccountProfile") {
+                        UserAccountProfileView()
+                    }
+                    if FeatureFlagStore.shared.isEnabled("userAssociations") {
+                        UserAssociationView()
+                    }
+                    if FeatureFlagStore.shared.isEnabled("userDemographics") {
+                        UserDemographicsView()
+                    }
                 }
             }
         }
