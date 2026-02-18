@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		77D38C1091328C6E3F5EB637 /* FeatureFlagStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39D8F1587800BE55C2E9602F /* FeatureFlagStore.swift */; };
+		7A28D6E5F7F717A08356BAB9 /* FeatureFlagConnector.swift in Sources */ = {isa = PBXBuildFile; fileRef = AED69FA84C52534776F58646 /* FeatureFlagConnector.swift */; };
 		B529E22C2F45469900F8CE76 /* AGENTS.md in Resources */ = {isa = PBXBuildFile; fileRef = B529E22B2F45469900F8CE76 /* AGENTS.md */; };
 		B5362E382E2747FC00E120B7 /* CONTRIBUTING-FFP.md in Resources */ = {isa = PBXBuildFile; fileRef = B5362E362E2747FC00E120B7 /* CONTRIBUTING-FFP.md */; };
 		B597799F2EB93B9B00712D85 /* CurrentUserService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59779502EB93B9B00712D85 /* CurrentUserService.swift */; };
@@ -90,9 +92,13 @@
 		B5C0BDEF2E241F6F00641B69 /* FirebaseDatabase in Frameworks */ = {isa = PBXBuildFile; productRef = B5C0BDEE2E241F6F00641B69 /* FirebaseDatabase */; };
 		B5C0BDF12E241F6F00641B69 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = B5C0BDF02E241F6F00641B69 /* FirebaseFirestore */; };
 		B5C0BE0B2E271C4900641B69 /* CONTRIBUTING.md in Resources */ = {isa = PBXBuildFile; fileRef = B5C0BE0A2E271C4900641B69 /* CONTRIBUTING.md */; };
+		E2C08A0171F0454275179C9A /* FeatureFlag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42FA9C49A6628BE1C69507A6 /* FeatureFlag.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		39D8F1587800BE55C2E9602F /* FeatureFlagStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureFlagStore.swift; sourceTree = "<group>"; };
+		42FA9C49A6628BE1C69507A6 /* FeatureFlag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureFlag.swift; sourceTree = "<group>"; };
+		AED69FA84C52534776F58646 /* FeatureFlagConnector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureFlagConnector.swift; sourceTree = "<group>"; };
 		B529E22B2F45469900F8CE76 /* AGENTS.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = AGENTS.md; sourceTree = "<group>"; };
 		B5362E362E2747FC00E120B7 /* CONTRIBUTING-FFP.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = "CONTRIBUTING-FFP.md"; sourceTree = "<group>"; };
 		B59779502EB93B9B00712D85 /* CurrentUserService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentUserService.swift; sourceTree = "<group>"; };
@@ -202,6 +208,7 @@
 			isa = PBXGroup;
 			children = (
 				B59779502EB93B9B00712D85 /* CurrentUserService.swift */,
+				AED69FA84C52534776F58646 /* FeatureFlagConnector.swift */,
 				B59779512EB93B9B00712D85 /* FirestoreConnector.swift */,
 				B59779522EB93B9B00712D85 /* HelpTextConnector.swift */,
 				B59779532EB93B9B00712D85 /* PostsConnector.swift */,
@@ -226,6 +233,7 @@
 				B59779592EB93B9B00712D85 /* ActivityLogEntry.swift */,
 				B597795A2EB93B9B00712D85 /* Announcement.swift */,
 				B597795B2EB93B9B00712D85 /* Contact.swift */,
+				42FA9C49A6628BE1C69507A6 /* FeatureFlag.swift */,
 				B597795C2EB93B9B00712D85 /* HelpText.swift */,
 				B597795D2EB93B9B00712D85 /* Posts.swift */,
 				B597795E2EB93B9B00712D85 /* User.swift */,
@@ -251,6 +259,7 @@
 				B59779662EB93B9B00712D85 /* PostStores.swift */,
 				B59779672EB93B9B00712D85 /* RestrictedWordStore.swift */,
 				B59779682EB93B9B00712D85 /* SettingsStore.swift */,
+				39D8F1587800BE55C2E9602F /* FeatureFlagStore.swift */,
 			);
 			path = Repositories;
 			sourceTree = "<group>";
@@ -575,6 +584,9 @@
 				B59779D82EB93B9B00712D85 /* LaunchView.swift in Sources */,
 				B59779D92EB93B9B00712D85 /* templateApp.swift in Sources */,
 				B59779DF2EB98A9900712D85 /* MainTabView.swift in Sources */,
+				E2C08A0171F0454275179C9A /* FeatureFlag.swift in Sources */,
+				7A28D6E5F7F717A08356BAB9 /* FeatureFlagConnector.swift in Sources */,
+				77D38C1091328C6E3F5EB637 /* FeatureFlagStore.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

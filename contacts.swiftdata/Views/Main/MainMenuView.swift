@@ -64,6 +64,7 @@ extension MainMenuView {
         }
 
         if currentUserService.isSignedIn
+          ,FeatureFlagStore.shared.isEnabled("publicComments")
 //          ,publicCommentStore.list.count > 0    // uncomment this to have comments display only if there already is one
           ,self.selectedMenuItem != .comments
         {
@@ -83,6 +84,7 @@ extension MainMenuView {
         }
 
         if currentUserService.isSignedIn
+          ,FeatureFlagStore.shared.isEnabled("privateMessages")
 //          ,privateMessageStore.list.count > 0   // uncomment this to have messages display only if there already is one
           ,self.selectedMenuItem != .messages
         {
@@ -117,7 +119,7 @@ extension MainMenuView {
     var menuView: some View {
         Menu {
             // group NavigationItems by their first sortOrder component, then sort them
-            let groupedItems = Dictionary(grouping: NavigationItem.allCases.filter { $0.sortOrder.0 >= 0 }) {
+            let groupedItems = Dictionary(grouping: NavigationItem.allCases.filter { $0.isVisible }) {
                 $0.sortOrder.0
             }
             let sortedGroupKeys = groupedItems.keys.sorted()

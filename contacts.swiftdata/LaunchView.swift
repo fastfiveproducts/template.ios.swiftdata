@@ -57,6 +57,7 @@ struct LaunchView: View {
         // Note: stores with requiresSignIn (PublicCommentStore, PrivateMessageStore)
         // are initialized via postSignInSetup() when the user signs in
         .task {
+            FeatureFlagStore.shared.initialize()
             RestrictedWordStore.shared.enableRestrictedWordCheck()                  // Load from server
             // RestrictedWordStore.shared.enableRestrictedWordCheckWithBundledWords()  // Load from bundle
             HelpTextStore.shared.initialize()

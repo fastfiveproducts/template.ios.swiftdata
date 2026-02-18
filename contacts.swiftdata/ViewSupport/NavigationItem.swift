@@ -52,13 +52,28 @@ enum NavigationItem: String, CaseIterable, Identifiable {
         case .home: return (0,0)
         case .announcements: return (1,0)
         case .contacts: return (1,2)
-        case .messages: return (-1,0)   // hide
-        case .comments: return (-1,0)   // hide
+        case .messages: return (1,3)    // visibility driven by feature flag
+        case .comments: return (1,4)    // visibility driven by feature flag
         case .activity: return (2,0)
         case .settings: return (2,1)
         case .support: return (2,2)
         case .profile: return (-1,0)    // hide
         }
+    }
+
+    var featureFlagCode: String? {
+        switch self {
+        case .comments: return "publicComments"
+        case .messages: return "privateMessages"
+        default: return nil
+        }
+    }
+
+    @MainActor
+    var isVisible: Bool {
+        guard sortOrder.0 >= 0 else { return false }
+        guard let code = featureFlagCode else { return true }
+        return FeatureFlagStore.shared.isEnabled(code)
     }
 
     var systemImage: String {
