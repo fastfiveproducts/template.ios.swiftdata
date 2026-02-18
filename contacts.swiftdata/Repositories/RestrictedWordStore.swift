@@ -2,8 +2,8 @@
 //  RestrictedWordStore.swift
 //
 //  Template created by Pete Maiser, July 2024 through May 2025
-//  Modified by Pete Maiser, Fast Five Products LLC, on 2/5/26.
-//      Template v0.2.5 (updated) — Fast Five Products LLC's public AGPL template.
+//  Modified by Pete Maiser, Fast Five Products LLC, on 2/18/26.
+//      Template v0.2.8 (updated) — Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025, 2026 Fast Five Products LLC. All rights reserved.
 //
@@ -20,8 +20,6 @@
 //  and a function that can be used to check if a string contains one of those words
 //
 //  Keywords: bad words, objectional words, swear words, blocked words, restricted text
-//
-//      Template v0.2.1
 //
 
 
@@ -76,15 +74,25 @@ final class RestrictedWordStore: ObservableObject, DebugPrintable {
         "rteqrz", "reqrz", "r-eqrz", "yqoz opfftr", "yqozopfftr", "ykqhtz mtqhtr",
         "ykqhtz nvyyd", "yktbqst", "ykpejvoe", "ykpezpjl", "ykpetqetr", "ykpekxst",
         "ysve mvjlte", "ysvemqf", "ysvey", "ynply", "ynrtqz stfy", "eiqey", "vnylpre",
-        "ipfftr", "dtssxi ykxitry"
+        "ipfftr", "dtssxi ykxitry",
+        "gvjl", "ykpe", "npyy", "jvoe", "jxjlyvjltr", "bxektrgvjltr", "epey", "zpjl", "nvyyu"
     ]
+
+    // local cache
+    private let cacheFilename = "restrictedWordCache.json"
 
     // function to fetch data from the server, will only fetch one time
     func enableRestrictedWordCheck() {
         if case .loaded(_) = list { return }
 
+        // try cache first
+        if let cached = loadFromCache(), !cached.isEmpty {
+            list = .loaded(cached)
+            debugprint("loaded \(list.count) Restricted Text Keywords from cache ✅")
+        }
+
         Task {
-            list = .loading
+            if case .none = list { list = .loading }
             do {
                 let result = try await fetchFromService()
                 if result.isEmpty {
@@ -92,12 +100,21 @@ final class RestrictedWordStore: ObservableObject, DebugPrintable {
                     deviceLog("Restricted Word functionality enabled but no Restricted Words found.", category: "RestrictedWords")
                 }
                 list = .loaded(result)
+                if !result.isEmpty { saveToCache(result) }
                 debugprint ("fetched \(list.count) Restricted Text Keywords from server")
             }
             catch {
-                list = .error(error)
-                debugprint("🛑 ERROR:  fetching Restricted Word List: \(error)")
-                deviceLog("🛑 ERROR:  fetching Restricted Word List: %@", category: "RestrictedWords", error: error)
+                if case .loaded = list {
+                    debugprint("⚠️ WARNING: error fetching Restricted Words from service; will use current data. Error: \(error.localizedDescription)")
+                } else if !Self.bundledRestrictedWords.isEmpty {
+                    list = .loaded(Self.bundledRestrictedWords)
+                    debugprint("⚠️ WARNING: error fetching Restricted Words from service; falling back to bundled words (\(list.count)). Error: \(error.localizedDescription)")
+                    deviceLog("Restricted Words fetch failed; using bundled fallback.", category: "RestrictedWords", error: error)
+                } else {
+                    list = .error(error)
+                    debugprint("🛑 ERROR:  fetching Restricted Word List: \(error)")
+                    deviceLog("🛑 ERROR:  fetching Restricted Word List: %@", category: "RestrictedWords", error: error)
+                }
             }
         }
     }
@@ -145,6 +162,31 @@ final class RestrictedWordStore: ObservableObject, DebugPrintable {
         }
         return false
         
+    }
+    // cache helpers
+    private var cacheURL: URL {
+        let dir = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
+        try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
+        return dir.appending(path: cacheFilename)
+    }
+
+    private func saveToCache(_ words: [String]) {
+        do {
+            let data = try JSONEncoder().encode(words)
+            try data.write(to: cacheURL, options: .atomic)
+            debugprint("saved \(words.count) Restricted Text Keywords to cache 💾")
+        } catch {
+            debugprint("⚠️ WARNING: Failed to save Restricted Words to cache: \(error)")
+        }
+    }
+
+    private func loadFromCache() -> [String]? {
+        do {
+            let data = try Data(contentsOf: cacheURL)
+            return try JSONDecoder().decode([String].self, from: data)
+        } catch {
+            return nil
+        }
     }
 }
 

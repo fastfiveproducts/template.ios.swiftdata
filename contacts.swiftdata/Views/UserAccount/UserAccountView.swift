@@ -2,10 +2,10 @@
 //  UserAccountView.swift
 //
 //  Template created by Pete Maiser, July 2024 through August 2025
-//  Modified by Pete Maiser, Fast Five Products LLC, on 8/28/25.
-//      Template v0.2.2 (updated) Fast Five Products LLC's public AGPL template.
+//  Modified by Pete Maiser, Fast Five Products LLC, on 2/18/26.
+//      Template v0.2.8 (updated) — Fast Five Products LLC's public AGPL template.
 //
-//  Copyright © 2025 Fast Five Products LLC. All rights reserved.
+//  Copyright © 2025, 2026 Fast Five Products LLC. All rights reserved.
 //
 //  This file is part of a project licensed under the GNU Affero General Public License v3.0.
 //  See the LICENSE file at the root of this repository for full terms.
@@ -31,9 +31,15 @@ struct UserAccountView: View {
             Form {
                 SignUpInOutView(viewModel: viewModel, currentUserService: currentUserService)
                 if currentUserService.isSignedIn && !viewModel.showStatusMode {
-                    UserAccountProfileView()
-                    UserAssociationView()
-                    UserDemographicsView()
+                    if FeatureFlagStore.shared.isEnabled("userAccountProfile") {
+                        UserAccountProfileView()
+                    }
+                    if FeatureFlagStore.shared.isEnabled("userAssociations") {
+                        UserAssociationView()
+                    }
+                    if FeatureFlagStore.shared.isEnabled("userDemographics") {
+                        UserDemographicsView()
+                    }
                 }
             }
         }

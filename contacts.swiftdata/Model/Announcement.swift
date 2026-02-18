@@ -2,10 +2,10 @@
 //  Announcement.swift
 //
 //  Template created by Pete Maiser, July 2024 through May 2025
-//  Modified by Pete Maiser, Fast Five Products LLC, on 10/23/25.
-//      Template v0.2.3 (updated) Fast Five Products LLC's public AGPL template.
+//  Modified by Pete Maiser, Fast Five Products LLC, on 2/18/26.
+//      Template v0.2.8 (updated) — Fast Five Products LLC's public AGPL template.
 //
-//  Copyright © 2025 Fast Five Products LLC. All rights reserved.
+//  Copyright © 2025, 2026 Fast Five Products LLC. All rights reserved.
 //
 //  This file is part of a project licensed under the GNU Affero General Public License v3.0.
 //  See the LICENSE file at the root of this repository for full terms.
@@ -39,9 +39,9 @@ extension Announcement {
 }
 
 extension Announcement {
-    // to conform to Listable, add placeholder features
-    static let usePlaceholder = false
-    static let placeholder = [Announcement(
+    // to conform to Listable, add bundled defaults
+    static let useBundledDefaults = false
+    static let bundledDefaults = [Announcement(
         id: 0,
         title: "",
         content: "Announcements not available!",
