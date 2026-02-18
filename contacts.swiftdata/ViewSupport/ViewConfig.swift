@@ -2,8 +2,8 @@
 //  ViewConfig.swift
 //
 //  Template created by Pete Maiser, July 2024 through May 2025
-//  Modified by Pete Maiser, Fast Five Products LLC, on 2/11/26.
-//      Template v0.2.6 (updated) — Fast Five Products LLC's public AGPL template.
+//  Modified by Pete Maiser, Fast Five Products LLC, on 2/18/26.
+//      Template v0.2.8 (updated) — Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025, 2026 Fast Five Products LLC. All rights reserved.
 //
@@ -48,6 +48,20 @@ struct ViewConfig {
 
     // Launch Sequence - Background Task Overlays (if needed)
     static let loadingOverlayDelay: TimeInterval = 1.25     // show "loading" overlay if still loading after this time
+
+    // Bundled Feature Flags
+    // These are the default feature flags used when the server is unreachable,
+    // or when using initializeWithBundledFlags() for local-only apps.
+    // Apps that use this template should configure these for their needs.
+    static let bundledFeatureFlags: [FeatureFlag] = [
+        FeatureFlag(code: "publicComments", enabled: false),
+        FeatureFlag(code: "privateMessages", enabled: false),
+        FeatureFlag(code: "activityLog", enabled: false),
+        FeatureFlag(code: "settings", enabled: false),
+        FeatureFlag(code: "userAccountProfile", enabled: false),
+        FeatureFlag(code: "userAssociations", enabled: false),
+        FeatureFlag(code: "userDemographics", enabled: false),
+    ]
 
     // Home Screen
     static let topHalfSpaceRatio: CGFloat = 0.6     // Top ratio when splitting screen top-to-bottom

@@ -2,8 +2,8 @@
 //  ListableStore.swift
 //
 //  Template created by Pete Maiser, July 2024 through May 2025
-//  Modified by Pete Maiser, Fast Five Products LLC, on 2/17/26.
-//      Template v0.2.7 (updated) — Fast Five Products LLC's public AGPL template.
+//  Modified by Pete Maiser, Fast Five Products LLC, on 2/18/26.
+//      Template v0.2.8 (updated) — Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025, 2026 Fast Five Products LLC. All rights reserved.
 //
@@ -56,9 +56,15 @@ class ListableStore<T: Listable>: SignInOutObserver  {
     
     // optionally override this with a filename to enable caching
     var cacheFilename: String? { nil }
+
+    // override to true for stores that require a signed-in user
+    var requiresSignIn: Bool { false }
     
     // Startup
     func initialize() {
+        // Skip if auth is required but no user is signed in
+        if requiresSignIn && !CurrentUserService.shared.isSignedIn { return }
+
         // Skip if already loaded or already loading
         if case .loaded = list { return }
         if case .loading = list { return }
@@ -71,16 +77,16 @@ class ListableStore<T: Listable>: SignInOutObserver  {
             debugprint("loaded \(cached.count) \(storeTypeDescription)(s) from cache ✅.")
         }
 
-        // 2️⃣ If nothing cached, use placeholder if available
-        else if T.usePlaceholder {
-            list = .loaded(T.placeholder)
-            debugprint("loaded \(T.placeholder.count) \(storeTypeDescription) placeholder(s) 🪣.")
+        // 2️⃣ If nothing cached, use bundled defaults if available
+        else if T.useBundledDefaults {
+            list = .loaded(T.bundledDefaults)
+            debugprint("loaded \(T.bundledDefaults.count) \(storeTypeDescription) bundled default(s) 🪣.")
         }
 
         // 3️⃣ Fallback to .loading
         else {
             list = .loading
-            debugprint("no cache or placeholder \(storeTypeDescription)s available ⚠️.")
+            debugprint("no cache or bundled default \(storeTypeDescription)s available ⚠️.")
         }
 
         // 4️⃣ Always kick off a background fetch to refresh
@@ -89,6 +95,7 @@ class ListableStore<T: Listable>: SignInOutObserver  {
 
     // fetch, check cache and refresh it if appropriate
     func fetch() {
+        if requiresSignIn && !CurrentUserService.shared.isSignedIn { return }
         Task {
             do {
                 let result = try await fetchFromService()
@@ -122,6 +129,7 @@ class ListableStore<T: Listable>: SignInOutObserver  {
 
     // async/await fetch with a callback return, list cleared and set to "loading" to indicate we are waiting
     func fetchAndReturn() async -> Loadable<[T]> {
+        if requiresSignIn && !CurrentUserService.shared.isSignedIn { return .none }
         list = .loading
         do {
             let result = try await fetchFromService()
@@ -137,6 +145,13 @@ class ListableStore<T: Listable>: SignInOutObserver  {
     }
         
     
+    // clear user-specific data on sign-out
+    override func postSignOutCleanup() {
+        guard requiresSignIn else { return }
+        list = .none
+        clearCache()
+    }
+
     // insert new data into local store
     func insert(_ item: T) {
         switch list {

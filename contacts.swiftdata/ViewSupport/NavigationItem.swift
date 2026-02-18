@@ -2,10 +2,10 @@
 //  NavigationItem.swift
 //
 //  Template created by Pete Maiser, July 2024 through May 2025
-//  Modified by Pete Maiser, Fast Five Products LLC, on 10/23/25.
-//      Template v0.2.4 (updated) Fast Five Products LLC's public AGPL template.
+//  Modified by Pete Maiser, Fast Five Products LLC, on 2/18/26.
+//      Template v0.2.8 (updated) — Fast Five Products LLC's public AGPL template.
 //
-//  Copyright © 2025 Fast Five Products LLC. All rights reserved.
+//  Copyright © 2025, 2026 Fast Five Products LLC. All rights reserved.
 //
 //  This file is part of a project licensed under the GNU Affero General Public License v3.0.
 //  See the LICENSE file at the root of this repository for full terms.
@@ -52,13 +52,30 @@ enum NavigationItem: String, CaseIterable, Identifiable {
         case .home: return (0,0)
         case .announcements: return (1,0)
         case .contacts: return (1,2)
-        case .messages: return (-1,0)   // hide
-        case .comments: return (-1,0)   // hide
-        case .activity: return (2,0)
-        case .settings: return (2,1)
+        case .messages: return (1,3)    // visibility driven by feature flag
+        case .comments: return (1,4)    // visibility driven by feature flag
+        case .activity: return (2,0)    // visibility driven by feature flag
+        case .settings: return (2,1)    // visibility driven by feature flag
         case .support: return (2,2)
         case .profile: return (-1,0)    // hide
         }
+    }
+
+    var featureFlagCode: String? {
+        switch self {
+        case .comments: return "publicComments"
+        case .messages: return "privateMessages"
+        case .activity: return "activityLog"
+        case .settings: return "settings"
+        default: return nil
+        }
+    }
+
+    @MainActor
+    var isVisible: Bool {
+        guard sortOrder.0 >= 0 else { return false }
+        guard let code = featureFlagCode else { return true }
+        return FeatureFlagStore.shared.isEnabled(code)
     }
 
     var systemImage: String {
