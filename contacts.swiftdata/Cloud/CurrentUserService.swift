@@ -74,6 +74,12 @@ class CurrentUserService: ObservableObject, DebugPrintable {
     
     // ***** Listener and Publisher Functions *****
     func setupListener() {
+        #if DEBUG
+        if isPreview {
+            debugprint("[setupListener]: running in Xcode Preview, skipping Firebase listener")
+            return
+        }
+        #endif
         listener = auth.addStateDidChangeListener { [weak self] _, user in
             self?.userAuth = user.map(UserAuth.init(from:)) ?? UserAuth.blankUser
             if Auth.auth().currentUser != nil {

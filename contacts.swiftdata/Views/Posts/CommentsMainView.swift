@@ -65,7 +65,8 @@ struct CommentsMainView: View, DebugPrintable {
                     }
                 }
             } else {
-                SignUpInLinkView(currentUserService: currentUserService)
+                SignUpInLinkView(currentUserService: currentUserService, showDivider: false)
+                    .frame(maxWidth: .infinity)
             }
         }
         .styledView()
@@ -75,7 +76,7 @@ struct CommentsMainView: View, DebugPrintable {
 
 
 #if DEBUG
-#Preview  {
+#Preview ("test-data signed-in") {
     NavigationStack {
         CommentsMainView(
             currentUserService: CurrentUserTestService.sharedSignedIn,
@@ -83,11 +84,18 @@ struct CommentsMainView: View, DebugPrintable {
         )
     }
 }
-
-#Preview ("Empty") {
+#Preview ("test-data anonymous") {
     NavigationStack {
         CommentsMainView(
-            currentUserService: CurrentUserTestService.sharedSignedIn,
+            currentUserService: CurrentUserTestService.sharedAnonymous,
+            store: PublicCommentStore.testLoaded()
+        )
+    }
+}
+#Preview ("no-data and signed-out") {
+    NavigationStack {
+        CommentsMainView(
+            currentUserService: CurrentUserTestService.sharedSignedOut,
             store: PublicCommentStore()
         )
     }
