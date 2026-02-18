@@ -75,7 +75,7 @@ struct SignUpInLinkView: View {
                 UserAccountView(
                     viewModel: UserAccountViewModel(),
                     currentUserService: currentUserService)
-                .onAppear { onNavigate?() } 
+                .onAppear { onNavigate?() }
             } label: {
                 if inToolbar && currentUserService.isSignedIn {
                     Label("Account Profile", systemImage: "\(NavigationItem.profile.systemImage).fill")

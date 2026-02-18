@@ -52,7 +52,6 @@ struct PostCandidate: DebugPrintable {
     }
 }
 
-
 // optional reference to any other object:
 struct PostReference {
     let id: UUID
@@ -62,7 +61,6 @@ struct PostReference {
         id != referenceId
     }
 }
-
 
 // search
 extension Post {
@@ -79,7 +77,6 @@ extension Post {
         return !matches.isEmpty
     }
 }
-
 
 // subtype of "public comment" (one-to-everyone, public)
 // also supports to one-to-everyone with a 'to' for replies or callout

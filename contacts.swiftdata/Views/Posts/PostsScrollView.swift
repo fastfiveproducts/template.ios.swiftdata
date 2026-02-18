@@ -176,7 +176,6 @@ struct PostsScrollView<T: Post>: View {
         .padding()
     }
 }
-
 #Preview ("Newest on Top") {
     let currentUserService = CurrentUserTestService.sharedSignedIn
            
@@ -189,7 +188,6 @@ struct PostsScrollView<T: Post>: View {
         )
     }
 }
-
 #Preview ("Empty") {
     let currentUserService = CurrentUserTestService.sharedSignedIn
     

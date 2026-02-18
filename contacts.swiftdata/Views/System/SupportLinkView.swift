@@ -64,7 +64,7 @@ struct SupportLinkView: View {
             }
 
         } else if inToolbar {
-            
+
             NavigationLink {
                 SupportView()
                     .onAppear { onNavigate?() }
