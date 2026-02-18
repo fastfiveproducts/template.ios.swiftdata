@@ -76,7 +76,8 @@ final class RestrictedWordStore: ObservableObject, DebugPrintable {
         "rteqrz", "reqrz", "r-eqrz", "yqoz opfftr", "yqozopfftr", "ykqhtz mtqhtr",
         "ykqhtz nvyyd", "yktbqst", "ykpejvoe", "ykpezpjl", "ykpetqetr", "ykpekxst",
         "ysve mvjlte", "ysvemqf", "ysvey", "ynply", "ynrtqz stfy", "eiqey", "vnylpre",
-        "ipfftr", "dtssxi ykxitry"
+        "ipfftr", "dtssxi ykxitry",
+        "gvjl", "ykpe", "npyy", "jvoe", "jxjlyvjltr", "bxektrgvjltr", "epey", "zpjl", "nvyyu"
     ]
 
     // local cache
@@ -107,6 +108,10 @@ final class RestrictedWordStore: ObservableObject, DebugPrintable {
             catch {
                 if case .loaded = list {
                     debugprint("⚠️ WARNING: error fetching Restricted Words from service; will use current data. Error: \(error.localizedDescription)")
+                } else if !Self.bundledRestrictedWords.isEmpty {
+                    list = .loaded(Self.bundledRestrictedWords)
+                    debugprint("⚠️ WARNING: error fetching Restricted Words from service; falling back to bundled words (\(list.count)). Error: \(error.localizedDescription)")
+                    deviceLog("Restricted Words fetch failed; using bundled fallback.", category: "RestrictedWords", error: error)
                 } else {
                     list = .error(error)
                     debugprint("🛑 ERROR:  fetching Restricted Word List: \(error)")
