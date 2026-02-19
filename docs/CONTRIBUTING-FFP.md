@@ -1,46 +1,34 @@
 # Contributing Guidelines (Internal - Fast Five Products LLC)
 
-This guide is for FFP employees and internal contributors working on template projects, client work, or apps.  
-It includes header guidance for both AGPL and proprietary use cases, and seeks to preserver our author exception when possible.
+This guide is for FFP employees and internal contributors working on template projects, client work, or apps.
+It includes header guidance for both AGPL and proprietary use cases, and seeks to preserve our author exception when possible.
+
+For day-to-day workflow details (Modified-by lines, version updates, git workflow), see [AGENTS.md](../AGENTS.md).
 
 ---
 
-### 📄 Template File Headers and Versioning
+## Open-Source Use Cases
 
-All Swift files should include a standard file header that provides authorship, licensing, and version context.
+### Adding New Files to a Template Project
 
-### General Rules
+These are still **FFP template files**, so use the **FFP Template Files** header from the public [CONTRIBUTING.md](../CONTRIBUTING.md) — same format.
 
-- **NEW files**: Use the current year.
-- **CHANGED files**: Append new years (e.g., `2025, 2026`) to reflect modification history.
-- **Template version**: Update the version number for any file added to or modified in the TEMPLATE project.
+### Template Files Changed Within an Open-Source App
 
-Version numbers in the examples below are example-only and need to be updated appropirately
+Use the **FFP Template Files** header from the public [CONTRIBUTING.md](../CONTRIBUTING.md) with a "Modified by" line. This retains the FFP exception on FFP template files, and carries forward without it on template files created by others. If this particular template file was created by others, the full AGPL-3.0 applies so this file must remain open when modified or redistributed.
 
----
+### New App Files (Open Source)
 
-## ✅ Header Case 1: Adding new files to a TEMPLATE project
-
-Even though these are **new**, they are still **FFP TEMPLATE files**, so please see **Case 1a** in the public [CONTRIBUTING.md](../CONTRIBUTING.md)  file — same format.
-
----
-
-## ✅ Header Case 2: TEMPLATE files changed WITHIN an APP (open source)
-
-If the app is also open source, please see **Case 2** in the public [CONTRIBUTING.md](../CONTRIBUTING.md)  file — same changes.  This will retain the FFP exception on **FFP TEMPLATE files**, and carry forward without it on TEMPLATE files created by others.  If this particular TEMPLATE file was created by others, the full AGPL-3.0 applies so this file must remain open when modified or redistributed.
-
----
-
-## ✅ Header Case 3: NEW app files (open source)
-
-If the app is also open source, use the **Case 1a** header from the public [CONTRIBUTING.md](../CONTRIBUTING.md)  file - thus adding the exception to this new file - but remove this template version line:
+Use the **FFP Template Files** header from the public [CONTRIBUTING.md](../CONTRIBUTING.md) — thus adding the exception to this new file — but remove the template version line:
 ```swift
 //      Template v0.2.0 — Fast Five Products LLC's public AGPL template.
 ```
 
 ---
 
-## ✅ Header Case 4: FFP TEMPLATE files changed WITHIN an APP (proprietary)
+## Proprietary Use Cases
+
+### Template Files Changed Within a Proprietary App
 
 ```swift
 //
@@ -62,9 +50,7 @@ If the app is also open source, use the **Case 1a** header from the public [CONT
 //
 ```
 
----
-
-## ✅ Header Case 5: NEW app files (proprietary, FFP)
+### New App Files (Proprietary, FFP)
 
 ```swift
 //
@@ -79,15 +65,13 @@ If the app is also open source, use the **Case 1a** header from the public [CONT
 //  with an author exception for proprietary use by Fast Five Products LLC.
 //
 //  This file is provided under commercial licensing terms to [Client Name]
-//. and is not subject to the AGPL.
+//  and is not subject to the AGPL.
 //
 //  For licensing inquiries, contact: licenses@fastfiveproducts.llc
 //
 ```
 
----
-
-## ✅ Header Case 6: NEW app files (proprietary, shared)
+### New App Files (Proprietary, Shared with Client)
 
 ```swift
 //
@@ -111,5 +95,5 @@ If the app is also open source, use the **Case 1a** header from the public [CONT
 
 ---
 
-Please keep headers current and consistent.  
+Please keep headers current and consistent.
 Questions? Email **licenses@fastfiveproducts.llc**
