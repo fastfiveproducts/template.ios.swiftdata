@@ -2,8 +2,8 @@
 //  SignUpSignInSignOutView.swift
 //
 //  Template created by Pete Maiser, July 2024 through August 2025
-//  Modified by Pete Maiser, Fast Five Products LLC, on 2/3/26.
-//      Template v0.2.5 (updated) — Fast Five Products LLC's public AGPL template.
+//  Modified by Pete Maiser, Fast Five Products LLC, on 2/18/26.
+//      Template v0.2.9 (updated) — Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025, 2026 Fast Five Products LLC. All rights reserved.
 //
@@ -40,8 +40,8 @@ struct SignUpInOutView: View, DebugPrintable {
     
     var body: some View {
         
-        Section(header: Text(currentUserService.isSignedIn ? "Signed-In User" : ( viewModel.createAccountMode ? "Sign-Up" : "Sign-In or Sign-Up"))) {
-            if currentUserService.isSignedIn {
+        Section(header: Text(currentUserService.isRealUser ? "Signed-In User" : ( viewModel.createAccountMode ? "Sign-Up" : "Sign-In or Sign-Up"))) {
+            if currentUserService.isRealUser {
                 
                 // email
                 LabeledContent {
@@ -64,18 +64,18 @@ struct SignUpInOutView: View, DebugPrintable {
                 
                 // action
                 Button(action: toggleSignUpInOut) {
-                    Text(currentUserService.isSignedIn ? "Sign Out" : "Submit")
+                    Text(currentUserService.isRealUser ? "Sign Out" : "Submit")
                 }
                 .frame(maxWidth: .infinity)
                 .foregroundStyle(.white)
                 .listRowBackground(Color.accentColor)
-                
+
             }
             else {
                 
                 // email
                 LabeledContent {
-                    TextField(text: $viewModel.capturedEmailText, prompt: Text(currentUserService.isSignedIn ? currentUserService.user.auth.email : "sign-in or sign-up email address")) {}
+                    TextField(text: $viewModel.capturedEmailText, prompt: Text(currentUserService.isRealUser ? currentUserService.user.auth.email : "sign-in or sign-up email address")) {}
                         .disabled(viewModel.createAccountMode)
                         .textInputAutocapitalization(.never)
                         .keyboardType(.emailAddress)
@@ -101,7 +101,7 @@ struct SignUpInOutView: View, DebugPrintable {
                 } else {
                     LabeledContent {
                         SecureField(text: $viewModel.capturedPasswordText, prompt: Text("password")) {}
-                            .disabled(currentUserService.isSignedIn)
+                            .disabled(currentUserService.isRealUser)
                             .textInputAutocapitalization(.never)
                             .keyboardType(.emailAddress)
                             .autocorrectionDisabled()
@@ -111,7 +111,7 @@ struct SignUpInOutView: View, DebugPrintable {
                     } label: { Text("password:") }
                         .labeledContentStyle(TopLabeledContentStyle())
                     Button(action: toggleSignUpInOut) {
-                        Text(currentUserService.isSignedIn ? "Sign Out" : "Submit")
+                        Text(currentUserService.isRealUser ? "Sign Out" : "Submit")
                     }
                     .frame(maxWidth: .infinity)
                     .foregroundStyle(.white)
@@ -124,8 +124,8 @@ struct SignUpInOutView: View, DebugPrintable {
             
         }
         .onAppear {focusedField = .username}
-        .onChange(of: currentUserService.isSignedIn) {
-            if currentUserService.isSignedIn {
+        .onChange(of: currentUserService.isRealUser) {
+            if currentUserService.isRealUser {
                 viewModel.capturedPasswordText = ""
             }
         }
@@ -145,12 +145,14 @@ struct SignUpInOutView: View, DebugPrintable {
                 viewModel: viewModel,
                 currentUserService: currentUserService
             )
+        } else if currentUserService.isRealUser && !currentUserService.isVerifiedUser {
+            VerifyEmailView(currentUserService: currentUserService)
         } else if viewModel.changePasswordMode {
             ChangePasswordView(
                 viewModel: viewModel,
                 currentUserService: currentUserService
             )
-        } else if currentUserService.isSignedIn {
+        } else if currentUserService.isRealUser {
             Button("Change Password", action: toggleChangePasswordMode)
                 .frame(maxWidth: .infinity)
         } else {
@@ -166,7 +168,7 @@ struct SignUpInOutView: View, DebugPrintable {
                     ProgressView()
                     Spacer()
                 }
-            } else if currentUserService.isSignedIn && viewModel.showStatusMode {
+            } else if currentUserService.isRealUser && viewModel.showStatusMode {
                 HStack {
                     Text("Checking Email Address...AVAILABLE")
                     Spacer()
@@ -178,7 +180,7 @@ struct SignUpInOutView: View, DebugPrintable {
 
 private extension SignUpInOutView {
     private func toggleSignUpInOut() {
-        if currentUserService.isSignedIn {
+        if currentUserService.isRealUser {
             do {
                 try CurrentUserService.shared.signOut()
             } catch {
@@ -240,15 +242,6 @@ private extension SignUpInOutView {
 
 
 #if DEBUG
-#Preview ("test-data signed-in") {
-    let currentUserService = CurrentUserTestService.sharedSignedIn
-    Form {
-        SignUpInOutView(
-            viewModel: UserAccountViewModel(),
-            currentUserService: currentUserService
-        )
-    }
-}
 #Preview ("test-data signed-out") {
     let currentUserService = CurrentUserTestService.sharedSignedOut
     Form {
@@ -274,6 +267,25 @@ private extension SignUpInOutView {
     Form {
         SignUpInOutView(
             viewModel: viewModel,
+            currentUserService: currentUserService
+        )
+    }
+}
+#Preview ("test-data unverified user") {
+    let viewModel = UserAccountViewModel()
+    let currentUserService = CurrentUserTestService.sharedUnverifiedUser
+    Form {
+        SignUpInOutView(
+            viewModel: viewModel,
+            currentUserService: currentUserService
+        )
+    }
+}
+#Preview ("test-data signed-in") {
+    let currentUserService = CurrentUserTestService.sharedSignedIn
+    Form {
+        SignUpInOutView(
+            viewModel: UserAccountViewModel(),
             currentUserService: currentUserService
         )
     }

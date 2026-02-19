@@ -2,9 +2,10 @@
 //  User.swift
 //
 //  Template created by Pete Maiser, July 2024 through May 2025
-//      Template v0.1.1 Fast Five Products LLC's public AGPL template.
+//  Modified by Pete Maiser, Fast Five Products LLC, on 2/18/26.
+//      Template v0.2.9 (updated) — Fast Five Products LLC's public AGPL template.
 //
-//  Copyright © 2025 Fast Five Products LLC. All rights reserved.
+//  Copyright © 2025, 2026 Fast Five Products LLC. All rights reserved.
 //
 //  This file is part of a project licensed under the GNU Affero General Public License v3.0.
 //  See the LICENSE file at the root of this repository for full terms.
@@ -30,6 +31,8 @@ struct UserAuth: Equatable, Codable {
     let uid: String                 // "User Id" is 'uid' to distinguish it from the UUI Application Ids
     var email: String
     var phoneNumber: String?
+    var isAnonymous: Bool
+    var isEmailVerified: Bool
 }
 
 // User Account Data Service
@@ -62,7 +65,7 @@ extension User {
 }
 
 extension UserAuth {
-    static let blankUser = UserAuth(uid: UserKey.blankUser.uid, email: "", phoneNumber: "")
+    static let blankUser = UserAuth(uid: UserKey.blankUser.uid, email: "", phoneNumber: "", isAnonymous: false, isEmailVerified: false)
 }
 
 extension UserAccount {
@@ -78,12 +81,14 @@ extension UserKey {
 extension User {
     static let testObject = User(auth: UserAuth.testObject, account: UserAccount.testObject)
     static let testObjectAnother = User(auth: UserAuth.testObjectAnother, account: UserAccount.testObjectAnother)
+    static let testObjectUnverified = User(auth: UserAuth.testObjectUnverified, account: UserAccount.testObject)
     static let testObjects: [User] = [.testObject, .testObjectAnother]
 }
 
 extension UserAuth {
-    static let testObject = UserAuth(uid: UserKey.testObject.uid, email: "lorem@ipsum.com", phoneNumber: "+5555550101")
-    static let testObjectAnother = UserAuth(uid: UserKey.testObjectAnother.uid, email: "alorem@ipsum.com", phoneNumber: "+5555550102")
+    static let testObject = UserAuth(uid: UserKey.testObject.uid, email: "lorem@ipsum.com", phoneNumber: "+5555550101", isAnonymous: false, isEmailVerified: true)
+    static let testObjectAnother = UserAuth(uid: UserKey.testObjectAnother.uid, email: "alorem@ipsum.com", phoneNumber: "+5555550102", isAnonymous: false, isEmailVerified: true)
+    static let testObjectUnverified = UserAuth(uid: UserKey.testObject.uid, email: "lorem@ipsum.com", phoneNumber: "+5555550101", isAnonymous: false, isEmailVerified: false)
     static let testObjects: [UserAuth] = [.testObject, .testObjectAnother]
 }
 

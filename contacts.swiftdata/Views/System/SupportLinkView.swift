@@ -2,8 +2,8 @@
 //  SupportLinkView.swift
 //
 //  Template file created by Pete Maiser, Fast Five Products LLC, on 10/31/25.
-//  Modified by Pete Maiser, Fast Five Products LLC, on 2/16/26.
-//      Template v0.2.7 (updated) — Fast Five Products LLC's public AGPL template.
+//  Modified by Pete Maiser, Fast Five Products LLC, on 2/18/26.
+//      Template v0.2.9 (updated) — Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025, 2026 Fast Five Products LLC. All rights reserved.
 //
@@ -31,7 +31,7 @@ struct SupportLinkView: View {
     var leadingText: String {
         if inToolbar {
             return ""
-        } else if !currentUserService.isSignedIn {
+        } else if !currentUserService.isRealUser {
             return "Getting Started Tutorial"
         } else {
             return "Tap Here for Support"
@@ -69,12 +69,12 @@ struct SupportLinkView: View {
                 SupportView()
                     .onAppear { onNavigate?() }
             } label: {
-                if inToolbar && currentUserService.isSignedIn {
+                if inToolbar && currentUserService.isRealUser {
                     Label("Account Profile", systemImage: "\(NavigationItem.support.systemImage).fill")
                 } else {
                     HStack {
                         Text(leadingText)
-                        Image(systemName: currentUserService.isSignedIn
+                        Image(systemName: currentUserService.isRealUser
                               ? "\(NavigationItem.support.systemImage).fill"
                               : NavigationItem.support.systemImage)
                         Text(trailingText)
@@ -92,12 +92,12 @@ struct SupportLinkView: View {
                 SupportView()
                     .onAppear { onNavigate?() } 
             } label: {
-                if inToolbar && currentUserService.isSignedIn {
+                if inToolbar && currentUserService.isRealUser {
                     Label("Account Profile", systemImage: "\(NavigationItem.support.systemImage).fill")
                 } else {
                     HStack {
                         Text(leadingText)
-                        Image(systemName: currentUserService.isSignedIn
+                        Image(systemName: currentUserService.isRealUser
                               ? "\(NavigationItem.support.systemImage).fill"
                               : NavigationItem.support.systemImage)
                         Text(trailingText)

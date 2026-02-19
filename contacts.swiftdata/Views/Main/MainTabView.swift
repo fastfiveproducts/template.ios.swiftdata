@@ -3,8 +3,8 @@
 //
 //  Template created by Pete Maiser, July 2024 through May 2025
 //  Renamed from HomeView by Pete Maiser, Fast Five Products LLC, on 10/23/25.
-//  Modified by Pete Maiser, Fast Five Products LLC, on 2/11/26.
-//      Template v0.2.6 (updated) — Fast Five Products LLC's public AGPL template.
+//  Modified by Pete Maiser, Fast Five Products LLC, on 2/18/26.
+//      Template v0.2.9 (updated) — Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025, 2026 Fast Five Products LLC. All rights reserved.
 //
@@ -43,7 +43,7 @@ struct MainTabView: View {
                 .tabItem { NavigationItem.home.labelView }
                 .tag(NavigationItem.home)
 
-                RequiresSignInView(currentUserService: currentUserService) {
+                RequiresSignInView(currentUserService: currentUserService, requiresRealUser: true) {
                     ContactListView(currentUserService: currentUserService)
                 }
                 .tabItem { NavigationItem.contacts.labelView }
@@ -99,7 +99,7 @@ extension MainTabView {
             }
         }
 
-        if currentUserService.isSignedIn
+        if currentUserService.isVerifiedUser
 //          ,privateMessageStore.list.count > 0   // uncomment this to have messages display only if there already is one
         {
             ToolbarItem(placement: .navigationBarTrailing) {

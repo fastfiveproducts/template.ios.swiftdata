@@ -3,7 +3,7 @@
 //
 //  Template created by Pete Maiser, July 2024 through August 2025
 //  Modified by Pete Maiser, Fast Five Products LLC, on 2/18/26.
-//      Template v0.2.8 (updated) — Fast Five Products LLC's public AGPL template.
+//      Template v0.2.9 (updated) — Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025, 2026 Fast Five Products LLC. All rights reserved.
 //
@@ -23,6 +23,7 @@ import SwiftUI
 struct UserAccountView: View {
     @StateObject var viewModel: UserAccountViewModel
     @ObservedObject var currentUserService: CurrentUserService
+    @ObservedObject private var featureFlagStore = FeatureFlagStore.shared
 
     @Namespace var createUserViewId
           
@@ -30,7 +31,7 @@ struct UserAccountView: View {
         VStack {
             Form {
                 SignUpInOutView(viewModel: viewModel, currentUserService: currentUserService)
-                if currentUserService.isSignedIn && !viewModel.showStatusMode {
+                if currentUserService.isRealUser && !viewModel.showStatusMode {
                     if FeatureFlagStore.shared.isEnabled("userAccountProfile") {
                         UserAccountProfileView()
                     }
