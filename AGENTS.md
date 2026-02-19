@@ -14,7 +14,7 @@ xcodebuild build -scheme "default" -destination 'platform=iOS Simulator,name=iPh
 This is an iOS template app (SwiftUI, Swift 6, iOS 18+) with a Firebase backend using Data Connect (PostgreSQL) for primary data and Firestore for lightweight data.
 
 ### Project Structure
-- ./ - this iOS app (Xcode project: `contacts.swiftdata.xcodeproj`)
+- ./ - this iOS app (Xcode project: `template.xcodeproj`)
 - ../template.firebase/ — Firebase Data Connect schema, queries, and mutations
 - ../dataconnect-generated/ — Auto-generated Swift connectors (read-only)
 
