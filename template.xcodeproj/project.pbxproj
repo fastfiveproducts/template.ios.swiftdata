@@ -31,7 +31,6 @@
 		B59779B02EB93B9B00712D85 /* ModelContainerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59779652EB93B9B00712D85 /* ModelContainerManager.swift */; };
 		B59779B12EB93B9B00712D85 /* PostStores.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59779662EB93B9B00712D85 /* PostStores.swift */; };
 		B59779B22EB93B9B00712D85 /* RestrictedWordStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59779672EB93B9B00712D85 /* RestrictedWordStore.swift */; };
-		B59779B32EB93B9B00712D85 /* SettingsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59779682EB93B9B00712D85 /* SettingsStore.swift */; };
 		B59779B42EB93B9B00712D85 /* ListableStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B597796A2EB93B9B00712D85 /* ListableStore.swift */; };
 		B59779B52EB93B9B00712D85 /* ModelContainerConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = B597796B2EB93B9B00712D85 /* ModelContainerConfig.swift */; };
 		B59779B62EB93B9B00712D85 /* DebugLogging.swift in Sources */ = {isa = PBXBuildFile; fileRef = B597796D2EB93B9B00712D85 /* DebugLogging.swift */; };
@@ -123,7 +122,6 @@
 		B59779652EB93B9B00712D85 /* ModelContainerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelContainerManager.swift; sourceTree = "<group>"; };
 		B59779662EB93B9B00712D85 /* PostStores.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostStores.swift; sourceTree = "<group>"; };
 		B59779672EB93B9B00712D85 /* RestrictedWordStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestrictedWordStore.swift; sourceTree = "<group>"; };
-		B59779682EB93B9B00712D85 /* SettingsStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsStore.swift; sourceTree = "<group>"; };
 		B597796A2EB93B9B00712D85 /* ListableStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListableStore.swift; sourceTree = "<group>"; };
 		B597796B2EB93B9B00712D85 /* ModelContainerConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelContainerConfig.swift; sourceTree = "<group>"; };
 		B597796D2EB93B9B00712D85 /* DebugLogging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugLogging.swift; sourceTree = "<group>"; };
@@ -179,7 +177,7 @@
 		B5C0BD612E24187300641B69 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		B5C0BD642E2418E200641B69 /* LICENSE-EXCEPTIONS.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = "LICENSE-EXCEPTIONS.md"; sourceTree = "<group>"; };
 		B5C0BE0A2E271C4900641B69 /* CONTRIBUTING.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CONTRIBUTING.md; sourceTree = "<group>"; };
-		B5D0C78E2E2415FC00B31F19 /* contacts.swiftdata.swiftdata.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = contacts.swiftdata.swiftdata.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B5D0C78E2E2415FC00B31F19 /* template.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = template.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -262,7 +260,6 @@
 				B59779652EB93B9B00712D85 /* ModelContainerManager.swift */,
 				B59779662EB93B9B00712D85 /* PostStores.swift */,
 				B59779672EB93B9B00712D85 /* RestrictedWordStore.swift */,
-				B59779682EB93B9B00712D85 /* SettingsStore.swift */,
 				39D8F1587800BE55C2E9602F /* FeatureFlagStore.swift */,
 			);
 			path = Repositories;
@@ -387,7 +384,7 @@
 			path = ViewSupport;
 			sourceTree = "<group>";
 		};
-		B597799E2EB93B9B00712D85 /* contacts.swiftdata */ = {
+		B597799E2EB93B9B00712D85 /* template */ = {
 			isa = PBXGroup;
 			children = (
 				B59779552EB93B9B00712D85 /* Cloud */,
@@ -407,7 +404,7 @@
 				B597799C2EB93B9B00712D85 /* template_diff.zsh */,
 				B597799D2EB93B9B00712D85 /* templateApp.swift */,
 			);
-			path = contacts.swiftdata;
+			path = template;
 			sourceTree = "<group>";
 		};
 		B5D0C7852E2415FC00B31F19 = {
@@ -418,7 +415,7 @@
 				B5C0BD602E24187300641B69 /* LICENSE */,
 				B5C0BD642E2418E200641B69 /* LICENSE-EXCEPTIONS.md */,
 				B5C0BD612E24187300641B69 /* README.md */,
-				B597799E2EB93B9B00712D85 /* contacts.swiftdata */,
+				B597799E2EB93B9B00712D85 /* template */,
 				B5362E372E2747FC00E120B7 /* docs */,
 				B5D0C78F2E2415FC00B31F19 /* Products */,
 			);
@@ -427,7 +424,7 @@
 		B5D0C78F2E2415FC00B31F19 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				B5D0C78E2E2415FC00B31F19 /* contacts.swiftdata.swiftdata.app */,
+				B5D0C78E2E2415FC00B31F19 /* template.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -435,9 +432,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		B5D0C78D2E2415FC00B31F19 /* contacts.swiftdata.swiftdata */ = {
+		B5D0C78D2E2415FC00B31F19 /* template */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = B5D0C79B2E2415FD00B31F19 /* Build configuration list for PBXNativeTarget "contacts.swiftdata.swiftdata" */;
+			buildConfigurationList = B5D0C79B2E2415FD00B31F19 /* Build configuration list for PBXNativeTarget "template" */;
 			buildPhases = (
 				B5D0C78A2E2415FC00B31F19 /* Sources */,
 				B5D0C78B2E2415FC00B31F19 /* Frameworks */,
@@ -447,7 +444,7 @@
 			);
 			dependencies = (
 			);
-			name = contacts.swiftdata.swiftdata;
+			name = template;
 			packageProductDependencies = (
 				B5C0BDE52E241F1000641B69 /* DefaultConnector */,
 				B5C0BDE82E241F6F00641B69 /* FirebaseAppCheck */,
@@ -457,8 +454,8 @@
 				B5C0BDF02E241F6F00641B69 /* FirebaseFirestore */,
 				B5A0A71B2F32A21A004D0593 /* DefaultConnector */,
 			);
-			productName = contacts;
-			productReference = B5D0C78E2E2415FC00B31F19 /* contacts.swiftdata.swiftdata.app */;
+			productName = template;
+			productReference = B5D0C78E2E2415FC00B31F19 /* template.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -476,7 +473,7 @@
 					};
 				};
 			};
-			buildConfigurationList = B5D0C7892E2415FC00B31F19 /* Build configuration list for PBXProject "contacts.swiftdata" */;
+			buildConfigurationList = B5D0C7892E2415FC00B31F19 /* Build configuration list for PBXProject "template" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -494,7 +491,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				B5D0C78D2E2415FC00B31F19 /* contacts.swiftdata.swiftdata */,
+				B5D0C78D2E2415FC00B31F19 /* template */,
 			);
 		};
 /* End PBXProject section */
@@ -546,7 +543,6 @@
 				B59779B02EB93B9B00712D85 /* ModelContainerManager.swift in Sources */,
 				B59779B12EB93B9B00712D85 /* PostStores.swift in Sources */,
 				B59779B22EB93B9B00712D85 /* RestrictedWordStore.swift in Sources */,
-				B59779B32EB93B9B00712D85 /* SettingsStore.swift in Sources */,
 				B59779B42EB93B9B00712D85 /* ListableStore.swift in Sources */,
 				B59779B52EB93B9B00712D85 /* ModelContainerConfig.swift in Sources */,
 				B59779B62EB93B9B00712D85 /* DebugLogging.swift in Sources */,
@@ -735,7 +731,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "";
-				INFOPLIST_KEY_CFBundleDisplayName = ContactsSwiftData;
+				INFOPLIST_KEY_CFBundleDisplayName = Contacts;
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -768,7 +764,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "";
-				INFOPLIST_KEY_CFBundleDisplayName = ContactsSwiftData;
+				INFOPLIST_KEY_CFBundleDisplayName = Contacts;
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -793,7 +789,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		B5D0C7892E2415FC00B31F19 /* Build configuration list for PBXProject "contacts.swiftdata" */ = {
+		B5D0C7892E2415FC00B31F19 /* Build configuration list for PBXProject "template" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				B5D0C7992E2415FD00B31F19 /* Debug */,
@@ -802,7 +798,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		B5D0C79B2E2415FD00B31F19 /* Build configuration list for PBXNativeTarget "contacts.swiftdata.swiftdata" */ = {
+		B5D0C79B2E2415FD00B31F19 /* Build configuration list for PBXNativeTarget "template" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				B5D0C79C2E2415FD00B31F19 /* Debug */,

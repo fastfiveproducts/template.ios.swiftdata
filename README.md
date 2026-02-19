@@ -1,14 +1,13 @@
-# template.ios (contacts example)
+# template.ios
 
-> **Branches:** [`main`](https://github.com/fastfiveproducts/template.ios.swiftdata/tree/main) contains the latest stable release.
-> [`develop`](https://github.com/fastfiveproducts/template.ios.swiftdata/tree/develop) is the working branch.
-> GitHub may show these branches as "behind" or "ahead" of each other — this is expected due to the squash-merge release process described [below](#-branch-structure--change-approach).
+> **Branches:** [`main`](https://github.com/fastfiveproducts/template.ios/tree/main) contains the latest stable release.
+> [`develop`](https://github.com/fastfiveproducts/template.ios/tree/develop) is the working branch.
+> GitHub may show these branches as "behind" or "ahead" of each other — this is expected due to the squash-merge release process described [below](#branch-structure--change-approach).
 
-The Fast Five Products (FFP) LLC iOS application template app — SwiftData variant
+The Fast Five Products (FFP) LLC iOS application template app
 
-- this template: https://github.com/fastfiveproducts/template.ios.swiftdata
-- the other variant (FileData): https://github.com/fastfiveproducts/template.ios.filedata
-- it is expected other files in this repository may be 'ahead' of this version number as additons and improvements are made
+- this template: https://github.com/fastfiveproducts/template.ios
+- files in this repository may be ahead of the latest release as additions and improvements are made
 
 ---
 

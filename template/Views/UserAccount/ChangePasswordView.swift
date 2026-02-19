@@ -2,8 +2,8 @@
 //  ChangePasswordView.swift
 //
 //  Template file created by Pete Maiser, Fast Five Products LLC, on 8/20/25.
-//  Modified by Pete Maiser, Fast Five Products LLC, on 2/9/26.
-//      Template v0.2.6 (updated) — Fast Five Products LLC's public AGPL template.
+//  Modified by Pete Maiser, Fast Five Products LLC, on 2/19/26.
+//      Template v0.3.0 (updated) — Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025, 2026 Fast Five Products LLC. All rights reserved.
 //
@@ -24,8 +24,6 @@ struct ChangePasswordView: View, DebugPrintable {
     @ObservedObject var viewModel: UserAccountViewModel
     @ObservedObject var currentUserService: CurrentUserService
     @State private var showConfirmation = false
-    
-    @Environment(\.modelContext) private var modelContext
     
     @FocusState private var focusedField: Field?
     private func nextField() {
@@ -112,7 +110,6 @@ private extension ChangePasswordView {
                     debugprint("🛑 ERROR:  (View) Error requesting password change: \(error)")
                     viewModel.error = error
                 }
-                modelContext.insert(ActivityLogEntry("Password changed"))
                 showConfirmation = true
             }
         }

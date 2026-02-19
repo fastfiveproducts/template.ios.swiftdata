@@ -8,7 +8,7 @@ set -euo pipefail
 # ————————————————
 
 # ——— CONFIGURUTION ———
-TEMPLATE_DIR="../../template.ios.swiftdata/contacts.swiftdata"
+TEMPLATE_DIR="../../template.ios/template"
 PROJECT_DIR="."
 OUTPUT_FILE="./template_diff.txt"
 # ————————————————

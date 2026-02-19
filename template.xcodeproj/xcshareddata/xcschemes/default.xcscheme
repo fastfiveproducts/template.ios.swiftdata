@@ -16,9 +16,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "B5D0C78D2E2415FC00B31F19"
-               BuildableName = "contacts.swiftdata.swiftdata.app"
-               BlueprintName = "contacts.swiftdata.swiftdata"
-               ReferencedContainer = "container:contacts.swiftdata.xcodeproj">
+               BuildableName = "template.app"
+               BlueprintName = "template"
+               ReferencedContainer = "container:template.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -45,9 +45,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "B5D0C78D2E2415FC00B31F19"
-            BuildableName = "contacts.swiftdata.swiftdata.app"
-            BlueprintName = "contacts.swiftdata.swiftdata"
-            ReferencedContainer = "container:contacts.swiftdata.xcodeproj">
+            BuildableName = "template.app"
+            BlueprintName = "template"
+            ReferencedContainer = "container:template.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <LocationScenarioReference
@@ -66,9 +66,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "B5D0C78D2E2415FC00B31F19"
-            BuildableName = "contacts.swiftdata.swiftdata.app"
-            BlueprintName = "contacts.swiftdata.swiftdata"
-            ReferencedContainer = "container:contacts.swiftdata.xcodeproj">
+            BuildableName = "template.app"
+            BlueprintName = "template"
+            ReferencedContainer = "container:template.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
