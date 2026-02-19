@@ -99,7 +99,7 @@ extension MainTabView {
             }
         }
 
-        if currentUserService.isRealUser
+        if currentUserService.isVerifiedUser
 //          ,privateMessageStore.list.count > 0   // uncomment this to have messages display only if there already is one
         {
             ToolbarItem(placement: .navigationBarTrailing) {

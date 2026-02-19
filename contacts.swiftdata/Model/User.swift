@@ -32,6 +32,7 @@ struct UserAuth: Equatable, Codable {
     var email: String
     var phoneNumber: String?
     var isAnonymous: Bool
+    var isEmailVerified: Bool
 }
 
 // User Account Data Service
@@ -64,7 +65,7 @@ extension User {
 }
 
 extension UserAuth {
-    static let blankUser = UserAuth(uid: UserKey.blankUser.uid, email: "", phoneNumber: "", isAnonymous: false)
+    static let blankUser = UserAuth(uid: UserKey.blankUser.uid, email: "", phoneNumber: "", isAnonymous: false, isEmailVerified: false)
 }
 
 extension UserAccount {
@@ -80,12 +81,14 @@ extension UserKey {
 extension User {
     static let testObject = User(auth: UserAuth.testObject, account: UserAccount.testObject)
     static let testObjectAnother = User(auth: UserAuth.testObjectAnother, account: UserAccount.testObjectAnother)
+    static let testObjectUnverified = User(auth: UserAuth.testObjectUnverified, account: UserAccount.testObject)
     static let testObjects: [User] = [.testObject, .testObjectAnother]
 }
 
 extension UserAuth {
-    static let testObject = UserAuth(uid: UserKey.testObject.uid, email: "lorem@ipsum.com", phoneNumber: "+5555550101", isAnonymous: false)
-    static let testObjectAnother = UserAuth(uid: UserKey.testObjectAnother.uid, email: "alorem@ipsum.com", phoneNumber: "+5555550102", isAnonymous: false)
+    static let testObject = UserAuth(uid: UserKey.testObject.uid, email: "lorem@ipsum.com", phoneNumber: "+5555550101", isAnonymous: false, isEmailVerified: true)
+    static let testObjectAnother = UserAuth(uid: UserKey.testObjectAnother.uid, email: "alorem@ipsum.com", phoneNumber: "+5555550102", isAnonymous: false, isEmailVerified: true)
+    static let testObjectUnverified = UserAuth(uid: UserKey.testObject.uid, email: "lorem@ipsum.com", phoneNumber: "+5555550101", isAnonymous: false, isEmailVerified: false)
     static let testObjects: [UserAuth] = [.testObject, .testObjectAnother]
 }
 

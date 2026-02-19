@@ -83,7 +83,7 @@ extension MainMenuView {
             }
         }
 
-        if currentUserService.isRealUser
+        if currentUserService.isVerifiedUser
           ,FeatureFlagStore.shared.isEnabled("privateMessages")
 //          ,privateMessageStore.list.count > 0   // uncomment this to have messages display only if there already is one
           ,self.selectedMenuItem != .messages
@@ -189,7 +189,7 @@ extension MainMenuView {
             .onAppear { OverlayManager.shared.hide(.brand) }
 
         case .messages:
-            RequiresSignInView(currentUserService: currentUserService, requiresRealUser: true) {
+            RequiresSignInView(currentUserService: currentUserService, requiresVerifiedUser: true) {
                 MessagesMainView(
                     currentUserService: currentUserService,
                     store: privateMessageStore

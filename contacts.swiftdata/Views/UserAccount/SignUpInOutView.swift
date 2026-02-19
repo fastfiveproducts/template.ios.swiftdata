@@ -145,6 +145,8 @@ struct SignUpInOutView: View, DebugPrintable {
                 viewModel: viewModel,
                 currentUserService: currentUserService
             )
+        } else if currentUserService.isRealUser && !currentUserService.isVerifiedUser {
+            VerifyEmailView(currentUserService: currentUserService)
         } else if viewModel.changePasswordMode {
             ChangePasswordView(
                 viewModel: viewModel,
@@ -240,15 +242,6 @@ private extension SignUpInOutView {
 
 
 #if DEBUG
-#Preview ("test-data signed-in") {
-    let currentUserService = CurrentUserTestService.sharedSignedIn
-    Form {
-        SignUpInOutView(
-            viewModel: UserAccountViewModel(),
-            currentUserService: currentUserService
-        )
-    }
-}
 #Preview ("test-data signed-out") {
     let currentUserService = CurrentUserTestService.sharedSignedOut
     Form {
@@ -274,6 +267,25 @@ private extension SignUpInOutView {
     Form {
         SignUpInOutView(
             viewModel: viewModel,
+            currentUserService: currentUserService
+        )
+    }
+}
+#Preview ("test-data unverified user") {
+    let viewModel = UserAccountViewModel()
+    let currentUserService = CurrentUserTestService.sharedUnverifiedUser
+    Form {
+        SignUpInOutView(
+            viewModel: viewModel,
+            currentUserService: currentUserService
+        )
+    }
+}
+#Preview ("test-data signed-in") {
+    let currentUserService = CurrentUserTestService.sharedSignedIn
+    Form {
+        SignUpInOutView(
+            viewModel: UserAccountViewModel(),
             currentUserService: currentUserService
         )
     }

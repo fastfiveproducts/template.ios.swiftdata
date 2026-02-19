@@ -23,26 +23,41 @@ import SwiftUI
 struct RequiresSignInView<Content: View>: View {
     @ObservedObject var currentUserService: CurrentUserService
     var requiresRealUser: Bool = false
+    var requiresVerifiedUser: Bool = false
     let content: () -> Content
 
     init(
         currentUserService: CurrentUserService,
         requiresRealUser: Bool = false,
+        requiresVerifiedUser: Bool = false,
         @ViewBuilder content: @escaping () -> Content
     ) {
         self.currentUserService = currentUserService
         self.requiresRealUser = requiresRealUser
+        self.requiresVerifiedUser = requiresVerifiedUser
         self.content = content
+    }
+
+    private var isAuthorized: Bool {
+        if requiresVerifiedUser { return currentUserService.isVerifiedUser }
+        else if requiresRealUser { return currentUserService.isRealUser }
+        else { return currentUserService.isSignedIn }
     }
 
     var body: some View {
         Group {
-            if requiresRealUser ? currentUserService.isRealUser : currentUserService.isSignedIn {
+            if isAuthorized {
                 AnyView(content())
+            } else if requiresVerifiedUser && currentUserService.isRealUser {
+                AnyView(
+                    Form {
+                        VerifyEmailView(currentUserService: currentUserService)
+                    }
+                )
             } else {
                 AnyView(
                     VStackBox {
-                        Text(requiresRealUser ? "Sign In Required" : "Not Signed In!")
+                        Text(requiresRealUser || requiresVerifiedUser ? "Sign In Required" : "Not Signed In!")
                         SignUpInLinkView(currentUserService: currentUserService)
                     }
                 )
@@ -68,6 +83,15 @@ struct RequiresSignInView<Content: View>: View {
         CommentsMainView(
             currentUserService: currentUserService,
             store: PublicCommentStore()
+        )
+    }
+}
+#Preview ("test-data unverified user") {
+    let currentUserService = CurrentUserTestService.sharedUnverifiedUser
+    RequiresSignInView(currentUserService: currentUserService, requiresVerifiedUser: true) {
+        CommentsMainView(
+            currentUserService: currentUserService,
+            store: PublicCommentStore.testLoaded()
         )
     }
 }

@@ -40,7 +40,7 @@ struct CommentsMainView: View, DebugPrintable {
             Divider()
                 .padding(.top, 8)
                 .padding(.bottom, 12)
-            if currentUserService.isRealUser {
+            if currentUserService.isVerifiedUser {
                 VStackBox(title: "Write a Comment") {
                     NavigationLink {
                         UserPostsStackView(
@@ -64,6 +64,9 @@ struct CommentsMainView: View, DebugPrintable {
                         .foregroundStyle(Color.accentColor)
                     }
                 }
+            } else if currentUserService.isRealUser {
+                VerifyEmailLinkView(currentUserService: currentUserService, showDivider: false)
+                    .frame(maxWidth: .infinity)
             } else {
                 SignUpInLinkView(currentUserService: currentUserService, showDivider: false)
                     .frame(maxWidth: .infinity)
@@ -76,11 +79,11 @@ struct CommentsMainView: View, DebugPrintable {
 
 
 #if DEBUG
-#Preview ("test-data signed-in") {
+#Preview ("no-data and signed-out") {
     NavigationStack {
         CommentsMainView(
-            currentUserService: CurrentUserTestService.sharedSignedIn,
-            store: PublicCommentStore.testLoaded()
+            currentUserService: CurrentUserTestService.sharedSignedOut,
+            store: PublicCommentStore()
         )
     }
 }
@@ -92,11 +95,20 @@ struct CommentsMainView: View, DebugPrintable {
         )
     }
 }
-#Preview ("no-data and signed-out") {
+
+#Preview ("test-data unverified user") {
     NavigationStack {
         CommentsMainView(
-            currentUserService: CurrentUserTestService.sharedSignedOut,
-            store: PublicCommentStore()
+            currentUserService: CurrentUserTestService.sharedUnverifiedUser,
+            store: PublicCommentStore.testLoaded()
+        )
+    }
+}
+#Preview ("test-data signed-in") {
+    NavigationStack {
+        CommentsMainView(
+            currentUserService: CurrentUserTestService.sharedSignedIn,
+            store: PublicCommentStore.testLoaded()
         )
     }
 }

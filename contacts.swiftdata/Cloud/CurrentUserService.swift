@@ -43,6 +43,10 @@ class CurrentUserService: ObservableObject, DebugPrintable {
     @Published var isCreatingUserAccount = false
     @Published var isUpdatingUserAccount = false
     @Published var isIncompleteUserAccount = false
+
+    // for email verification
+    @Published var isSendingVerificationEmail = false
+    @Published var isCheckingVerificationStatus = false
     
     // for password maintenance
     @Published var isReAuthenticatingUser = false
@@ -50,13 +54,14 @@ class CurrentUserService: ObservableObject, DebugPrintable {
     
     // for passwordless Authentication setup
     // WARNING - placeholder only - not fully implemented - not tested
-    @Published var isWaitingOnEmailVerification = false
+    @Published var isWaitingOnEmailAuthenticaion = false
     
     
     // ***** User *****
     @Published var user: User = User.blankUser
     var userKey: UserKey { UserKey(uid: user.auth.uid, displayName: user.account.displayName) }
     var isRealUser: Bool { isSignedIn && !user.auth.isAnonymous }
+    var isVerifiedUser: Bool { isRealUser && user.auth.isEmailVerified }
     
     
     // ***** Cloud Auth *****
@@ -332,14 +337,13 @@ class CurrentUserService: ObservableObject, DebugPrintable {
 // ***** Auth Functions via Passwordless Email Link *****
 // ***** WARNING - placeholder only - not fully implemented - not tested *****
 extension CurrentUserService {
-    
-    func requestNewUser(email: String) async throws {
+    func requestSignInWithUrlEmail(email: String) async throws {
         guard !email.isEmpty else {
             throw AccountCreationError.invalidInput
         }
         
         isCreatingUser = true
-        isWaitingOnEmailVerification = true
+        isWaitingOnEmailAuthenticaion = true
         do {
             UserDefaults.standard.set(email, forKey: "emailForSignIn")
             let actionCodeSettings = ActionCodeSettings()
@@ -347,15 +351,14 @@ extension CurrentUserService {
             actionCodeSettings.handleCodeInApp = true
             try await auth.sendSignInLink(toEmail: email, actionCodeSettings: actionCodeSettings)
         } catch {
-            isWaitingOnEmailVerification = false
+            isWaitingOnEmailAuthenticaion = false
             isCreatingUser = false
             throw error
         }
     }
       
     func completeSignInWithUrlLink(_ url: URL) async {
-        
-        isWaitingOnEmailVerification = false
+        isWaitingOnEmailAuthenticaion = false
         guard let email = UserDefaults.standard.string(forKey: "emailForSignIn")
         else {
             self.error = AuthError.signInInputsNotFound
@@ -481,6 +484,38 @@ extension CurrentUserService {
 }
 
 
+// ***** Email Verification Functions *****
+extension CurrentUserService {
+    func sendVerificationEmail() async throws {
+        guard let firebaseUser = auth.currentUser, !user.auth.isAnonymous else { return }
+        guard !user.auth.isEmailVerified else { return }
+
+        isSendingVerificationEmail = true
+        defer { isSendingVerificationEmail = false }
+        try await firebaseUser.sendEmailVerification()
+    }
+
+    func checkEmailVerificationStatus() async throws -> Bool {
+        guard let firebaseUser = auth.currentUser else { return false }
+
+        isCheckingVerificationStatus = true
+        defer { isCheckingVerificationStatus = false }
+
+        try await firebaseUser.reload()
+
+        // the auth listener does NOT fire after reload, so update local state manually
+        userAuth.isEmailVerified = firebaseUser.isEmailVerified
+        user.auth.isEmailVerified = firebaseUser.isEmailVerified
+
+        if firebaseUser.isEmailVerified {
+            // refresh the ID token so the email_verified claim is up-to-date for server rules
+            let _ = try await firebaseUser.getIDToken(forcingRefresh: true)
+        }
+        return firebaseUser.isEmailVerified
+    }
+}
+
+
 // ***** helpers to make local structs *****
 
 private extension UserAuth {
@@ -489,6 +524,7 @@ private extension UserAuth {
         self.email = firebaseUser.email ?? ""
         self.phoneNumber = firebaseUser.phoneNumber ?? ""
         self.isAnonymous = firebaseUser.isAnonymous
+        self.isEmailVerified = firebaseUser.isEmailVerified
     }
 }
 
@@ -524,12 +560,14 @@ class CurrentUserTestService: CurrentUserService {
     let startCreatingUser: Bool
     let startIncompleteUserAccount: Bool
     let startAnonymous: Bool
+    let startUnverified: Bool
 
-    init(startSignedIn: Bool, startCreatingUser: Bool = false, startIncompleteUserAccount: Bool = false, startAnonymous: Bool = false) {
+    init(startSignedIn: Bool, startCreatingUser: Bool = false, startIncompleteUserAccount: Bool = false, startAnonymous: Bool = false, startUnverified: Bool = false) {
         self.startSignedIn = startSignedIn
         self.startCreatingUser = startCreatingUser
         self.startIncompleteUserAccount = startIncompleteUserAccount
         self.startAnonymous = startAnonymous
+        self.startUnverified = startUnverified
     }
 
     static let sharedSignedIn = CurrentUserTestService(startSignedIn: true) // as CurrentUserService
@@ -537,6 +575,7 @@ class CurrentUserTestService: CurrentUserService {
     static let sharedAnonymous = CurrentUserTestService(startSignedIn: false, startAnonymous: true) // as CurrentUserService
     static let sharedCreatingUser = CurrentUserTestService(startSignedIn: false, startCreatingUser: true) // as CurrentUserService
     static let sharedIncompleteUserAccount = CurrentUserTestService(startSignedIn: true, startIncompleteUserAccount: true) // as CurrentUserService
+    static let sharedUnverifiedUser = CurrentUserTestService(startSignedIn: true, startUnverified: true) // as CurrentUserService
     
     func nextSignInState() {
         if isSigningIn {
@@ -582,6 +621,15 @@ class CurrentUserTestService: CurrentUserService {
             isSignedIn = true
             isCreatingUserAccount = false
             isUpdatingUserAccount = false
+            isSendingVerificationEmail = true
+        } else if isSendingVerificationEmail {
+            debugprint("was SendingVerificationEmail")
+            isCreatingUser = false
+            isSigningIn = false
+            isSignedIn = true
+            isCreatingUserAccount = false
+            isUpdatingUserAccount = false
+            isSendingVerificationEmail = false
         } else {
             debugprint("reset")
             isCreatingUser = true
@@ -589,6 +637,7 @@ class CurrentUserTestService: CurrentUserService {
             isSignedIn = false
             isCreatingUserAccount = false
             isUpdatingUserAccount = false
+            isSendingVerificationEmail = false
         }
     }
     
@@ -596,6 +645,8 @@ class CurrentUserTestService: CurrentUserService {
         if startSignedIn {
             if startIncompleteUserAccount {
                 loadIncompleteUser()
+            } else if startUnverified {
+                loadUnverifiedUser()
             } else {
                 loadTestUser()
             }
@@ -622,7 +673,7 @@ class CurrentUserTestService: CurrentUserService {
     }
 
     private func loadAnonymousUser() {
-        let anonAuth = UserAuth(uid: "anon-00000000-0000-0000-0000-000000000000", email: "", phoneNumber: "", isAnonymous: true)
+        let anonAuth = UserAuth(uid: "anon-00000000-0000-0000-0000-000000000000", email: "", phoneNumber: "", isAnonymous: true, isEmailVerified: false)
         user = User(auth: anonAuth, account: UserAccount.blankUser)
         isCreatingUser = false
         isSigningIn = false
@@ -633,6 +684,15 @@ class CurrentUserTestService: CurrentUserService {
 
     private func loadTestUser() {
         user = User.testObject
+        isCreatingUser = false
+        isSigningIn = false
+        isSignedIn = true
+        isCreatingUserAccount = false
+        isIncompleteUserAccount = false
+    }
+
+    private func loadUnverifiedUser() {
+        user = User.testObjectUnverified
         isCreatingUser = false
         isSigningIn = false
         isSignedIn = true
