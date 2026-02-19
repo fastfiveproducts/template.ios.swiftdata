@@ -61,7 +61,7 @@ class CurrentUserService: ObservableObject, DebugPrintable {
     @Published var user: User = User.blankUser
     var userKey: UserKey { UserKey(uid: user.auth.uid, displayName: user.account.displayName) }
     var isRealUser: Bool { isSignedIn && !user.auth.isAnonymous }
-    var isVerifiedUser: Bool { isRealUser && user.auth.isEmailVerified }
+    var isVerifiedUser: Bool { isRealUser && (user.auth.isEmailVerified || !ViewConfig.requiresEmailVerification) }
     
     
     // ***** Cloud Auth *****
@@ -487,6 +487,7 @@ extension CurrentUserService {
 // ***** Email Verification Functions *****
 extension CurrentUserService {
     func sendVerificationEmail() async throws {
+        guard ViewConfig.requiresEmailVerification else { return }
         guard let firebaseUser = auth.currentUser, !user.auth.isAnonymous else { return }
         guard !user.auth.isEmailVerified else { return }
 

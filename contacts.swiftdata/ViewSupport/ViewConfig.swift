@@ -49,6 +49,12 @@ struct ViewConfig {
     // Launch Sequence - Background Task Overlays (if needed)
     static let loadingOverlayDelay: TimeInterval = 1.25     // show "loading" overlay if still loading after this time
 
+    // Email Verification
+    // When true, new users are sent a verification email and some operations
+    // may be are gated on verified status. When false, these gates
+    // gates fall back to isRealUser and no verification emails are sent.
+    static let requiresEmailVerification = true
+
     // Bundled Feature Flags
     // These are the default feature flags used when the server is unreachable,
     // or when using initializeWithBundledFlags() for local-only apps.
