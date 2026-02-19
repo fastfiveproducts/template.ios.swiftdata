@@ -2,9 +2,10 @@
 //  SupportView.swift
 //
 //  Template file created by Pete Maiser, Fast Five Products LLC, on 10/30/25.
-//      Template v0.2.4 Fast Five Products LLC's public AGPL template.
+//  Modified by Claude, on 2/19/26.
+//      Template v0.3.0 (updated) — Fast Five Products LLC's public AGPL template.
 //
-//  Copyright © 2025 Fast Five Products LLC. All rights reserved.
+//  Copyright © 2025, 2026 Fast Five Products LLC. All rights reserved.
 //
 //  This file is part of a project licensed under the GNU Affero General Public License v3.0.
 //  See the LICENSE file at the root of this repository for full terms.
@@ -47,21 +48,30 @@ struct SupportView: View {
                         .foregroundStyle(ViewConfig.brandColor)
                 }) {
                     Text("""
-                    The Template App provides a clean starting point for building SwiftUI apps with shared services, data stores, and visual components.
+                    This is a template app for building SwiftUI apps backed by Firebase. \
+                    It includes user accounts, messaging, announcements, contacts, and more \
+                    — all wired up and ready to customize.
                     """)
                     .font(.body)
                     .foregroundStyle(.secondary)
                 }
 
-                // MARK: - Layout
+                // MARK: - Features
                 VStackBox(titleView: {
-                    Label("Layout Overview", systemImage: "square.grid.2x2")
+                    Label("Template Features", systemImage: "square.grid.2x2")
                         .font(.headline)
                         .foregroundStyle(ViewConfig.brandColor)
                 }) {
-                    Text("""
-                    Most screens use a VStack-based layout for clarity and flexibility. You’ll see consistent section headers and spacing throughout.
-                    """)
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("**User Accounts** — Sign in, sign up, email verification, and profile management.")
+                        Text("**Announcements** — View announcements published for all users.")
+                        Text("**Contacts** — Browse and manage a list of contacts (included as a SwiftData sample).")
+                        Text("**Private Messages** — Send and receive messages between users.")
+                        Text("**Public Comments** — Post and read comments visible to all users.")
+                        Text("**Activity Log** — Review a log of your recent actions.")
+                        Text("**Settings** — Adjust app preferences.")
+                        Text("**Feature Flags** — Some features above are controlled by server-driven feature flags, so they can be enabled or disabled without an app update.")
+                    }
                     .font(.body)
                     .foregroundStyle(.secondary)
                 }
@@ -73,7 +83,10 @@ struct SupportView: View {
                         .foregroundStyle(ViewConfig.brandColor)
                 }) {
                     Text("""
-                    App-wide appearance and constants live in `ViewConfig`. You can easily customize brand colors, fonts, and layout sizes there. You can also define dynamic colors, links, and branding for your app’s environment.
+                    App-wide appearance and constants live in `ViewConfig` — brand name, \
+                    colors, URLs, and timing. Menu items and their visibility are defined \
+                    in `NavigationItem`. The template supports two navigation patterns \
+                    (side menu and tab bar); switch between them in `LaunchView`.
                     """)
                     .font(.body)
                     .foregroundStyle(.secondary)
@@ -92,19 +105,23 @@ struct SupportView: View {
                                 .foregroundStyle(.secondary)
 
                             Text("""
-                            **A:** Begin with `ViewConfig`. It defines your app’s name, theme color, background, and link information. From there, you can explore other example views to understand the structure.
+                            **A:** Begin with `ViewConfig` to set your app's name, theme \
+                            color, and links. Then review `NavigationItem` to choose which \
+                            menu items appear and in what order.
                             """)
                             .font(.body)
                             .foregroundStyle(.secondary)
                         }
 
                         Group {
-                            Text("**Q:** Is there example code I can safely modify?")
+                            Text("**Q:** Why are some features not showing up?")
                                 .font(.subheadline)
                                 .foregroundStyle(.secondary)
 
                             Text("""
-                            **A:** Yes. Every view in this template is written to be self-contained and easy to modify. You can duplicate any view or component (like `VStackBox`) and rename it for your own use.
+                            **A:** Several features (messages, comments, activity log, \
+                            settings) are controlled by feature flags. Check your Firebase \
+                            configuration or `ViewConfig.bundledFeatureFlags` to enable them.
                             """)
                             .font(.body)
                             .foregroundStyle(.secondary)
