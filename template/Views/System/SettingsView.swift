@@ -2,9 +2,10 @@
 //  SettingsView.swift
 //
 //  Template file created by Elizabeth Maiser, Fast Five Products LLC, on 7/4/25.
-//      Template v0.2.0 — Fast Five Products LLC's public AGPL template.
+//  Modified by Claude, Fast Five Products LLC, on 2/19/26.
+//      Template v0.3.0 (updated) — Fast Five Products LLC's public AGPL template.
 //
-//  Copyright © 2025 Fast Five Products LLC. All rights reserved.
+//  Copyright © 2025, 2026 Fast Five Products LLC. All rights reserved.
 //
 //  This file is part of a project licensed under the GNU Affero General Public License v3.0.
 //  See the LICENSE file at the root of this repository for full terms.
@@ -20,10 +21,11 @@
 import SwiftUI
 
 struct SettingsView: View {
-    @StateObject private var settings = SettingsStore()
-    
+    @AppStorage("darkMode") private var darkMode = false
+    @AppStorage("defaultToDog") private var defaultToDog = false
+
     var showTitle: Bool = false
-    
+
     var body: some View {
         VStack {
             if showTitle {
@@ -35,17 +37,18 @@ struct SettingsView: View {
                 }
                 .padding(.bottom)
             }
-            
+
             List {
-                Toggle("Dark Mode", isOn: $settings.darkMode)
-                Toggle("Sound effects", isOn: $settings.soundEffects)
+                Toggle("Dark Mode", isOn: $darkMode)
+                Toggle("Default to Dog", isOn: $defaultToDog)
             }
             .listStyle(.plain)
-            
+
             Spacer()
             Button("Reset All Settings") {
                 withAnimation {
-                    settings.resetAllSettings()
+                    darkMode = false
+                    defaultToDog = false
                 }
             }
         }

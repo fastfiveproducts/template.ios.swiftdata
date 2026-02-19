@@ -31,7 +31,6 @@
 		B59779B02EB93B9B00712D85 /* ModelContainerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59779652EB93B9B00712D85 /* ModelContainerManager.swift */; };
 		B59779B12EB93B9B00712D85 /* PostStores.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59779662EB93B9B00712D85 /* PostStores.swift */; };
 		B59779B22EB93B9B00712D85 /* RestrictedWordStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59779672EB93B9B00712D85 /* RestrictedWordStore.swift */; };
-		B59779B32EB93B9B00712D85 /* SettingsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59779682EB93B9B00712D85 /* SettingsStore.swift */; };
 		B59779B42EB93B9B00712D85 /* ListableStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B597796A2EB93B9B00712D85 /* ListableStore.swift */; };
 		B59779B52EB93B9B00712D85 /* ModelContainerConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = B597796B2EB93B9B00712D85 /* ModelContainerConfig.swift */; };
 		B59779B62EB93B9B00712D85 /* DebugLogging.swift in Sources */ = {isa = PBXBuildFile; fileRef = B597796D2EB93B9B00712D85 /* DebugLogging.swift */; };
@@ -123,7 +122,6 @@
 		B59779652EB93B9B00712D85 /* ModelContainerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelContainerManager.swift; sourceTree = "<group>"; };
 		B59779662EB93B9B00712D85 /* PostStores.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostStores.swift; sourceTree = "<group>"; };
 		B59779672EB93B9B00712D85 /* RestrictedWordStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestrictedWordStore.swift; sourceTree = "<group>"; };
-		B59779682EB93B9B00712D85 /* SettingsStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsStore.swift; sourceTree = "<group>"; };
 		B597796A2EB93B9B00712D85 /* ListableStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListableStore.swift; sourceTree = "<group>"; };
 		B597796B2EB93B9B00712D85 /* ModelContainerConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelContainerConfig.swift; sourceTree = "<group>"; };
 		B597796D2EB93B9B00712D85 /* DebugLogging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugLogging.swift; sourceTree = "<group>"; };
@@ -262,7 +260,6 @@
 				B59779652EB93B9B00712D85 /* ModelContainerManager.swift */,
 				B59779662EB93B9B00712D85 /* PostStores.swift */,
 				B59779672EB93B9B00712D85 /* RestrictedWordStore.swift */,
-				B59779682EB93B9B00712D85 /* SettingsStore.swift */,
 				39D8F1587800BE55C2E9602F /* FeatureFlagStore.swift */,
 			);
 			path = Repositories;
@@ -546,7 +543,6 @@
 				B59779B02EB93B9B00712D85 /* ModelContainerManager.swift in Sources */,
 				B59779B12EB93B9B00712D85 /* PostStores.swift in Sources */,
 				B59779B22EB93B9B00712D85 /* RestrictedWordStore.swift in Sources */,
-				B59779B32EB93B9B00712D85 /* SettingsStore.swift in Sources */,
 				B59779B42EB93B9B00712D85 /* ListableStore.swift in Sources */,
 				B59779B52EB93B9B00712D85 /* ModelContainerConfig.swift in Sources */,
 				B59779B62EB93B9B00712D85 /* DebugLogging.swift in Sources */,

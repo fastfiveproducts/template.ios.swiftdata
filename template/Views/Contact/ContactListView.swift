@@ -2,8 +2,8 @@
 //  ContactListView.swift
 //
 //  Template file created by Pete Maiser, Fast Five Products LLC, on 7/13/25.
-//  Modified by Pete Maiser, Fast Five Products LLC, on 2/18/26.
-//      Template v0.2.9 (updated) — Fast Five Products LLC's public AGPL template.
+//  Modified by Pete Maiser, Fast Five Products LLC, on 2/19/26.
+//      Template v0.3.0 (updated) — Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025, 2026 Fast Five Products LLC. All rights reserved.
 //
@@ -25,7 +25,8 @@ struct ContactListView: View {
     @Environment(\.modelContext) private var modelContext
     @Query private var contacts: [Contact]
     @ObservedObject var currentUserService: CurrentUserService
-    
+    @AppStorage("defaultToDog") private var defaultToDog = false
+
     @State private var showAddSheet = false
     @State private var newContact = Contact.empty
     @State private var selectedContact: Contact?
@@ -54,6 +55,7 @@ struct ContactListView: View {
             if currentUserService.isRealUser {
                 Divider()
                 Button {
+                    newContact.isDog = defaultToDog
                     showAddSheet = true
                 } label: {
                     HStack {
@@ -81,6 +83,7 @@ struct ContactListView: View {
                             Button("Save") {
                                 if newContact.isValid {
                                     modelContext.insert(newContact)
+                                    modelContext.insert(ActivityLogEntry("Contact created"))
                                     newContact = Contact.empty
                                     showAddSheet = false
                                 }

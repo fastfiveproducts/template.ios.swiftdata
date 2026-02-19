@@ -3,7 +3,8 @@
 //
 //  Template created by Pete Maiser, July 2024 through May 2025
 //  Modified by Pete Maiser, Fast Five Products LLC, on 10/23/25.
-//      Template v0.2.3 (updated) Fast Five Products LLC's public AGPL template.
+//  Modified by Claude, Fast Five Products LLC, on 2/19/26.
+//      Template v0.3.0 (updated) — Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025 Fast Five Products LLC. All rights reserved.
 //
@@ -26,7 +27,8 @@ import FirebaseAppCheck
 @main
 struct templateApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
-    
+    @AppStorage("darkMode") private var darkMode = false
+
     // Shared Services
     @StateObject private var currentUserService = CurrentUserService.shared
     @StateObject private var modelContainerManager: ModelContainerManager
@@ -53,6 +55,7 @@ struct templateApp: App {
                 currentUserService: currentUserService,
                 modelContainerManager: modelContainerManager
             )
+            .preferredColorScheme(darkMode ? .dark : .light)
         }
     }
 }
