@@ -2,8 +2,8 @@
 //  UserAccountViewModel.swift
 //
 //  Template created by Pete Maiser, July 2024 through August 2025
-//  Modified by Pete Maiser, Fast Five Products LLC, on 2/5/26.
-//      Template v0.2.5 (updated) — Fast Five Products LLC's public AGPL template.
+//  Modified by Pete Maiser, Fast Five Products LLC, on 2/18/26.
+//      Template v0.2.9 (updated) — Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025, 2026 Fast Five Products LLC. All rights reserved.
 //
@@ -219,11 +219,19 @@ class UserAccountViewModel: ObservableObject, DebugPrintable
         // set that chosen display name
         do {
             try await currentUserService.setUserDisplayName(candidate.displayName)
-            showSuccessMode = true
         } catch {
             debugprint("🛑 ERROR:  (View) User \(userId) Account created, Display Name created, but Cloud Error setting Display Name: \(error)")
             self.error = AccountCreationError.setUserDisplayNameFailed
         }
+
+        // send verification email (non-critical)
+        do {
+            try await currentUserService.sendVerificationEmail()
+        } catch {
+            debugprint("WARNING: verification email send failed: \(error)")
+        }
+
+        showSuccessMode = true
     }
     
     // MARK: - Create Account
@@ -276,12 +284,20 @@ class UserAccountViewModel: ObservableObject, DebugPrintable
         // set that chosen display name
         do {
             try await currentUserService.setUserDisplayName(accountCandidate.displayName)
-            showSuccessMode = true
         } catch {
             debugprint("🛑 ERROR:  (View) User \(createdUserId) created, Account initialized, Display Name created, but Cloud Error setting Display Name: \(error)")
             self.error = AccountCreationError.setUserDisplayNameFailed
         }
-        
+
+        // send verification email (non-critical)
+        do {
+            try await currentUserService.sendVerificationEmail()
+        } catch {
+            debugprint("WARNING: verification email send failed: \(error)")
+        }
+
+        showSuccessMode = true
+
     }
         
     // MARK: - Reset Password

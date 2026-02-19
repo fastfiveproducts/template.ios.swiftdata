@@ -3,7 +3,7 @@
 //
 //  Template created by Pete Maiser, July 2024 through May 2025
 //  Modified by Pete Maiser, Fast Five Products LLC, on 2/18/26.
-//      Template v0.2.8 (updated) — Fast Five Products LLC's public AGPL template.
+//      Template v0.2.9 (updated) — Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025, 2026 Fast Five Products LLC. All rights reserved.
 //
@@ -24,16 +24,19 @@
 
 
 import Foundation
+import Combine
 
 @MainActor
 final class RestrictedWordStore: ObservableObject, DebugPrintable {
 
     // primary data available from the store
     private var list: Loadable<[String]> = .none
-   
+
     // initiate this store as a Swift Singleton
     // this is also how to 'get' the singleton store
     static let shared = RestrictedWordStore()
+
+    private var signInCancellable: AnyCancellable?
     
     // set how to fetch data into the store
     private let fetchFromService: () async throws -> [String] = {
@@ -115,6 +118,33 @@ final class RestrictedWordStore: ObservableObject, DebugPrintable {
                     debugprint("🛑 ERROR:  fetching Restricted Word List: \(error)")
                     deviceLog("🛑 ERROR:  fetching Restricted Word List: %@", category: "RestrictedWords", error: error)
                 }
+            }
+        }
+
+        // Retry fetch after sign-in (covers first-launch race with anonymous auth)
+        signInCancellable = CurrentUserService.shared.signInPublisher
+            .first()
+            .sink { [weak self] in
+                Task { @MainActor in self?.retryFetchIfNeeded() }
+            }
+    }
+
+    private func retryFetchIfNeeded() {
+        signInCancellable = nil
+        // Only retry if we don't already have server data
+        if case .loaded(let current) = list, current != Self.bundledRestrictedWords {
+            return  // already have server data
+        }
+        Task {
+            do {
+                let result = try await fetchFromService()
+                if !result.isEmpty {
+                    list = .loaded(result)
+                    saveToCache(result)
+                    debugprint("fetched \(list.count) Restricted Text Keywords from server (retry after sign-in)")
+                }
+            } catch {
+                debugprint("⚠️ WARNING: retry fetch of Restricted Words after sign-in failed: \(error.localizedDescription)")
             }
         }
     }

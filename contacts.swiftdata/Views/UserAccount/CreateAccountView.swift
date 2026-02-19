@@ -100,16 +100,22 @@ struct CreateAccountView: View, DebugPrintable {
                 VStack(alignment: .leading, spacing: 8) {
                     statusRow("Creating User",
                               isActive: currentUserService.isCreatingUser,
-                              isDone: !currentUserService.isCreatingUser && (currentUserService.isCreatingUserAccount || currentUserService.isUpdatingUserAccount || viewModel.showSuccessMode))
-                    
+                              isDone: !currentUserService.isCreatingUser && (currentUserService.isCreatingUserAccount || currentUserService.isUpdatingUserAccount || currentUserService.isSendingVerificationEmail || viewModel.showSuccessMode))
+
                     statusRow("Creating User Profile",
                               isActive: currentUserService.isCreatingUserAccount,
-                              isDone: !currentUserService.isCreatingUserAccount && (currentUserService.isUpdatingUserAccount || viewModel.showSuccessMode))
-                    
+                              isDone: !currentUserService.isCreatingUserAccount && (currentUserService.isUpdatingUserAccount || currentUserService.isSendingVerificationEmail || viewModel.showSuccessMode))
+
                     statusRow("Setting Display Name",
                               isActive: currentUserService.isUpdatingUserAccount,
-                              isDone: !currentUserService.isUpdatingUserAccount && viewModel.showSuccessMode)
-                    
+                              isDone: !currentUserService.isUpdatingUserAccount && (currentUserService.isSendingVerificationEmail || viewModel.showSuccessMode))
+
+                    if ViewConfig.requiresEmailVerification {
+                        statusRow("Sending Verification Email",
+                                  isActive: currentUserService.isSendingVerificationEmail,
+                                  isDone: !currentUserService.isSendingVerificationEmail && viewModel.showSuccessMode)
+                    }
+
                     if viewModel.showSuccessMode {
                         HStack {
                             Image(systemName: "checkmark.circle.fill")
@@ -118,6 +124,11 @@ struct CreateAccountView: View, DebugPrintable {
                                 .fontWeight(.medium)
                         }
                         .padding(.top, 4)
+                        if ViewConfig.requiresEmailVerification {
+                            Text("Check your inbox to verify your email address.\nIf you don't see the email, check your Junk folder.")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
                     }
                 }
                 .padding(.vertical, 8)

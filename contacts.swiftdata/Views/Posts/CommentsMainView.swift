@@ -3,7 +3,8 @@
 //
 //  Template file created by Pete Maiser, 7/15/2025
 //  Renamed from CommentPostsStackView.swift by Pete Maiser, Fast Five Products LLC, on 2/4/26.
-//      Template v0.2.5 (updated) — Fast Five Products LLC's public AGPL template.
+//  Modified by Pete Maiser, Fast Five Products LLC, on 2/18/26.
+//      Template v0.2.9 (updated) — Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025, 2026 Fast Five Products LLC. All rights reserved.
 //
@@ -39,28 +40,36 @@ struct CommentsMainView: View, DebugPrintable {
             Divider()
                 .padding(.top, 8)
                 .padding(.bottom, 12)
-            VStackBox(title: "Write a Comment") {
-                NavigationLink {
-                    UserPostsStackView(
-                        currentUserService: currentUserService,
-                        viewModel: UserPostViewModel<PublicComment>(),
-                        store: store,
-                        sectionTitle: "Your Past Comments",
-                        composeTitle: "Write a Comment",
-                        textFieldLabel: "Comment Text",
-                        buttonText: "Submit New Comment",
-                        createPost: { candidate in
-                            try await store.createPublicComment(from: candidate)
+            if currentUserService.isVerifiedUser {
+                VStackBox(title: "Write a Comment") {
+                    NavigationLink {
+                        UserPostsStackView(
+                            currentUserService: currentUserService,
+                            viewModel: UserPostViewModel<PublicComment>(),
+                            store: store,
+                            sectionTitle: "Your Past Comments",
+                            composeTitle: "Write a Comment",
+                            textFieldLabel: "Comment Text",
+                            buttonText: "Submit New Comment",
+                            createPost: { candidate in
+                                try await store.createPublicComment(from: candidate)
+                            }
+                        )
+                    } label: {
+                        HStack {
+                            Spacer()
+                            Text("My Comments")
+                            Spacer()
                         }
-                    )
-                } label: {
-                    HStack {
-                        Spacer()
-                        Text("My Comments")
-                        Spacer()
+                        .foregroundStyle(Color.accentColor)
                     }
-                    .foregroundStyle(Color.accentColor)
                 }
+            } else if currentUserService.isRealUser {
+                VerifyEmailLinkView(currentUserService: currentUserService, showDivider: false)
+                    .frame(maxWidth: .infinity)
+            } else {
+                SignUpInLinkView(currentUserService: currentUserService, showDivider: false)
+                    .frame(maxWidth: .infinity)
             }
         }
         .styledView()
@@ -70,20 +79,36 @@ struct CommentsMainView: View, DebugPrintable {
 
 
 #if DEBUG
-#Preview  {
+#Preview ("no-data and signed-out") {
     NavigationStack {
         CommentsMainView(
-            currentUserService: CurrentUserTestService.sharedSignedIn,
+            currentUserService: CurrentUserTestService.sharedSignedOut,
+            store: PublicCommentStore()
+        )
+    }
+}
+#Preview ("test-data anonymous") {
+    NavigationStack {
+        CommentsMainView(
+            currentUserService: CurrentUserTestService.sharedAnonymous,
             store: PublicCommentStore.testLoaded()
         )
     }
 }
 
-#Preview ("Empty") {
+#Preview ("test-data unverified user") {
+    NavigationStack {
+        CommentsMainView(
+            currentUserService: CurrentUserTestService.sharedUnverifiedUser,
+            store: PublicCommentStore.testLoaded()
+        )
+    }
+}
+#Preview ("test-data signed-in") {
     NavigationStack {
         CommentsMainView(
             currentUserService: CurrentUserTestService.sharedSignedIn,
-            store: PublicCommentStore()
+            store: PublicCommentStore.testLoaded()
         )
     }
 }
