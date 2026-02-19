@@ -28,6 +28,7 @@ struct MainMenuView: View {
     @ObservedObject var announcementStore: AnnouncementStore
     @ObservedObject var publicCommentStore: PublicCommentStore
     @ObservedObject var privateMessageStore: PrivateMessageStore
+    @ObservedObject private var featureFlagStore = FeatureFlagStore.shared
 
     @State private var showMenu = false
     @State private var selectedMenuItem: NavigationItem?

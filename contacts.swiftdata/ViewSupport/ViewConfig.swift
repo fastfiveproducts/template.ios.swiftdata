@@ -3,7 +3,7 @@
 //
 //  Template created by Pete Maiser, July 2024 through May 2025
 //  Modified by Pete Maiser, Fast Five Products LLC, on 2/18/26.
-//      Template v0.2.8 (updated) — Fast Five Products LLC's public AGPL template.
+//      Template v0.2.9 (updated) — Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025, 2026 Fast Five Products LLC. All rights reserved.
 //
@@ -51,8 +51,8 @@ struct ViewConfig {
 
     // Email Verification
     // When true, new users are sent a verification email and some operations
-    // may be are gated on verified status. When false, these gates
-    // gates fall back to isRealUser and no verification emails are sent.
+    // may be gated on verified status. When false, these gates
+    // fall back to isRealUser and no verification emails are sent.
     static let requiresEmailVerification = true
 
     // Bundled Feature Flags

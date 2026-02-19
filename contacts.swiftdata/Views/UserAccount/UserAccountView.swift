@@ -23,6 +23,7 @@ import SwiftUI
 struct UserAccountView: View {
     @StateObject var viewModel: UserAccountViewModel
     @ObservedObject var currentUserService: CurrentUserService
+    @ObservedObject private var featureFlagStore = FeatureFlagStore.shared
 
     @Namespace var createUserViewId
           
