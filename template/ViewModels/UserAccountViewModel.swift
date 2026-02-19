@@ -21,8 +21,7 @@
 import Foundation
 
 @MainActor
-class UserAccountViewModel: ObservableObject, DebugPrintable
-{
+class UserAccountViewModel: ObservableObject, DebugPrintable {
     // Support Previews to jump-start into create-account or status-mode
     #if DEBUG
     init(createAccountMode: Bool = false, showStatusMode: Bool = false, completeUserAccountMode: Bool = false) {

@@ -2,7 +2,7 @@
 //  SupportView.swift
 //
 //  Template file created by Pete Maiser, Fast Five Products LLC, on 10/30/25.
-//  Modified by Claude, on 2/19/26.
+//  Modified by Claude, Fast Five Products LLC, on 2/19/26.
 //      Template v0.3.0 (updated) — Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025, 2026 Fast Five Products LLC. All rights reserved.
