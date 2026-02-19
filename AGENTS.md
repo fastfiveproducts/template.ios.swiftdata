@@ -129,7 +129,7 @@ git pull origin develop
 
 Each commit on `main` represents a published release. Squash all of develop into a single commit on main.
 
-> **Example for User to Initiate**: "Release develop to main as 0.2.7"
+> **Example for User to Initiate**: "Release develop to main as v0.3.1"
 
 ```bash
 # 1. Ensure develop is current
@@ -142,19 +142,29 @@ git pull origin main
 
 # 3. Squash merge develop into main
 git merge --squash develop
-git commit -m "Release vX.Y.Z – <summary>"
+git commit -m "$(cat <<'EOF'
+Release vX.Y.Z
+
+<release notes body>
+EOF
+)"
 git push origin main
 
 # 4. If step 3 fails with conflicts (common after file renames/moves):
 git reset --hard origin/main
 git read-tree --reset -u develop
-git commit -m "Release vX.Y.Z – <summary>"
+git commit -m "$(cat <<'EOF'
+Release vX.Y.Z
+
+<release notes body>
+EOF
+)"
 git push origin main
 
 # 5. Verify content equivalence (should return nothing):
 git diff main..develop
 ```
 
-**Commit message**: Review `git log main..develop --oneline` and prior release messages on main (`git log main --oneline`) to match the established style. Group changes into categories (e.g. **Feature Area**, **Code Quality**, **Infrastructure**) with concise bullet points summarizing each PR/commit. Also look for previous commit messages that duplicate or cancel each other out and squash them. The message should read as release notes — what changed and why, not individual commit details.
+**Commit message**: The first line must be exactly `Release vX.Y.Z` with no suffix — this is the title GitHub displays. After a blank line, add the release notes body. Review `git log main..develop --oneline` and prior release messages on main (`git log main --oneline`) to match the established style. Group changes into categories (e.g. **Feature Area**, **Code Quality**, **Infrastructure**) with concise bullet points summarizing each PR/commit. Also look for previous commit messages that duplicate or cancel each other out and squash them. The body should read as release notes — what changed and why, not individual commit details.
 
 After release, main and develop will have different commit hashes but identical content. GitHub may report main as "behind"/"ahead" of develop — this is expected and should be ignored.
