@@ -65,7 +65,7 @@ struct SupportView: View {
                     VStack(alignment: .leading, spacing: 8) {
                         Text("**User Accounts** — Sign in, sign up, email verification, and profile management.")
                         Text("**Announcements** — View announcements published for all users.")
-                        Text("**Contacts** — Browse and manage a list of contacts (included as a Swift Data sample).")
+                        Text("**Contacts** — Browse and manage a list of contacts (included as a SwiftData sample).")
                         Text("**Private Messages** — Send and receive messages between users.")
                         Text("**Public Comments** — Post and read comments visible to all users.")
                         Text("**Activity Log** — Review a log of your recent actions.")
