@@ -3,7 +3,7 @@
 //
 //  Template file created by Pete Maiser, Fast Five Products LLC, on 8/20/25.
 //  Modified by Pete Maiser, Fast Five Products LLC, on 2/19/26.
-//      Template v0.3.0 (updated) — Fast Five Products LLC's public AGPL template.
+//      Template v0.3.2 (updated) — Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025, 2026 Fast Five Products LLC. All rights reserved.
 //
@@ -48,7 +48,6 @@ struct ChangePasswordView: View, DebugPrintable {
                     .keyboardType(.emailAddress)
                     .autocorrectionDisabled()
                     .focused($focusedField, equals: .passwordOld)
-                    .onTapGesture { nextField() }
                     .onSubmit { nextField() }
             } label: { Text("current password:") }
                 .labeledContentStyle(TopLabeledContentStyle())
@@ -59,7 +58,6 @@ struct ChangePasswordView: View, DebugPrintable {
                     .keyboardType(.emailAddress)
                     .autocorrectionDisabled()
                     .focused($focusedField, equals: .passwordNew)
-                    .onTapGesture { nextField() }
                     .onSubmit { nextField() }
             } label: { Text("new password:") }
                 .labeledContentStyle(TopLabeledContentStyle())
@@ -70,7 +68,6 @@ struct ChangePasswordView: View, DebugPrintable {
                     .keyboardType(.emailAddress)
                     .autocorrectionDisabled()
                     .focused($focusedField, equals: .passwordAgain)
-                    .onTapGesture { nextField() }
                     .onSubmit { nextField() }
             } label: { Text("enter new password again:") }
                 .labeledContentStyle(TopLabeledContentStyle())
@@ -106,11 +103,11 @@ private extension ChangePasswordView {
             Task {
                 do {
                     try await viewModel.changePasswordWithService(currentUserService)
+                    showConfirmation = true
                 } catch {
                     debugprint("🛑 ERROR:  (View) Error requesting password change: \(error)")
                     viewModel.error = error
                 }
-                showConfirmation = true
             }
         }
     }

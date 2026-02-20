@@ -20,40 +20,6 @@
 import SwiftUI
 import AVKit
 
-extension EnvironmentValues {
-    var tabSafeAreaBackground: Bool {
-        get { self[tabSafeAreaBackgroundKey.self] }
-        set { self[tabSafeAreaBackgroundKey.self] = newValue }
-    }
-}
-
-private struct tabSafeAreaBackgroundKey: EnvironmentKey {
-    static let defaultValue = false
-}
-
-struct ConditionalVideoBackgroundView: View {
-    var body: some View {
-        guard !ViewConfig.backgroundVideoName.isEmpty else {
-            return AnyView(EmptyView())
-        }
-        
-        return AnyView(
-            GeometryReader { geo in
-                let isLandscape = geo.size.width > geo.size.height
-                let isPad = UIDevice.current.userInterfaceIdiom == .pad
-                
-                Group {
-                    if !isPad || !isLandscape {
-                        VideoBackgroundView()
-                    } else {
-                        ViewConfig.bgColor.ignoresSafeArea()
-                    }
-                }
-                .ignoresSafeArea()
-            }
-        )
-    }
-}
 
 struct VideoBackgroundView: UIViewRepresentable {
     @ObservedObject var shared = VideoBackgroundPlayer.shared
@@ -94,6 +60,30 @@ struct VideoBackgroundView: UIViewRepresentable {
 
     func updateUIView(_ uiView: UIView, context: Context) {
         shared.queuePlayer.playImmediately(atRate: 1.0)
+    }
+}
+
+struct ConditionalVideoBackgroundView: View {
+    var body: some View {
+        guard !ViewConfig.backgroundVideoName.isEmpty else {
+            return AnyView(EmptyView())
+        }
+        
+        return AnyView(
+            GeometryReader { geo in
+                let isLandscape = geo.size.width > geo.size.height
+                let isPad = UIDevice.current.userInterfaceIdiom == .pad
+                
+                Group {
+                    if !isPad || !isLandscape {
+                        VideoBackgroundView()
+                    } else {
+                        ViewConfig.bgColor.ignoresSafeArea()
+                    }
+                }
+                .ignoresSafeArea()
+            }
+        )
     }
 }
 
@@ -142,6 +132,17 @@ final class VideoBackgroundPlayer: ObservableObject, DebugPrintable {
             self.queuePlayer = queue
             self.playerLooper = looper
         }
+    }
+}
+
+private struct TabSafeAreaBackgroundKey: EnvironmentKey {
+    static let defaultValue = false
+}
+
+extension EnvironmentValues {
+    var tabSafeAreaBackground: Bool {
+        get { self[TabSafeAreaBackgroundKey.self] }
+        set { self[TabSafeAreaBackgroundKey.self] = newValue }
     }
 }
 

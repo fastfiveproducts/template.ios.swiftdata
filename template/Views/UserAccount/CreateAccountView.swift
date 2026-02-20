@@ -2,8 +2,8 @@
 //  CreateAccountView.swift
 //
 //  Template created by Pete Maiser, July 2024 through August 2025
-//  Modified by Pete Maiser, Fast Five Products LLC, on 8/28/25.
-//      Template v0.2.2 (updated) Fast Five Products LLC's public AGPL template.
+//  Modified by Pete Maiser, Fast Five Products LLC, on 2/19/26.
+//      Template v0.3.2 (updated) — Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025 Fast Five Products LLC. All rights reserved.
 //
@@ -48,7 +48,6 @@ struct CreateAccountView: View, DebugPrintable {
                         .keyboardType(.emailAddress)
                         .autocorrectionDisabled()
                         .focused($focusedField, equals: .passwordAgain)
-                        .onTapGesture { nextField() }
                         .onSubmit { nextField() }
                 } label: { Text("enter password again:") }
                     .labeledContentStyle(TopLabeledContentStyle())
@@ -59,7 +58,6 @@ struct CreateAccountView: View, DebugPrintable {
                         .keyboardType(.emailAddress)
                         .autocorrectionDisabled()
                         .focused($focusedField, equals: .displayName)
-                        .onTapGesture { nextField() }
                         .onSubmit { nextField() }
                 } label: { Text("enter a Display Name:") }
                     .labeledContentStyle(TopLabeledContentStyle())

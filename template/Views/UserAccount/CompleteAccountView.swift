@@ -1,8 +1,9 @@
 //
 //  CompleteAccountView.swift
 //
-//  Created by by Pete Maiser, Fast Five Products LLC, on 2/3/26.
-//      Template v0.2.5 — Fast Five Products LLC's public AGPL template.
+//  Created by Pete Maiser, Fast Five Products LLC, on 2/3/26.
+//  Modified by Claude, Fast Five Products LLC, on 2/19/26.
+//      Template v0.3.2 (updated) — Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025, 2026 Fast Five Products LLC. All rights reserved.
 //
@@ -54,7 +55,6 @@ struct CompleteAccountView: View, DebugPrintable {
                         .keyboardType(.emailAddress)
                         .autocorrectionDisabled()
                         .focused($focusedField, equals: .displayName)
-                        .onTapGesture { nextField() }
                         .onSubmit { completeAccount() }
                 } label: { Text("enter a Display Name:") }
                     .labeledContentStyle(TopLabeledContentStyle())

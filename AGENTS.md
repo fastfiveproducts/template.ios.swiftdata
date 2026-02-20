@@ -56,7 +56,7 @@ When modifying an existing file:
 - Check other recently modified files to determine the current template version
 
 When creating a new file file:
-- Add a "Created by" line with your name and date (e.g., `Created by by Pete Maiser, Fast Five Products LLC, on 2/3/26.`)
+- Add a "Created by" line with your name and date (e.g., `Created by Pete Maiser, Fast Five Products LLC, on 2/3/26.`)
 - Start the template version with the current version (e.g., `Template v0.2.5 — Fast Five Products LLC's public AGPL template.`)
 
 **Git Workflow**: Feature branches from `develop`, squash-merge to `develop`, then squash to `main` for releases
