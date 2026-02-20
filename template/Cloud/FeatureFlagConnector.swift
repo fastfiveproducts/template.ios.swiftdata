@@ -2,7 +2,8 @@
 //  FeatureFlagConnector.swift
 //
 //  Template file created by Pete Maiser, Fast Five Products LLC, on 2/18/26.
-//      Template v0.2.8 — Fast Five Products LLC's public AGPL template.
+//  Modified by Pete Maiser, Fast Five Products LLC, on 2/19/26.
+//      Template v0.3.1 (updated)  — Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2026 Fast Five Products LLC. All rights reserved.
 //
@@ -28,7 +29,7 @@ fileprivate let defaultFetchLimit: Int = 100
 struct FeatureFlagConnector {
     func fetch(limit: Int = defaultFetchLimit) async throws -> [FeatureFlag] {
         var list: [FeatureFlag] = []
-        let queryRef = DataConnect.defaultConnector.listFeatureFlagsQuery.ref(limit: limit)
+        let queryRef = DataConnect.defaultConnector.listFeatureFlagsQuery.ref(appClientKey: ViewConfig.appClientKey, limit: limit)
         let operationResult = try await queryRef.execute()
         list = try operationResult.data.featureFlags.compactMap { firebaseResultRow in
             try makeFeatureFlagStruct(from: firebaseResultRow)

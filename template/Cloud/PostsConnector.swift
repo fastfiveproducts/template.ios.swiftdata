@@ -2,8 +2,8 @@
 //  PostsConnector.swift
 //
 //  Template created by Pete Maiser, July 2024 through May 2025
-//  Modified by Pete Maiser, Fast Five Products LLC, on 2/17/26.
-//      Template v0.2.7 (updated)  — Fast Five Products LLC's public AGPL template.
+//  Modified by Pete Maiser, Fast Five Products LLC, on 2/19/26.
+//      Template v0.3.1 (updated)  — Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025, 2026 Fast Five Products LLC. All rights reserved.
 //
@@ -32,7 +32,7 @@ struct PostsConnector {
 
     func fetchPublicComments(limit: Int = defaultFetchLimit) async throws -> [PublicComment] {
         var comments: [PublicComment] = []
-        let queryRef = DataConnect.defaultConnector.listPublicCommentsQuery.ref(limit: limit)
+        let queryRef = DataConnect.defaultConnector.listPublicCommentsQuery.ref(appClientKey: ViewConfig.appClientKey, limit: limit)
         let operationResult = try await queryRef.execute()
         comments = try operationResult.data.publicComments.compactMap { firebaseComment -> PublicComment? in
             let comment = try makePublicCommentStruct(from: firebaseComment)
@@ -46,7 +46,7 @@ struct PostsConnector {
 
     func fetchMyPrivateMessages(limit: Int = defaultFetchLimit) async throws -> [PrivateMessage] {
         var messages: [PrivateMessage] = []
-        let queryRef = DataConnect.defaultConnector.getMyPrivateMessagesQuery.ref(limit: limit)
+        let queryRef = DataConnect.defaultConnector.getMyPrivateMessagesQuery.ref(appClientKey: ViewConfig.appClientKey, limit: limit)
         let operationResult = try await queryRef.execute()
         messages = try operationResult.data.privateMessages.compactMap { firebaseMessage -> PrivateMessage? in
             let message = try makePrivateMessageStruct(from: firebaseMessage)
@@ -99,6 +99,7 @@ struct PostsConnector {
     func createPublicComment(_ comment: PostCandidate) async throws -> PublicComment {
         guard comment.isValid else { throw UpsertDataError.invalidFunctionInput }
         let operationResult = try await DataConnect.defaultConnector.createPublicCommentMutation.execute(
+            appClientKey: ViewConfig.appClientKey,
             toUserId: comment.to.uid,
             toUserDisplayNameText: comment.to.displayName,
             createDeviceIdentifierstamp: deviceIdentifierstamp(),
@@ -119,6 +120,7 @@ struct PostsConnector {
     func createPrivateMessage(_ message: PostCandidate) async throws -> PrivateMessage {
         guard message.isValid else { throw UpsertDataError.invalidFunctionInput }
         let operationResult = try await DataConnect.defaultConnector.createPrivateMessageMutation.execute(
+            appClientKey: ViewConfig.appClientKey,
             toUserId: message.to.uid,
             toUserDisplayNameText: message.to.displayName,
             createDeviceIdentifierstamp: deviceIdentifierstamp(),
