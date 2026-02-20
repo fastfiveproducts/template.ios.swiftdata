@@ -162,9 +162,7 @@ class UserAccountViewModel: ObservableObject, DebugPrintable {
         } else if capturedDisplayNameText.count > 100 {
             statusText = "Display Name is too long"
             isReady = false
-        }
-
-        if RestrictedWordStore.shared.containsRestrictedWords(capturedDisplayNameText) {
+        } else if RestrictedWordStore.shared.containsRestrictedWords(capturedDisplayNameText) {
             statusText = "Display Name matched one or more keywords on our Restricted Text List. Please adjust."
             isReady = false
         }
