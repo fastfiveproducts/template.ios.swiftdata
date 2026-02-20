@@ -21,8 +21,7 @@
 import Foundation
 
 @MainActor
-class UserAccountViewModel: ObservableObject, DebugPrintable
-{
+class UserAccountViewModel: ObservableObject, DebugPrintable {
     // Support Previews to jump-start into create-account or status-mode
     #if DEBUG
     init(createAccountMode: Bool = false, showStatusMode: Bool = false, completeUserAccountMode: Bool = false) {
@@ -83,15 +82,16 @@ class UserAccountViewModel: ObservableObject, DebugPrintable
         } else if capturedDisplayNameText.isEmpty {
             statusText = ("Please enter your display name")
             isReady = false
-        }
-        
-        if RestrictedWordStore.shared.containsRestrictedWords(capturedDisplayNameText) {
+        } else if capturedDisplayNameText.count > 100 {
+            statusText = "Display Name is too long"
+            isReady = false
+        } else if RestrictedWordStore.shared.containsRestrictedWords(capturedDisplayNameText) {
             statusText = "Display Name matched one or more keywords on our Restricted Text List. Please adjust."
             isReady = false
         }
         return isReady
     }
-    
+
     func isReadyToResetPassword() -> Bool {
         statusText = ""
         var isReady = true
@@ -159,9 +159,10 @@ class UserAccountViewModel: ObservableObject, DebugPrintable
         if capturedDisplayNameText.isEmpty {
             statusText = ("Please enter your display name")
             isReady = false
-        }
-
-        if RestrictedWordStore.shared.containsRestrictedWords(capturedDisplayNameText) {
+        } else if capturedDisplayNameText.count > 100 {
+            statusText = "Display Name is too long"
+            isReady = false
+        } else if RestrictedWordStore.shared.containsRestrictedWords(capturedDisplayNameText) {
             statusText = "Display Name matched one or more keywords on our Restricted Text List. Please adjust."
             isReady = false
         }
