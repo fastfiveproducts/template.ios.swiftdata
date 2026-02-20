@@ -22,7 +22,7 @@ import Foundation
 import UIKit
 
 #if DEBUG
-nonisolated(unsafe) var deviceIdentifierstampLogged: Bool = false
+nonisolated(unsafe) var deviceIdentifierstampLogged: Bool = false // debug-only flag, race is harmless (worst case: message prints twice)
 #endif
 
 @MainActor
