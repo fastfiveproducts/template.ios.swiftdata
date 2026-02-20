@@ -42,9 +42,13 @@ class UserPostViewModel<T: Post>: ObservableObject, DebugPrintable {
         if capturedContentText.isEmpty {
             statusText = ("No Content Entered")
             isReady = false
-        }
-        
-        else if RestrictedWordStore.shared.containsRestrictedWords(capturedContentText) {
+        } else if capturedTitleText.count > 100 {
+            statusText = "Title is too long"
+            isReady = false
+        } else if capturedContentText.count > 1000 {
+            statusText = "Content is too long"
+            isReady = false
+        } else if RestrictedWordStore.shared.containsRestrictedWords(capturedContentText) {
             statusText = "Content matched one or more keywords on our Restricted Text List. Please adjust."
             isReady = false
         }
