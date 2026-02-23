@@ -2,7 +2,7 @@
 //  CurrentUserService.swift
 //
 //  Template created by Pete Maiser, July 2024 through August 2025
-//  Modified by Pete Maiser, Fast Five Products LLC, on 2/18/26.
+//  Modified by Pete Maiser, Fast Five Products LLC, on 2/23/26.
 //      Template v0.3.3 (updated) — Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025, 2026 Fast Five Products LLC. All rights reserved.
@@ -323,6 +323,11 @@ class CurrentUserService: ObservableObject, DebugPrintable {
                 debugprint("⚠️ WARNING:  Password cannot be changed because the user needs to re-authenticate.  Error: \(error)")
             } else {
                 debugprint("🛑 ERROR:  Password Change error: \(error)")
+            }
+            if let message = AuthError.extractFirebaseMessage(from: error) {
+                let wrappedError = AuthError.internalError(message)
+                self.error = wrappedError
+                throw wrappedError
             }
             self.error = error
             throw error
