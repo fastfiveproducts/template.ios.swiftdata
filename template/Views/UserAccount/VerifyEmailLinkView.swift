@@ -2,7 +2,7 @@
 //  VerifyEmailLinkView.swift
 //
 //  Created by Claude, Fast Five Products LLC, on 2/18/26.
-//      Template v0.2.9 — Fast Five Products LLC's public AGPL template.
+//      Template v0.3.3 — Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2026 Fast Five Products LLC. All rights reserved.
 //
@@ -22,29 +22,48 @@ import SwiftUI
 struct VerifyEmailLinkView: View {
     @ObservedObject var currentUserService: CurrentUserService
 
+    var inList: Bool = false
     var showDivider: Bool = true
     var onNavigate: (() -> Void)? = nil
 
     var body: some View {
         if currentUserService.isRealUser && !currentUserService.isVerifiedUser {
-
-            if showDivider { Divider() }
-
-            NavigationLink {
-                UserAccountView(
-                    viewModel: UserAccountViewModel(),
-                    currentUserService: currentUserService)
-                .onAppear { onNavigate?() }
-            } label: {
-                HStack {
-                    Text("Verify your email")
-                    Image(systemName: "envelope.badge.shield.half.filled")
-                    Text("to unlock all features!")
+            if inList {
+                ZStack {
+                    NavigationLink {
+                        UserAccountView(
+                            viewModel: UserAccountViewModel(),
+                            currentUserService: currentUserService)
+                        .onAppear { onNavigate?() }
+                    } label: { EmptyView() }
+                    .opacity(0)
+                    HStack {
+                        Spacer()
+                        Text("Verify email")
+                        Image(systemName: "envelope.badge.shield.half.filled")
+                        Text("to unlock all features!")
+                        Spacer()
+                    }
+                    .foregroundStyle(ViewConfig.linkColor)
                 }
-                .foregroundStyle(ViewConfig.linkColor)
-            }
-            .buttonStyle(BorderlessButtonStyle())
+            } else {
+                if showDivider { Divider() }
 
+                NavigationLink {
+                    UserAccountView(
+                        viewModel: UserAccountViewModel(),
+                        currentUserService: currentUserService)
+                    .onAppear { onNavigate?() }
+                } label: {
+                    HStack {
+                        Text("Verify your email")
+                        Image(systemName: "envelope.badge.shield.half.filled")
+                        Text("to unlock all features!")
+                    }
+                    .foregroundStyle(ViewConfig.linkColor)
+                }
+                .buttonStyle(BorderlessButtonStyle())
+            }
         } else {
             EmptyView()
         }
@@ -61,6 +80,16 @@ struct VerifyEmailLinkView: View {
             VerifyEmailLinkView(currentUserService: currentUserService)
         }
         Spacer()
+    }
+}
+#Preview ("Form-List unverified user") {
+    let currentUserService = CurrentUserTestService.sharedUnverifiedUser
+    NavigationStack {
+        Form {
+            Section(header: Text("Form-List Preview")) {
+                VerifyEmailLinkView(currentUserService: currentUserService, inList: true)
+            }
+        }
     }
 }
 #Preview ("verified user") {
