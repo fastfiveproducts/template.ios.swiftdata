@@ -3,7 +3,7 @@
 //
 //  Template created by Pete Maiser, July 2024 through August 2025
 //  Modified by Pete Maiser, Fast Five Products LLC, on 2/18/26.
-//      Template v0.2.9 (updated) — Fast Five Products LLC's public AGPL template.
+//      Template v0.3.3 (updated) — Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025, 2026 Fast Five Products LLC. All rights reserved.
 //
@@ -29,11 +29,18 @@ class CurrentUserService: ObservableObject, DebugPrintable {
     
     static let shared = CurrentUserService()     // this store passed to view models as singleton
     
+    // ***** User *****
+    @Published var user: User = User.blankUser
+    var userKey: UserKey { UserKey(uid: user.auth.uid, displayName: user.account.displayName) }
+    var isVerifiedUser: Bool { isRealUser && (user.auth.isEmailVerified || !ViewConfig.requiresEmailVerification) }
+    
+    
     // ***** Status and Modes *****
 
     // sign-in process
     @Published var isSigningIn = false
     @Published var isSignedIn = false
+    @Published var isRealUser = false
     
     // because Auth masters users, creating a User in the Authententication system is "creating a user"
     // even if the user is not complete until the Account is created and complete
@@ -57,13 +64,6 @@ class CurrentUserService: ObservableObject, DebugPrintable {
     @Published var isWaitingOnEmailAuthenticaion = false
     
     
-    // ***** User *****
-    @Published var user: User = User.blankUser
-    var userKey: UserKey { UserKey(uid: user.auth.uid, displayName: user.account.displayName) }
-    var isRealUser: Bool { isSignedIn && !user.auth.isAnonymous }
-    var isVerifiedUser: Bool { isRealUser && (user.auth.isEmailVerified || !ViewConfig.requiresEmailVerification) }
-    
-    
     // ***** Cloud Auth *****
     @Published var error: Error?
     private let auth = Auth.auth()
@@ -71,8 +71,13 @@ class CurrentUserService: ObservableObject, DebugPrintable {
     private var listener: AuthStateDidChangeListenerHandle?
     let signInPublisher = PassthroughSubject<Void, Never>()
     let signOutPublisher = PassthroughSubject<Void, Never>()
-    
+    private var cancellables = Set<AnyCancellable>()
+
     init() {
+        $isSignedIn.combineLatest($user)
+            .map { signedIn, user in signedIn && !user.auth.isAnonymous }
+            .removeDuplicates()
+            .assign(to: &$isRealUser)
         setupListener()
     }
     
