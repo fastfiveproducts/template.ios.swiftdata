@@ -103,7 +103,7 @@ struct PostBubbleView: View {
 #Preview ("Various Views") {
     ScrollView {
         VStack(alignment: .leading, spacing: 16) {
-            Section(header: Text("All Comments View")) {
+            Section(header: Text("Comments")) {
                 PostBubbleView(post: PublicComment.testObject, isSent: true, showFromUser: true)
                 PostBubbleView(post: PublicComment.testObjectAnother, isSent: false, showFromUser: true)
             }
@@ -113,11 +113,7 @@ struct PostBubbleView: View {
             }
 
             Section(header: Text("Inbox Messages View")) {
-                PostBubbleView(post: PrivateMessage.testObjectAnother, isSent: false, showFromUser: true)
-            }
-
-            Section(header: Text("Sent View")) {
-                PostBubbleView(post: PrivateMessage.testObject, isSent: true, showToUser: true)
+                PostBubbleView(post: PrivateMessage.testObjectSubject, isSent: false, showFromUser: true)
             }
 
             Section(header: Text("Private Messages No Filter (Mixed)")) {

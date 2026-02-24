@@ -206,7 +206,7 @@ extension PrivateMessage {
         timestamp: Date().addingTimeInterval(-86400*2),
         from: UserKey.testObject,
         to: UserKey.testObjectAnother,
-        subject: "Title Lorem Ipsum",
+        subject: "",
         content: "Test Message from tO to tOA, lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
     )
     static let testObjectAnother = PrivateMessage(
@@ -214,7 +214,15 @@ extension PrivateMessage {
         timestamp: Date().addingTimeInterval(-86400*1),
         from: UserKey.testObjectAnother,
         to: UserKey.testObject,
-        subject: "Another Title Lorem ipsum",
+        subject: "",
+        content: "Test Message from tOA  to tO, more Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+    )
+    static let testObjectSubject = PrivateMessage(
+        id: UUID(),
+        timestamp: Date().addingTimeInterval(-86400*1),
+        from: UserKey.testObjectAnother,
+        to: UserKey.testObject,
+        subject: "Test Message Subject",
         content: "Test Message from tOA  to tO, more Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
     )
     static let testObjectTiny = PrivateMessage(
@@ -243,6 +251,14 @@ extension PublicComment {
         from: UserKey.testObjectAnother,
         to: UserKey.blankUser,
         subject: "",
+        content: "Test Comment from tOA, more lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+    )
+    static let testObjectSubject = PublicComment(
+        id: UUID(),
+        timestamp: Date().addingTimeInterval(-86400*1),
+        from: UserKey.testObjectAnother,
+        to: UserKey.blankUser,
+        subject: "Test Comment Subject",
         content: "Test Comment from tOA, more lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
     )
     static let testObjectTiny = PublicComment(
