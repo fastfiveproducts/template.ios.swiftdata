@@ -2,7 +2,7 @@
 //  CurrentUserService.swift
 //
 //  Template created by Pete Maiser, July 2024 through August 2025
-//  Modified by Pete Maiser, Fast Five Products LLC, on 2/23/26.
+//  Modified by Pete Maiser, Fast Five Products LLC, on 2/24/26.
 //      Template v0.3.3 (updated) — Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025, 2026 Fast Five Products LLC. All rights reserved.
@@ -31,7 +31,7 @@ class CurrentUserService: ObservableObject, DebugPrintable {
     
     // ***** User *****
     @Published var user: User = User.blankUser
-    var userKey: UserKey { UserKey(uid: user.auth.uid, displayName: user.account.displayName, userType: user.account.userType) }
+    var userKey: UserKey { UserKey(uid: user.auth.uid, userType: user.account.userType, displayName: user.account.displayName) }
     var isVerifiedUser: Bool { isRealUser && (user.auth.isEmailVerified || !ViewConfig.requiresEmailVerification) }
     
     
@@ -431,7 +431,7 @@ extension CurrentUserService {
                 displayNameTextLower: displayNameText.lowercased(),
                 photoUrl: profile.photoUrl
             )
-            let userProfile = UserAccount(uid: profile.uid, displayName: profile.displayName, photoUrl: profile.photoUrl, userType: nil)
+            let userProfile = UserAccount(uid: profile.uid, userType: nil, displayName: profile.displayName, photoUrl: profile.photoUrl)
             user.account = userProfile
         }
         catch {
@@ -545,9 +545,9 @@ extension CurrentUserService {
     ) throws -> UserAccount {
         return UserAccount(
             uid: firebaseAccount.id,
+            userType: firebaseAccount.userType,
             displayName: firebaseAccount.displayNameText,
-            photoUrl: firebaseAccount.photoUrl,
-            userType: firebaseAccount.userType
+            photoUrl: firebaseAccount.photoUrl
         )
     }
 }

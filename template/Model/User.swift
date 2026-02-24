@@ -2,8 +2,8 @@
 //  User.swift
 //
 //  Template created by Pete Maiser, July 2024 through May 2025
-//  Modified by Pete Maiser, Fast Five Products LLC, on 2/18/26.
-//      Template v0.2.9 (updated) — Fast Five Products LLC's public AGPL template.
+//  Modified by Pete Maiser, Fast Five Products LLC, on 2/24/26.
+//      Template v0.3.3 (updated) — Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025, 2026 Fast Five Products LLC. All rights reserved.
 //
@@ -38,17 +38,17 @@ struct UserAuth: Equatable, Codable {
 // User Account Data Service
 struct UserAccount: Equatable, Codable {
     let uid: String                 // mastered by the Auth Service
+    let userType: String?           // mastered by the Application Data Service
     let displayName: String         // mastered by the Application Data Service
     let photoUrl: String
-    let userType: String?
     var isValid: Bool { !uid.isEmpty && !displayName.isEmpty }
 }
 
 // Light, public, local-client helper-structure is most of the user data used throughout the app
 struct UserKey: Equatable, Codable {
     let uid: String
-    let displayName: String
     let userType: String?
+    let displayName: String
     var isValid: Bool {
         !uid.isEmpty &&
         !displayName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }
@@ -71,11 +71,11 @@ extension UserAuth {
 }
 
 extension UserAccount {
-    static let blankUser = UserAccount(uid: UserKey.blankUser.uid, displayName: "", photoUrl: "", userType: nil)
+    static let blankUser = UserAccount(uid: UserKey.blankUser.uid, userType: nil, displayName: "", photoUrl: "")
 }
 
 extension UserKey {
-    static let blankUser = UserKey(uid: "", displayName: "", userType: nil)
+    static let blankUser = UserKey(uid: "", userType: nil, displayName: "")
 }
 
 
@@ -97,20 +97,20 @@ extension UserAuth {
 extension UserAccount {
     static let testObject = UserAccount(
         uid: UserKey.testObject.uid,
+        userType: nil,
         displayName: UserKey.testObject.displayName,
-        photoUrl: "larryipsum.photo.com",
-        userType: nil)
+        photoUrl: "larryipsum.photo.com")
     static let testObjectAnother = UserAccount(
         uid: UserKey.testObjectAnother.uid,
+        userType: nil,
         displayName: UserKey.testObjectAnother.displayName,
-        photoUrl: "alisonipsum.photo.com",
-        userType: nil)
+        photoUrl: "alisonipsum.photo.com")
     static let testObjects: [UserAccount] = [.testObject, .testObjectAnother]
 }
 
 extension UserKey {
-    static let testObject = UserKey(uid: "00000000-0000-0000-0000-000000000001", displayName: "Larry Ipsum", userType: nil)
-    static let testObjectAnother = UserKey(uid: "00000000-0000-0000-0000-000000000002", displayName: "Alison Loretta Ipsum", userType: nil)
+    static let testObject = UserKey(uid: "00000000-0000-0000-0000-000000000001", userType: nil, displayName: "Larry Ipsum")
+    static let testObjectAnother = UserKey(uid: "00000000-0000-0000-0000-000000000002", userType: nil, displayName: "Alison Loretta Ipsum")
     static let testObjects: [UserKey] = [.testObject, .testObjectAnother]
 }
 #endif

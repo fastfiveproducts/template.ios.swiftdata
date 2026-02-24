@@ -2,8 +2,8 @@
 //  UsersConnector.swift
 //
 //  Created by Pete Maiser, Fast Five Products LLC, on 2/4/26.
-//  Modified by Pete Maiser, Fast Five Products LLC, on 2/17/26.
-//      Template v0.2.7 (updated) — Fast Five Products LLC's public AGPL template.
+//  Modified by Pete Maiser, Fast Five Products LLC, on 2/24/26.
+//      Template v0.3.3 (updated) — Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2026 Fast Five Products LLC. All rights reserved.
 //
@@ -48,7 +48,7 @@ struct UsersConnector {
         let queryRef = DataConnect.defaultConnector.userDisplayNameSearchQuery.ref(searchText: searchText, limit: limit)
         let operationResult = try await queryRef.execute()
         return try operationResult.data.userAccounts.compactMap { firebaseAccount -> UserKey? in
-            let userKey = UserKey(uid: firebaseAccount.id, displayName: firebaseAccount.displayNameText, userType: firebaseAccount.userType)
+            let userKey = UserKey(uid: firebaseAccount.id, userType: firebaseAccount.userType, displayName: firebaseAccount.displayNameText)
             guard userKey.isValid else { throw FetchDataError.invalidCloudData }
             return userKey
         }
@@ -64,9 +64,9 @@ private extension UsersConnector {
     ) -> UserAccount {
         return UserAccount(
             uid: firebaseAccount.id,
+            userType: firebaseAccount.userType,
             displayName: firebaseAccount.displayNameText,
-            photoUrl: firebaseAccount.photoUrl,
-            userType: firebaseAccount.userType
+            photoUrl: firebaseAccount.photoUrl
         )
     }
 
