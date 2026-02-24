@@ -198,6 +198,7 @@ class UserAccountViewModel: ObservableObject, DebugPrintable {
             try await currentUserService.createUserAccount(candidate, displayNameTextOverride: email)
         } catch {
             debugprint("🛑 ERROR:  (View) User \(userId) Auth exists, but Cloud error creating User Account: \(error)")
+            showStatusMode = false
             self.error = AccountCreationError.userAccountCompletionFailed(error)
             throw AccountCreationError.userAccountCompletionFailed(error)
         }
@@ -252,6 +253,9 @@ class UserAccountViewModel: ObservableObject, DebugPrintable {
                 password: capturedPasswordText)
         } catch {
             debugprint("🛑 ERROR:  (View) Cloud Error creating User in the Authentication system: \(error)")
+            showStatusMode = false
+            capturedPasswordText = ""
+            capturedPasswordMatchText = ""
             self.error = error
             throw error
         }
@@ -263,6 +267,8 @@ class UserAccountViewModel: ObservableObject, DebugPrintable {
             try await currentUserService.createUserAccount(accountCandidate, displayNameTextOverride: capturedEmailText)
         } catch {
             debugprint("🛑 ERROR:  (View) User \(createdUserId) created in the Authentication system, but Clould error creating User Account: \(error)")
+            showStatusMode = false
+            createAccountMode = false
             self.error = AccountCreationError.userAccountCreationIncomplete(error)
             throw AccountCreationError.userAccountCreationIncomplete(error)
         }
