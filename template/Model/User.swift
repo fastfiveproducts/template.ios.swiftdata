@@ -40,6 +40,7 @@ struct UserAccount: Equatable, Codable {
     let uid: String                 // mastered by the Auth Service
     let displayName: String         // mastered by the Application Data Service
     let photoUrl: String
+    let userType: String?
     var isValid: Bool { !uid.isEmpty && !displayName.isEmpty }
 }
 
@@ -47,6 +48,7 @@ struct UserAccount: Equatable, Codable {
 struct UserKey: Equatable, Codable {
     let uid: String
     let displayName: String
+    let userType: String?
     var isValid: Bool {
         !uid.isEmpty &&
         !displayName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }
@@ -69,11 +71,11 @@ extension UserAuth {
 }
 
 extension UserAccount {
-    static let blankUser = UserAccount(uid: UserKey.blankUser.uid, displayName: "", photoUrl: "")
+    static let blankUser = UserAccount(uid: UserKey.blankUser.uid, displayName: "", photoUrl: "", userType: nil)
 }
 
 extension UserKey {
-    static let blankUser = UserKey(uid: "", displayName: "")
+    static let blankUser = UserKey(uid: "", displayName: "", userType: nil)
 }
 
 
@@ -96,17 +98,19 @@ extension UserAccount {
     static let testObject = UserAccount(
         uid: UserKey.testObject.uid,
         displayName: UserKey.testObject.displayName,
-        photoUrl: "larryipsum.photo.com")
+        photoUrl: "larryipsum.photo.com",
+        userType: nil)
     static let testObjectAnother = UserAccount(
         uid: UserKey.testObjectAnother.uid,
         displayName: UserKey.testObjectAnother.displayName,
-        photoUrl: "alisonipsum.photo.com")
+        photoUrl: "alisonipsum.photo.com",
+        userType: nil)
     static let testObjects: [UserAccount] = [.testObject, .testObjectAnother]
 }
 
 extension UserKey {
-    static let testObject = UserKey(uid: "00000000-0000-0000-0000-000000000001", displayName: "Larry Ipsum")
-    static let testObjectAnother = UserKey(uid: "00000000-0000-0000-0000-000000000002", displayName: "Alison Loretta Ipsum")
+    static let testObject = UserKey(uid: "00000000-0000-0000-0000-000000000001", displayName: "Larry Ipsum", userType: nil)
+    static let testObjectAnother = UserKey(uid: "00000000-0000-0000-0000-000000000002", displayName: "Alison Loretta Ipsum", userType: nil)
     static let testObjects: [UserKey] = [.testObject, .testObjectAnother]
 }
 #endif

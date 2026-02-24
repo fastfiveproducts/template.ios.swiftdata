@@ -31,7 +31,7 @@ class CurrentUserService: ObservableObject, DebugPrintable {
     
     // ***** User *****
     @Published var user: User = User.blankUser
-    var userKey: UserKey { UserKey(uid: user.auth.uid, displayName: user.account.displayName) }
+    var userKey: UserKey { UserKey(uid: user.auth.uid, displayName: user.account.displayName, userType: user.account.userType) }
     var isVerifiedUser: Bool { isRealUser && (user.auth.isEmailVerified || !ViewConfig.requiresEmailVerification) }
     
     
@@ -431,7 +431,7 @@ extension CurrentUserService {
                 displayNameTextLower: displayNameText.lowercased(),
                 photoUrl: profile.photoUrl
             )
-            let userProfile = UserAccount(uid: profile.uid, displayName: profile.displayName, photoUrl: profile.photoUrl)
+            let userProfile = UserAccount(uid: profile.uid, displayName: profile.displayName, photoUrl: profile.photoUrl, userType: nil)
             user.account = userProfile
         }
         catch {
@@ -546,7 +546,8 @@ extension CurrentUserService {
         return UserAccount(
             uid: firebaseAccount.id,
             displayName: firebaseAccount.displayNameText,
-            photoUrl: firebaseAccount.photoUrl
+            photoUrl: firebaseAccount.photoUrl,
+            userType: firebaseAccount.userType
         )
     }
 }

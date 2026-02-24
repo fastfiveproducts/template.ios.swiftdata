@@ -48,7 +48,7 @@ struct UsersConnector {
         let queryRef = DataConnect.defaultConnector.userDisplayNameSearchQuery.ref(searchText: searchText, limit: limit)
         let operationResult = try await queryRef.execute()
         return try operationResult.data.userAccounts.compactMap { firebaseAccount -> UserKey? in
-            let userKey = UserKey(uid: firebaseAccount.id, displayName: firebaseAccount.displayNameText)
+            let userKey = UserKey(uid: firebaseAccount.id, displayName: firebaseAccount.displayNameText, userType: firebaseAccount.userType)
             guard userKey.isValid else { throw FetchDataError.invalidCloudData }
             return userKey
         }
@@ -65,7 +65,8 @@ private extension UsersConnector {
         return UserAccount(
             uid: firebaseAccount.id,
             displayName: firebaseAccount.displayNameText,
-            photoUrl: firebaseAccount.photoUrl
+            photoUrl: firebaseAccount.photoUrl,
+            userType: firebaseAccount.userType
         )
     }
 

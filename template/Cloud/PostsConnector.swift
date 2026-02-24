@@ -174,12 +174,13 @@ private extension PostsConnector {
     ) throws -> PublicComment {
         let toUserKey: UserKey = UserKey.init(
             uid: firebaseMessage.toUserId ?? "00000000-0000-0000-0000-000000000000",
-            displayName: firebaseMessage.toUserDisplayNameText ?? ""
+            displayName: firebaseMessage.toUserDisplayNameText ?? "",
+            userType: nil
         )
         return PublicComment(
             id: firebaseMessage.id,
             timestamp: firebaseMessage.createTimestamp.dateValue(),
-            from: UserKey.init(uid: firebaseMessage.createUser.id, displayName: firebaseMessage.createUser.displayNameText),
+            from: UserKey.init(uid: firebaseMessage.createUser.id, displayName: firebaseMessage.createUser.displayNameText, userType: firebaseMessage.createUser.userType),
             to: toUserKey,
             title: firebaseMessage.title,
             content: firebaseMessage.content,
@@ -203,12 +204,13 @@ private extension PostsConnector {
     ) throws -> PrivateMessage {
         let toUserKey: UserKey = UserKey.init(
             uid: firebaseMessage.toUserId ?? "00000000-0000-0000-0000-000000000000",
-            displayName: firebaseMessage.toUserDisplayNameText ?? ""
+            displayName: firebaseMessage.toUserDisplayNameText ?? "",
+            userType: nil
         )
         return PrivateMessage(
             id: firebaseMessage.id,
             timestamp: firebaseMessage.createTimestamp.dateValue(),
-            from: UserKey.init(uid: firebaseMessage.createUser.id, displayName: firebaseMessage.createUser.displayNameText),
+            from: UserKey.init(uid: firebaseMessage.createUser.id, displayName: firebaseMessage.createUser.displayNameText, userType: firebaseMessage.createUser.userType),
             to: toUserKey,
             title: firebaseMessage.title,
             content: firebaseMessage.content,
