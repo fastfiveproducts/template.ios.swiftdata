@@ -2,8 +2,8 @@
 //  UserPostViewModel.swift
 //
 //  Template created by Pete Maiser, July 2024 through May 2025
-//  Modified by Pete Maiser, Fast Five Products LLC, on 2/18/26.
-//      Template v0.2.8 (updated) — Fast Five Products LLC's public AGPL template.
+//  Modified by Pete Maiser, Fast Five Products LLC, on 2/24/26.
+//      Template v0.3.3 (updated) — Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025, 2026 Fast Five Products LLC. All rights reserved.
 //
@@ -31,7 +31,7 @@ class UserPostViewModel<T: Post>: ObservableObject, DebugPrintable {
 
     // Capture
     var toUser: UserKey = UserKey.blankUser
-    var capturedTitleText = ""
+    var capturedSubjectText = ""
     @Published var capturedContentText = ""
     
     // Validation
@@ -42,8 +42,8 @@ class UserPostViewModel<T: Post>: ObservableObject, DebugPrintable {
         if capturedContentText.isEmpty {
             statusText = ("No Content Entered")
             isReady = false
-        } else if capturedTitleText.count > 100 {
-            statusText = "Title is too long"
+        } else if capturedSubjectText.count > 100 {
+            statusText = "Subject is too long"
             isReady = false
         } else if capturedContentText.count > 1000 {
             statusText = "Content is too long"

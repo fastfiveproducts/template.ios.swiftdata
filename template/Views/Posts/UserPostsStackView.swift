@@ -3,8 +3,8 @@
 //
 //  Template created by Pete Maiser, July 2024 through May 2025
 //  Made/renamed from UserCommentPostsStackView.swift by Pete Maiser, Fast Five Products LLC, on 2/4/26.
-//  Modified by Pete Maiser, Fast Five Products LLC, on 2/5/26.
-//      Template v0.2.5 (updated) — Fast Five Products LLC's public AGPL template.
+//  Modified by Pete Maiser, Fast Five Products LLC, on 2/24/26.
+//      Template v0.3.3 (updated) — Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025, 2026 Fast Five Products LLC. All rights reserved.
 //
@@ -147,7 +147,7 @@ private extension UserPostsStackView {
         viewModel.postCandidate = PostCandidate(
             from: currentUserService.userKey,
             to: conversationWith ?? UserKey.blankUser,
-            title: viewModel.capturedTitleText,
+            subject: viewModel.capturedSubjectText,
             content: viewModel.capturedContentText)
         if viewModel.isReadyToPost() {
             viewModel.isWorking = true

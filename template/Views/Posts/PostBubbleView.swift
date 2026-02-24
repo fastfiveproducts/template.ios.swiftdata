@@ -2,9 +2,10 @@
 //  PostBubbleView.swift
 //
 //  Template created by Pete Maiser, July 2024 through May 2025
-//      Template v0.1.1 Fast Five Products LLC's public AGPL template.
+//  Modified by Pete Maiser, Fast Five Products LLC, on 2/24/26.
+//      Template v0.3.3 (updated) — Fast Five Products LLC's public AGPL template.
 //
-//  Copyright © 2025 Fast Five Products LLC. All rights reserved.
+//  Copyright © 2025, 2026 Fast Five Products LLC. All rights reserved.
 //
 //  This file is part of a project licensed under the GNU Affero General Public License v3.0.
 //  See the LICENSE file at the root of this repository for full terms.
@@ -68,8 +69,8 @@ struct PostBubbleView: View {
             }
 
             VStack(alignment: .leading, spacing: 4) {
-                if !post.title.isEmpty {
-                    Text(post.title)
+                if ViewConfig.showPostSubject && !post.subject.isEmpty {
+                    Text(post.subject)
                         .font(.headline)
                         .foregroundStyle(textColor)
                 }
@@ -102,7 +103,7 @@ struct PostBubbleView: View {
 #Preview ("Various Views") {
     ScrollView {
         VStack(alignment: .leading, spacing: 16) {
-            Section(header: Text("All Comments View")) {
+            Section(header: Text("Comments")) {
                 PostBubbleView(post: PublicComment.testObject, isSent: true, showFromUser: true)
                 PostBubbleView(post: PublicComment.testObjectAnother, isSent: false, showFromUser: true)
             }
@@ -112,11 +113,7 @@ struct PostBubbleView: View {
             }
 
             Section(header: Text("Inbox Messages View")) {
-                PostBubbleView(post: PrivateMessage.testObjectAnother, isSent: false, showFromUser: true)
-            }
-
-            Section(header: Text("Sent View")) {
-                PostBubbleView(post: PrivateMessage.testObject, isSent: true, showToUser: true)
+                PostBubbleView(post: PrivateMessage.testObjectSubject, isSent: false, showFromUser: true)
             }
 
             Section(header: Text("Private Messages No Filter (Mixed)")) {
