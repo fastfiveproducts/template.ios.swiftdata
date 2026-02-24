@@ -122,7 +122,6 @@ git pull origin develop
 ```
 
 **Code Review**:  User may ask for a Code Review leading to a feature-branch merge, or at any time
-**Local branches**: Don't delete local branches after merge — just leave them.
 
 
 ## Release Process (develop to main)
