@@ -2,8 +2,8 @@
 //  PostsConnector.swift
 //
 //  Template created by Pete Maiser, July 2024 through May 2025
-//  Modified by Pete Maiser, Fast Five Products LLC, on 2/19/26.
-//      Template v0.3.1 (updated) — Fast Five Products LLC's public AGPL template.
+//  Modified by Pete Maiser, Fast Five Products LLC, on 2/24/26.
+//      Template v0.3.3 (updated) — Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025, 2026 Fast Five Products LLC. All rights reserved.
 //
@@ -174,12 +174,13 @@ private extension PostsConnector {
     ) throws -> PublicComment {
         let toUserKey: UserKey = UserKey.init(
             uid: firebaseMessage.toUserId ?? "00000000-0000-0000-0000-000000000000",
+            userType: nil,
             displayName: firebaseMessage.toUserDisplayNameText ?? ""
         )
         return PublicComment(
             id: firebaseMessage.id,
             timestamp: firebaseMessage.createTimestamp.dateValue(),
-            from: UserKey.init(uid: firebaseMessage.createUser.id, displayName: firebaseMessage.createUser.displayNameText),
+            from: UserKey.init(uid: firebaseMessage.createUser.id, userType: firebaseMessage.createUser.userType, displayName: firebaseMessage.createUser.displayNameText),
             to: toUserKey,
             title: firebaseMessage.title,
             content: firebaseMessage.content,
@@ -203,12 +204,13 @@ private extension PostsConnector {
     ) throws -> PrivateMessage {
         let toUserKey: UserKey = UserKey.init(
             uid: firebaseMessage.toUserId ?? "00000000-0000-0000-0000-000000000000",
+            userType: nil,
             displayName: firebaseMessage.toUserDisplayNameText ?? ""
         )
         return PrivateMessage(
             id: firebaseMessage.id,
             timestamp: firebaseMessage.createTimestamp.dateValue(),
-            from: UserKey.init(uid: firebaseMessage.createUser.id, displayName: firebaseMessage.createUser.displayNameText),
+            from: UserKey.init(uid: firebaseMessage.createUser.id, userType: firebaseMessage.createUser.userType, displayName: firebaseMessage.createUser.displayNameText),
             to: toUserKey,
             title: firebaseMessage.title,
             content: firebaseMessage.content,
