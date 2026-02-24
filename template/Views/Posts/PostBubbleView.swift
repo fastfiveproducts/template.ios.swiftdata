@@ -2,9 +2,10 @@
 //  PostBubbleView.swift
 //
 //  Template created by Pete Maiser, July 2024 through May 2025
-//      Template v0.1.1 Fast Five Products LLC's public AGPL template.
+//  Modified by Pete Maiser, Fast Five Products LLC, on 2/24/26.
+//      Template v0.3.3 (updated) — Fast Five Products LLC's public AGPL template.
 //
-//  Copyright © 2025 Fast Five Products LLC. All rights reserved.
+//  Copyright © 2025, 2026 Fast Five Products LLC. All rights reserved.
 //
 //  This file is part of a project licensed under the GNU Affero General Public License v3.0.
 //  See the LICENSE file at the root of this repository for full terms.
@@ -68,8 +69,8 @@ struct PostBubbleView: View {
             }
 
             VStack(alignment: .leading, spacing: 4) {
-                if !post.title.isEmpty {
-                    Text(post.title)
+                if ViewConfig.showPostSubject && !post.subject.isEmpty {
+                    Text(post.subject)
                         .font(.headline)
                         .foregroundStyle(textColor)
                 }

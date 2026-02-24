@@ -2,8 +2,8 @@
 //  Posts.swift
 //
 //  Template created by Pete Maiser, July 2024 through May 2025
-//  Modified by Pete Maiser, Fast Five Products LLC, on 2/18/26.
-//      Template v0.2.8 (updated) — Fast Five Products LLC's public AGPL template.
+//  Modified by Pete Maiser, Fast Five Products LLC, on 2/24/26.
+//      Template v0.3.3 (updated) — Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025, 2026 Fast Five Products LLC. All rights reserved.
 //
@@ -26,7 +26,7 @@ protocol Post: Listable {
     var timestamp: Date { get }
     var from: UserKey { get }
     var to: UserKey { get }
-    var title: String { get }
+    var subject: String { get }
     var content: String { get }
     var references: Set<UUID> { get }
     static var typeDisplayName: String { get }
@@ -37,7 +37,7 @@ protocol Post: Listable {
 struct PostCandidate: DebugPrintable {
     let from: UserKey
     var to: UserKey
-    var title: String
+    var subject: String
     var content: String
     var references: Set<UUID> = []
     
@@ -65,7 +65,7 @@ struct PostReference {
 // search
 extension Post {
     func contains(_ string: String) -> Bool {
-        var properties = [title, content].map { $0.lowercased() }
+        var properties = [subject, content].map { $0.lowercased() }
         if !to.displayName.isEmpty {
             properties.append(to.displayName.lowercased())
         }
@@ -85,13 +85,16 @@ struct PublicComment: Post, Listable {
     private(set) var timestamp: Date
     let from: UserKey
     let to: UserKey
-    let title: String
+    let subject: String
     let content: String
     var references: Set<UUID> = []
-    
+
     // to conform to Post, establish a short displayable type description
     static let typeDisplayName: String = "Comment"
-       
+
+    // to conform to Listable, provide title from subject
+    var title: String { subject }
+
     // to conform to Listable, use known data to describe the object
     var objectDescription: String { "Comment from " + from.displayName + ": " + content }
     
@@ -114,14 +117,17 @@ struct PrivateMessage: Post, Listable  {
     private(set) var timestamp: Date
     let from: UserKey
     let to: UserKey
-    let title: String
+    let subject: String
     let content: String
     var references: Set<UUID> = []
     var status: [MessageStatus] = []
-    
+
     // to conform to Post, establish a short displayable type description
     static let typeDisplayName: String = "Message"
-    
+
+    // to conform to Listable, provide title from subject
+    var title: String { subject }
+
     // to conform to Listable, use known data to describe the object
     var objectDescription: String { "Message from " + from.displayName + ": " + content }
     
@@ -161,7 +167,7 @@ extension PostCandidate {
     static let placeholder = PostCandidate(
         from: UserKey.blankUser,
         to: UserKey.blankUser,
-        title: "",
+        subject: "",
         content: ""
     )
 }
@@ -174,7 +180,7 @@ extension PublicComment {
         timestamp: Date(),
         from: UserKey.blankUser,
         to: UserKey.blankUser,
-        title: "",
+        subject: "",
         content: "No Messages!"
     )]
 }
@@ -187,7 +193,7 @@ extension PrivateMessage {
         timestamp: Date(),
         from: UserKey.blankUser,
         to: UserKey.blankUser,
-        title: "",
+        subject: "",
         content: "No Messages!"
     )]
 }
@@ -200,7 +206,7 @@ extension PrivateMessage {
         timestamp: Date().addingTimeInterval(-86400*2),
         from: UserKey.testObject,
         to: UserKey.testObjectAnother,
-        title: "Title Lorem Ipsum",
+        subject: "Title Lorem Ipsum",
         content: "Test Message from tO to tOA, lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
     )
     static let testObjectAnother = PrivateMessage(
@@ -208,7 +214,7 @@ extension PrivateMessage {
         timestamp: Date().addingTimeInterval(-86400*1),
         from: UserKey.testObjectAnother,
         to: UserKey.testObject,
-        title: "Another Title Lorem ipsum",
+        subject: "Another Title Lorem ipsum",
         content: "Test Message from tOA  to tO, more Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
     )
     static let testObjectTiny = PrivateMessage(
@@ -216,7 +222,7 @@ extension PrivateMessage {
         timestamp: Date(),
         from: UserKey.testObject,
         to: UserKey.testObjectAnother,
-        title: "t",
+        subject: "t",
         content: "tO to tOA"
     )
     static let testObjects: [PrivateMessage] = [.testObject, .testObjectAnother, .testObjectTiny]
@@ -228,7 +234,7 @@ extension PublicComment {
         timestamp: Date().addingTimeInterval(-86400*2),
         from: UserKey.testObject,
         to: UserKey.blankUser,
-        title: "",
+        subject: "",
         content: "Test Comment from tO, lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
     )
     static let testObjectAnother = PublicComment(
@@ -236,7 +242,7 @@ extension PublicComment {
         timestamp: Date().addingTimeInterval(-86400*1),
         from: UserKey.testObjectAnother,
         to: UserKey.blankUser,
-        title: "",
+        subject: "",
         content: "Test Comment from tOA, more lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
     )
     static let testObjectTiny = PublicComment(
@@ -244,7 +250,7 @@ extension PublicComment {
         timestamp: Date(),
         from: UserKey.testObject,
         to: UserKey.blankUser,
-        title: "",
+        subject: "",
         content: "tO comment"
     )
     static let testObjects: [PublicComment] = [.testObject, .testObjectAnother, .testObjectTiny]
