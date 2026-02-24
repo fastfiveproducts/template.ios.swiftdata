@@ -203,12 +203,17 @@ class CurrentUserService: ObservableObject, DebugPrintable {
                 throw AuthError.userNotFound
             } else {
                 debugprint("🛑 ERROR:  User Sign-In error: \(error)")
+                if let message = AuthError.extractFirebaseMessage(from: error) {
+                    let wrappedError = AuthError.internalError(message)
+                    self.error = wrappedError
+                    throw wrappedError
+                }
                 self.error = error
                 throw error
             }
         }
     }
-    
+
     func signInOrCreateUser(email: String, password: String) async throws -> String {
         guard !email.isEmpty, !password.isEmpty else {
             throw AuthError.invalidInput
@@ -234,6 +239,11 @@ class CurrentUserService: ObservableObject, DebugPrintable {
                    nsError.code == AuthErrorCode.emailAlreadyInUse.rawValue {
                     debugprint("link failed (email in use), falling through to sign-in")
                 } else {
+                    if let message = AuthError.extractFirebaseMessage(from: error) {
+                        let wrappedError = AuthError.internalError(message)
+                        self.error = wrappedError
+                        throw wrappedError
+                    }
                     self.error = error
                     throw error
                 }
@@ -262,17 +272,27 @@ class CurrentUserService: ObservableObject, DebugPrintable {
                     return result.user.uid  // user did not exist + create successful = we are done
                 } catch {
                     debugprint("🛑 ERROR:  User Create error: \(error)")
+                    if let message = AuthError.extractFirebaseMessage(from: error) {
+                        let wrappedError = AuthError.internalError(message)
+                        self.error = wrappedError
+                        throw wrappedError
+                    }
                     self.error = error
                     throw error
                 }
             } else {
                 debugprint("🛑 ERROR:  User Sign-In error: \(error)")
+                if let message = AuthError.extractFirebaseMessage(from: error) {
+                    let wrappedError = AuthError.internalError(message)
+                    self.error = wrappedError
+                    throw wrappedError
+                }
                 self.error = error
                 throw error
             }
         }
     }
-    
+
     func resetUserPassword(email: String) async throws {
         guard !email.isEmpty else {
             throw AuthError.invalidInput
