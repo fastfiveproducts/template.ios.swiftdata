@@ -1,9 +1,9 @@
 //
 //  ViewHelpers.swift
 //
-//  Template file created by Pete Maiser, Fast Five Products LLC, on 2/10/26.
-//  Split from ViewConfig.swift
-//      Template v0.2.6 — Fast Five Products LLC's public AGPL template.
+//  Template file created by Pete Maiser, Fast Five Products LLC, on 2/10/26 (split from ViewConfig.swift)
+//  Modified by Pete Maiser, Fast Five Products LLC, on 2/24/26.
+//      Template v0.3.3 (updated) — Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2026 Fast Five Products LLC. All rights reserved.
 //
@@ -71,4 +71,15 @@ extension Color {
             opacity: 1
         )
     }
+}
+
+// Used by MainViewPreviewWrapper to signal tab-style safe area background
+extension EnvironmentValues {
+    var tabSafeAreaBackground: Bool {
+        get { self[TabSafeAreaBackgroundKey.self] }
+        set { self[TabSafeAreaBackgroundKey.self] = newValue }
+    }
+}
+private struct TabSafeAreaBackgroundKey: EnvironmentKey {
+    static let defaultValue: Bool = false
 }

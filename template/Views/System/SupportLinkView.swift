@@ -2,8 +2,8 @@
 //  SupportLinkView.swift
 //
 //  Template file created by Pete Maiser, Fast Five Products LLC, on 10/31/25.
-//  Modified by Pete Maiser, Fast Five Products LLC, on 2/18/26.
-//      Template v0.2.9 (updated) — Fast Five Products LLC's public AGPL template.
+//  Modified by Pete Maiser, Fast Five Products LLC, on 2/22/26.
+//      Template v0.3.3 (updated) — Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025, 2026 Fast Five Products LLC. All rights reserved.
 //
@@ -48,7 +48,6 @@ struct SupportLinkView: View {
     
     var body: some View {
         if inList {
-
             ZStack {
                 NavigationLink {
                     SupportView()
@@ -62,9 +61,7 @@ struct SupportLinkView: View {
                 }
                 .foregroundStyle(ViewConfig.linkColor)
             }
-
         } else if inToolbar {
-
             NavigationLink {
                 SupportView()
                     .onAppear { onNavigate?() }
@@ -83,9 +80,7 @@ struct SupportLinkView: View {
                 }
             }
             .buttonStyle(BorderlessButtonStyle())
-            
         } else {
-            
             if showDivider { Divider() }
             
             NavigationLink {
@@ -106,7 +101,6 @@ struct SupportLinkView: View {
                 }
             }
             .buttonStyle(BorderlessButtonStyle())
-            
         }
     }
 }

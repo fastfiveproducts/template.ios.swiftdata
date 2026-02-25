@@ -2,8 +2,8 @@
 //  SignUpInLinkView.swift
 //
 //  Created by Pete Maiser, Fast Five Products LLC, on 7/15/25.
-//  Modified by Pete Maiser, Fast Five Products LLC, on 2/18/26.
-//      Template v0.2.9 (updated) — Fast Five Products LLC's public AGPL template.
+//  Modified by Pete Maiser, Fast Five Products LLC, on 2/22/26.
+//      Template v0.3.3 (updated) — Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025, 2026 Fast Five Products LLC. All rights reserved.
 //
@@ -48,7 +48,6 @@ struct SignUpInLinkView: View {
     
     var body: some View {
         if inList, !currentUserService.isRealUser {
-
             ZStack {
                 NavigationLink {
                     UserAccountView(
@@ -66,9 +65,7 @@ struct SignUpInLinkView: View {
                 }
                 .foregroundStyle(ViewConfig.linkColor)
             }
-
         } else if inToolbar || !currentUserService.isRealUser {
-
             if !inToolbar, !currentUserService.isRealUser, showDivider { Divider() }
 
             NavigationLink {
@@ -95,7 +92,6 @@ struct SignUpInLinkView: View {
         } else {
             EmptyView( )
         }
-        
     }
 }
 

@@ -2,8 +2,8 @@
 //  UserAccountViewModel.swift
 //
 //  Template created by Pete Maiser, July 2024 through August 2025
-//  Modified by Pete Maiser, Fast Five Products LLC, on 2/18/26.
-//      Template v0.2.9 (updated) — Fast Five Products LLC's public AGPL template.
+//  Modified by Pete Maiser, Fast Five Products LLC, on 2/24/26.
+//      Template v0.3.3 (updated) — Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025, 2026 Fast Five Products LLC. All rights reserved.
 //
@@ -198,6 +198,7 @@ class UserAccountViewModel: ObservableObject, DebugPrintable {
             try await currentUserService.createUserAccount(candidate, displayNameTextOverride: email)
         } catch {
             debugprint("🛑 ERROR:  (View) User \(userId) Auth exists, but Cloud error creating User Account: \(error)")
+            showStatusMode = false
             self.error = AccountCreationError.userAccountCompletionFailed(error)
             throw AccountCreationError.userAccountCompletionFailed(error)
         }
@@ -252,6 +253,9 @@ class UserAccountViewModel: ObservableObject, DebugPrintable {
                 password: capturedPasswordText)
         } catch {
             debugprint("🛑 ERROR:  (View) Cloud Error creating User in the Authentication system: \(error)")
+            showStatusMode = false
+            capturedPasswordText = ""
+            capturedPasswordMatchText = ""
             self.error = error
             throw error
         }
@@ -263,6 +267,8 @@ class UserAccountViewModel: ObservableObject, DebugPrintable {
             try await currentUserService.createUserAccount(accountCandidate, displayNameTextOverride: capturedEmailText)
         } catch {
             debugprint("🛑 ERROR:  (View) User \(createdUserId) created in the Authentication system, but Clould error creating User Account: \(error)")
+            showStatusMode = false
+            createAccountMode = false
             self.error = AccountCreationError.userAccountCreationIncomplete(error)
             throw AccountCreationError.userAccountCreationIncomplete(error)
         }

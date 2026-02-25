@@ -2,8 +2,8 @@
 //  CurrentUserService.swift
 //
 //  Template created by Pete Maiser, July 2024 through August 2025
-//  Modified by Pete Maiser, Fast Five Products LLC, on 2/18/26.
-//      Template v0.2.9 (updated) — Fast Five Products LLC's public AGPL template.
+//  Modified by Pete Maiser, Fast Five Products LLC, on 2/24/26.
+//      Template v0.3.3 (updated) — Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025, 2026 Fast Five Products LLC. All rights reserved.
 //
@@ -29,11 +29,18 @@ class CurrentUserService: ObservableObject, DebugPrintable {
     
     static let shared = CurrentUserService()     // this store passed to view models as singleton
     
+    // ***** User *****
+    @Published var user: User = User.blankUser
+    var userKey: UserKey { UserKey(uid: user.auth.uid, userType: user.account.userType, displayName: user.account.displayName) }
+    var isVerifiedUser: Bool { isRealUser && (user.auth.isEmailVerified || !ViewConfig.requiresEmailVerification) }
+    
+    
     // ***** Status and Modes *****
 
     // sign-in process
     @Published var isSigningIn = false
     @Published var isSignedIn = false
+    @Published var isRealUser = false
     
     // because Auth masters users, creating a User in the Authententication system is "creating a user"
     // even if the user is not complete until the Account is created and complete
@@ -57,13 +64,6 @@ class CurrentUserService: ObservableObject, DebugPrintable {
     @Published var isWaitingOnEmailAuthenticaion = false
     
     
-    // ***** User *****
-    @Published var user: User = User.blankUser
-    var userKey: UserKey { UserKey(uid: user.auth.uid, displayName: user.account.displayName) }
-    var isRealUser: Bool { isSignedIn && !user.auth.isAnonymous }
-    var isVerifiedUser: Bool { isRealUser && (user.auth.isEmailVerified || !ViewConfig.requiresEmailVerification) }
-    
-    
     // ***** Cloud Auth *****
     @Published var error: Error?
     private let auth = Auth.auth()
@@ -71,8 +71,13 @@ class CurrentUserService: ObservableObject, DebugPrintable {
     private var listener: AuthStateDidChangeListenerHandle?
     let signInPublisher = PassthroughSubject<Void, Never>()
     let signOutPublisher = PassthroughSubject<Void, Never>()
-    
+    private var cancellables = Set<AnyCancellable>()
+
     init() {
+        $isSignedIn.combineLatest($user)
+            .map { signedIn, user in signedIn && !user.auth.isAnonymous }
+            .removeDuplicates()
+            .assign(to: &$isRealUser)
         setupListener()
     }
     
@@ -198,12 +203,17 @@ class CurrentUserService: ObservableObject, DebugPrintable {
                 throw AuthError.userNotFound
             } else {
                 debugprint("🛑 ERROR:  User Sign-In error: \(error)")
+                if let message = AuthError.extractFirebaseMessage(from: error) {
+                    let wrappedError = AuthError.internalError(message)
+                    self.error = wrappedError
+                    throw wrappedError
+                }
                 self.error = error
                 throw error
             }
         }
     }
-    
+
     func signInOrCreateUser(email: String, password: String) async throws -> String {
         guard !email.isEmpty, !password.isEmpty else {
             throw AuthError.invalidInput
@@ -229,6 +239,11 @@ class CurrentUserService: ObservableObject, DebugPrintable {
                    nsError.code == AuthErrorCode.emailAlreadyInUse.rawValue {
                     debugprint("link failed (email in use), falling through to sign-in")
                 } else {
+                    if let message = AuthError.extractFirebaseMessage(from: error) {
+                        let wrappedError = AuthError.internalError(message)
+                        self.error = wrappedError
+                        throw wrappedError
+                    }
                     self.error = error
                     throw error
                 }
@@ -257,17 +272,27 @@ class CurrentUserService: ObservableObject, DebugPrintable {
                     return result.user.uid  // user did not exist + create successful = we are done
                 } catch {
                     debugprint("🛑 ERROR:  User Create error: \(error)")
+                    if let message = AuthError.extractFirebaseMessage(from: error) {
+                        let wrappedError = AuthError.internalError(message)
+                        self.error = wrappedError
+                        throw wrappedError
+                    }
                     self.error = error
                     throw error
                 }
             } else {
                 debugprint("🛑 ERROR:  User Sign-In error: \(error)")
+                if let message = AuthError.extractFirebaseMessage(from: error) {
+                    let wrappedError = AuthError.internalError(message)
+                    self.error = wrappedError
+                    throw wrappedError
+                }
                 self.error = error
                 throw error
             }
         }
     }
-    
+
     func resetUserPassword(email: String) async throws {
         guard !email.isEmpty else {
             throw AuthError.invalidInput
@@ -318,6 +343,11 @@ class CurrentUserService: ObservableObject, DebugPrintable {
                 debugprint("⚠️ WARNING:  Password cannot be changed because the user needs to re-authenticate.  Error: \(error)")
             } else {
                 debugprint("🛑 ERROR:  Password Change error: \(error)")
+            }
+            if let message = AuthError.extractFirebaseMessage(from: error) {
+                let wrappedError = AuthError.internalError(message)
+                self.error = wrappedError
+                throw wrappedError
             }
             self.error = error
             throw error
@@ -421,7 +451,7 @@ extension CurrentUserService {
                 displayNameTextLower: displayNameText.lowercased(),
                 photoUrl: profile.photoUrl
             )
-            let userProfile = UserAccount(uid: profile.uid, displayName: profile.displayName, photoUrl: profile.photoUrl)
+            let userProfile = UserAccount(uid: profile.uid, userType: nil, displayName: profile.displayName, photoUrl: profile.photoUrl)
             user.account = userProfile
         }
         catch {
@@ -535,6 +565,7 @@ extension CurrentUserService {
     ) throws -> UserAccount {
         return UserAccount(
             uid: firebaseAccount.id,
+            userType: firebaseAccount.userType,
             displayName: firebaseAccount.displayNameText,
             photoUrl: firebaseAccount.photoUrl
         )

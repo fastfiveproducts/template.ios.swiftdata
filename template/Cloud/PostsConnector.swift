@@ -2,8 +2,8 @@
 //  PostsConnector.swift
 //
 //  Template created by Pete Maiser, July 2024 through May 2025
-//  Modified by Pete Maiser, Fast Five Products LLC, on 2/19/26.
-//      Template v0.3.1 (updated) — Fast Five Products LLC's public AGPL template.
+//  Modified by Pete Maiser, Fast Five Products LLC, on 2/24/26.
+//      Template v0.3.3 (updated) — Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025, 2026 Fast Five Products LLC. All rights reserved.
 //
@@ -39,6 +39,14 @@ struct PostsConnector {
             guard comment.isValid else { throw FetchDataError.invalidCloudData }
             return comment
         }
+        let references = try await fetchPublicCommentReferences(for: ViewConfig.appClientKey, limit: limit)
+        let refDict = Dictionary(grouping: references, by: { $0.id })
+            .mapValues { Set($0.map { $0.referenceId }) }
+        for i in comments.indices {
+            if let refs = refDict[comments[i].id] {
+                comments[i].references = refs
+            }
+        }
         return comments
     }
 
@@ -53,10 +61,30 @@ struct PostsConnector {
             guard message.isValid else { throw FetchDataError.invalidCloudData }
             return message
         }
+        let references = try await fetchMyPrivateMessageReferences(limit: limit)
+        let refDict = Dictionary(grouping: references, by: { $0.id })
+            .mapValues { Set($0.map { $0.referenceId }) }
+        for i in messages.indices {
+            if let refs = refDict[messages[i].id] {
+                messages[i].references = refs
+            }
+        }
         return messages
     }
 
     // MARK: - References
+
+    func fetchPublicCommentReferences(for appClientKey: String = ViewConfig.appClientKey, limit: Int = defaultFetchLimit) async throws -> [PostReference] {
+        var references: [PostReference] = []
+        let queryRef = DataConnect.defaultConnector.listPublicCommentReferencesQuery.ref(appClientKey: appClientKey, limit: limit)
+        let operationResult = try await queryRef.execute()
+        references = try operationResult.data.publicCommentReferences.compactMap { firebaseReference -> PostReference? in
+            let reference = try makeMessageReferenceStruct(from: firebaseReference)
+            guard reference.isValid else { throw FetchDataError.invalidCloudData }
+            return reference
+        }
+        return references
+    }
 
     func fetchPublicCommentReferences(for commentId: UUID, limit: Int = defaultFetchLimit) async throws -> [PostReference] {
         var references: [PostReference] = []
@@ -104,7 +132,7 @@ struct PostsConnector {
             toUserDisplayNameText: comment.to.displayName,
             createDeviceIdentifierstamp: deviceIdentifierstamp(),
             createDeviceTimestamp: deviceTimestamp(),
-            title: comment.title,
+            subject: comment.subject,
             content: comment.content
         )
         let commentId = operationResult.data.publicComment_insert.id
@@ -125,7 +153,7 @@ struct PostsConnector {
             toUserDisplayNameText: message.to.displayName,
             createDeviceIdentifierstamp: deviceIdentifierstamp(),
             createDeviceTimestamp: deviceTimestamp(),
-            title: message.title,
+            subject: message.subject,
             content: message.content
         )
         let messageId = operationResult.data.privateMessage_insert.id
@@ -174,57 +202,61 @@ private extension PostsConnector {
     ) throws -> PublicComment {
         let toUserKey: UserKey = UserKey.init(
             uid: firebaseMessage.toUserId ?? "00000000-0000-0000-0000-000000000000",
+            userType: nil,
             displayName: firebaseMessage.toUserDisplayNameText ?? ""
         )
         return PublicComment(
             id: firebaseMessage.id,
             timestamp: firebaseMessage.createTimestamp.dateValue(),
-            from: UserKey.init(uid: firebaseMessage.createUser.id, displayName: firebaseMessage.createUser.displayNameText),
+            from: UserKey.init(uid: firebaseMessage.createUser.id, userType: firebaseMessage.createUser.userType, displayName: firebaseMessage.createUser.displayNameText),
             to: toUserKey,
-            title: firebaseMessage.title,
+            subject: firebaseMessage.subject,
             content: firebaseMessage.content,
             references: []
         )
     }
-    
+
     func makePublicCommentStruct(from postCandidate: PostCandidate, withId createdId: UUID) -> PublicComment {
         return PublicComment(
             id: createdId,
             timestamp: Date(),
             from: postCandidate.from,
             to: postCandidate.to,
-            title: postCandidate.title,
-            content: postCandidate.content
+            subject: postCandidate.subject,
+            content: postCandidate.content,
+            references: postCandidate.references
         )
     }
-    
+
     func makePrivateMessageStruct(
         from firebaseMessage: GetMyPrivateMessagesQuery.Data.PrivateMessage
     ) throws -> PrivateMessage {
         let toUserKey: UserKey = UserKey.init(
             uid: firebaseMessage.toUserId ?? "00000000-0000-0000-0000-000000000000",
+            userType: nil,
             displayName: firebaseMessage.toUserDisplayNameText ?? ""
         )
         return PrivateMessage(
             id: firebaseMessage.id,
             timestamp: firebaseMessage.createTimestamp.dateValue(),
-            from: UserKey.init(uid: firebaseMessage.createUser.id, displayName: firebaseMessage.createUser.displayNameText),
+            from: UserKey.init(uid: firebaseMessage.createUser.id, userType: firebaseMessage.createUser.userType, displayName: firebaseMessage.createUser.displayNameText),
             to: toUserKey,
-            title: firebaseMessage.title,
+            subject: firebaseMessage.subject,
             content: firebaseMessage.content,
             references: [],
             status: []
         )
     }
-    
+
     func makePrivateMessageStruct(from postCandidate: PostCandidate, withId createdId: UUID) -> PrivateMessage {
         return PrivateMessage(
             id: createdId,
             timestamp: Date(),
             from: postCandidate.from,
             to: postCandidate.to,
-            title: postCandidate.title,
-            content: postCandidate.content
+            subject: postCandidate.subject,
+            content: postCandidate.content,
+            references: postCandidate.references
         )
     }
     
@@ -233,7 +265,10 @@ private extension PostsConnector {
     ) throws -> PostReference {
         let id: UUID
         let referenceId: UUID
-        if let publicComment = firebaseReference as? GetPublicCommentReferencesQuery.Data.PublicCommentReference {
+        if let publicComment = firebaseReference as? ListPublicCommentReferencesQuery.Data.PublicCommentReference {
+            id = publicComment.publicCommentId
+            referenceId = publicComment.referenceId
+        } else if let publicComment = firebaseReference as? GetPublicCommentReferencesQuery.Data.PublicCommentReference {
             id = publicComment.publicCommentId
             referenceId = publicComment.referenceId
         } else if let privateMessage = firebaseReference as? GetMyPrivateMessageReferencesQuery.Data.PrivateMessageReference {

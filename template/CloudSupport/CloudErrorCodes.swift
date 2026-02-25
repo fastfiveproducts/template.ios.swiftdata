@@ -2,8 +2,8 @@
 //  CloudErrorCodes.swift
 //
 //  Template created by Pete Maiser, July 2024 through August 2025
-//  Modified by Pete Maiser, Fast Five Products LLC, on 2/3/26.
-//      Template v0.2.5 (updated) — Fast Five Products LLC's public AGPL template.
+//  Modified by Pete Maiser, Fast Five Products LLC, on 2/23/26.
+//      Template v0.3.3 (updated) — Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025, 2026 Fast Five Products LLC. All rights reserved.
 //
@@ -20,13 +20,14 @@
 
 import Foundation
 
-enum AuthError: Error, LocalizedError {
+enum AuthError: Error, LocalizedError, Equatable {
     case invalidInput
     case emailLinkInvalid
     case signInInputsNotFound
     case userNotFound
     case userIdNotFound
-    
+    case internalError(String)
+
     var errorDescription: String? {
         switch self {
             case .invalidInput:
@@ -39,7 +40,27 @@ enum AuthError: Error, LocalizedError {
                 return NSLocalizedString("Could not complete sign in, please go to sign in page and try again", comment: "Unexpected Internal Error")
             case .userIdNotFound:
                 return NSLocalizedString("Completed sign in but User Id not found, some features may not work correctly", comment: "Unexpected Cloud Services Error")
+            case .internalError(let message):
+                return message
         }
+    }
+
+    // Extracts a user-friendly message from Firebase Auth's internal error (code 17999),
+    // which wraps the actual error message in nested userInfo.
+    static func extractFirebaseMessage(from error: Error) -> String? {
+        let nsError = error as NSError
+        guard nsError.domain == "FIRAuthErrorDomain",
+              nsError.code == 17999,
+              let underlyingError = nsError.userInfo[NSUnderlyingErrorKey] as? NSError,
+              let response = underlyingError.userInfo["FIRAuthErrorUserInfoDeserializedResponseKey"] as? [String: Any],
+              let message = response["message"] as? String
+        else { return nil }
+
+        // Message format: "ERROR_CODE : Human readable message"
+        if let range = message.range(of: " : ") {
+            return String(message[range.upperBound...])
+        }
+        return message
     }
 }
 
