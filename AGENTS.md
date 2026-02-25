@@ -167,3 +167,7 @@ git diff main..develop
 **Commit message**: The first line must be exactly `Release vX.Y.Z` with no suffix — this is the title GitHub displays. After a blank line, add the release notes body. Review `git log main..develop --oneline` and prior release messages on main (`git log main --oneline`) to match the established style. Group changes into categories (e.g. **Feature Area**, **Code Quality**, **Infrastructure**) with concise bullet points summarizing each PR/commit. Also look for previous commit messages that duplicate or cancel each other out and squash them. The body should read as release notes — what changed and why, not individual commit details.
 
 After release, main and develop will have different commit hashes but identical content. GitHub may report main as "behind"/"ahead" of develop — this is expected and should be ignored.
+
+
+## Common Issues
+- **Using wrong build command**:  Always use the build command included above.  When agents invent their own they often include a Simulator that isn't installed, and the build command doesn't report back a problem so the process takes the full time-out period before it can move on.
