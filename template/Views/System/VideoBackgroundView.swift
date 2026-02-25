@@ -1,8 +1,8 @@
 //
 //  VideoBackgroundView.swift
 //
-//  Template file created by Pete Maiser, Fast Five Products LLC, in October 2025.
-//      Template v0.2.4 (updated) Fast Five Products LLC's public AGPL template.
+//  Modified by Pete Maiser, Fast Five Products LLC, on 2/24/26.
+//      Template v0.3.3 (updated) — Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025 Fast Five Products LLC. All rights reserved.
 //
@@ -132,17 +132,6 @@ final class VideoBackgroundPlayer: ObservableObject, DebugPrintable {
             self.queuePlayer = queue
             self.playerLooper = looper
         }
-    }
-}
-
-private struct TabSafeAreaBackgroundKey: EnvironmentKey {
-    static let defaultValue = false
-}
-
-extension EnvironmentValues {
-    var tabSafeAreaBackground: Bool {
-        get { self[TabSafeAreaBackgroundKey.self] }
-        set { self[TabSafeAreaBackgroundKey.self] = newValue }
     }
 }
 
