@@ -28,7 +28,7 @@ struct MainTabView: View {
     @ObservedObject var announcementStore: AnnouncementStore
     @ObservedObject var publicCommentStore: PublicCommentStore
     @ObservedObject var privateMessageStore: PrivateMessageStore
-
+    @ObservedObject private var featureFlagStore = FeatureFlagStore.shared
 
     @State private var selectedTabItem: NavigationItem = .home
 
@@ -82,7 +82,7 @@ extension MainTabView {
     @ToolbarContentBuilder
     var mainToolbar: some ToolbarContent {
         if currentUserService.isSignedIn
-//          ,publicCommentStore.list.count > 0    // uncomment to only show if there is already a comment
+          ,FeatureFlagStore.shared.isEnabled("publicComments")
         {
             ToolbarItem(placement: .navigationBarTrailing) {
                 NavigationLink(destination:
@@ -100,7 +100,7 @@ extension MainTabView {
         }
 
         if currentUserService.isVerifiedUser
-//          ,privateMessageStore.list.count > 0   // uncomment to only show if there is already a message
+          ,FeatureFlagStore.shared.isEnabled("privateMessages")
         {
             ToolbarItem(placement: .navigationBarTrailing) {
                 NavigationLink(destination:

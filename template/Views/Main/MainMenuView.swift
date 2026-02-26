@@ -66,7 +66,6 @@ extension MainMenuView {
 
         if currentUserService.isSignedIn
           ,FeatureFlagStore.shared.isEnabled("publicComments")
-//          ,publicCommentStore.list.count > 0    // uncomment to only show if there is already a comment
           ,self.selectedMenuItem != .comments
         {
             ToolbarItem(placement: .navigationBarTrailing) {
@@ -86,7 +85,6 @@ extension MainMenuView {
 
         if currentUserService.isVerifiedUser
           ,FeatureFlagStore.shared.isEnabled("privateMessages")
-//          ,privateMessageStore.list.count > 0   // uncomment to only show if there is already a message
           ,self.selectedMenuItem != .messages
         {
             ToolbarItem(placement: .navigationBarTrailing) {
