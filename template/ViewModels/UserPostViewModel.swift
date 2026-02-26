@@ -48,6 +48,9 @@ class UserPostViewModel<T: Post>: ObservableObject, DebugPrintable {
         } else if capturedContentText.count > 1000 {
             statusText = "Content is too long"
             isReady = false
+        } else if RestrictedWordStore.shared.containsRestrictedWords(capturedSubjectText) {
+            statusText = "Subject matched one or more keywords on our Restricted Text List. Please adjust."
+            isReady = false
         } else if RestrictedWordStore.shared.containsRestrictedWords(capturedContentText) {
             statusText = "Content matched one or more keywords on our Restricted Text List. Please adjust."
             isReady = false
