@@ -163,7 +163,7 @@ struct StoreListView<T: Listable, Content: View>: View {
                     Spacer()
                 }
                 HStack {
-                    Text("display unti: \(announcement.displayEndDate)")
+                    Text("display until: \(announcement.displayEndDate)")
                         .font(.caption)
                     Spacer()
                 }

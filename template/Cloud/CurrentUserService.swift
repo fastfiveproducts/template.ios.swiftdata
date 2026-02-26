@@ -42,7 +42,7 @@ class CurrentUserService: ObservableObject, DebugPrintable {
     @Published var isSignedIn = false
     @Published var isRealUser = false
     
-    // because Auth masters users, creating a User in the Authententication system is "creating a user"
+    // because Auth masters users, creating a User in the Authentication system is "creating a user"
     // even if the user is not complete until the Account is created and complete
     @Published var isCreatingUser = false
     
@@ -425,7 +425,7 @@ extension CurrentUserService {
                 try await createUserAccount(UserAccountCandidate(uid: userId, displayName: email, photoUrl: ""))
                 UserDefaults.standard.removeObject(forKey: "emailForSignIn")
             } catch {
-                debugprint("🛑 ERROR:  (View) User \(userId) created but Clould error creating User Profile. Error: \(error)")
+                debugprint("🛑 ERROR:  (View) User \(userId) created but Cloud error creating User Profile. Error: \(error)")
                 self.error = error
             }
         }

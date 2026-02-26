@@ -82,7 +82,7 @@ extension MainTabView {
     @ToolbarContentBuilder
     var mainToolbar: some ToolbarContent {
         if currentUserService.isSignedIn
-//          ,publicCommentStore.list.count > 0    // uncomment this to have comments display only if there already is one
+//          ,publicCommentStore.list.count > 0    // uncomment to only show if there is already a comment
         {
             ToolbarItem(placement: .navigationBarTrailing) {
                 NavigationLink(destination:
@@ -100,7 +100,7 @@ extension MainTabView {
         }
 
         if currentUserService.isVerifiedUser
-//          ,privateMessageStore.list.count > 0   // uncomment this to have messages display only if there already is one
+//          ,privateMessageStore.list.count > 0   // uncomment to only show if there is already a message
         {
             ToolbarItem(placement: .navigationBarTrailing) {
                 NavigationLink(destination:
