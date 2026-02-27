@@ -177,5 +177,6 @@ After release, main and develop will have different commit hashes but identical 
 
 
 ## Common Issues
-- **Using wrong build command**:  Always use the build command included above.  When agents invent their own they often include a Simulator that isn't installed, and the build command doesn't report back a problem so the process takes the full time-out period before it can move on.
 - **Making small changes without updating the version number (and ideally date) in the file header**: Not updating the date may make it harder for apps that use the template to recognize a change has happened when upgrading.
+- **Using wrong build command**:  Always use the build command included above.  When agents invent their own they often include a Simulator that isn't installed, and the build command doesn't report back a problem so the process takes the full time-out period before it can move on.
+
