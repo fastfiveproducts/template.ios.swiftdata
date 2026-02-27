@@ -2,8 +2,8 @@
 //  ChangePasswordView.swift
 //
 //  Template file created by Pete Maiser, Fast Five Products LLC, on 8/20/25.
-//  Modified by Pete Maiser, Fast Five Products LLC, on 2/19/26.
-//      Template v0.3.2 (updated) — Fast Five Products LLC's public AGPL template.
+//  Modified by Pete Maiser, Fast Five Products LLC, on 2/26/26.
+//      Template v0.3.4 (updated) — Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025, 2026 Fast Five Products LLC. All rights reserved.
 //
