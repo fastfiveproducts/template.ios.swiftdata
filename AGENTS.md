@@ -174,3 +174,7 @@ git diff main..develop
 **Commit message**: The first line must be exactly `Release vX.Y.Z` with no suffix — this is the title GitHub displays. After a blank line, add the release notes body. Review `git log main..develop --oneline` and prior release messages on main (`git log main --oneline`) to match the established style. Group changes into categories (e.g. **Feature Area**, **Code Quality**, **Infrastructure**) with concise bullet points summarizing each PR/commit. Also look for previous commit messages that duplicate or cancel each other out and squash them. The body should read as release notes — what changed and why, not individual commit details.
 
 After release, main and develop will have different commit hashes but identical content. GitHub may report main as "behind"/"ahead" of develop — this is expected and should be ignored.
+
+
+## Common Issues
+- **Making small changes without updating the version number (and ideally date) in the file header**: Not updating the date may make it harder for apps that use the template to recognize a change has happened when upgrading.

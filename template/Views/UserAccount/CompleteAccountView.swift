@@ -49,6 +49,8 @@ struct CompleteAccountView: View, DebugPrintable {
                 } label: { Text("email address:") }
                     .labeledContentStyle(TopLabeledContentStyle())
 
+                // .emailAddress keyboard type is deliberate — keeps the keyboard
+                // consistent with the email field above.
                 LabeledContent {
                     TextField(text: $viewModel.capturedDisplayNameText) {}
                         .textInputAutocapitalization(.never)
