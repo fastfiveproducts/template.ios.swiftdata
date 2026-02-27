@@ -20,7 +20,7 @@
 
 import Foundation
 import Combine
-@preconcurrency import FirebaseAuth
+@preconcurrency import FirebaseAuth  // Suppresses Sendable warnings until Firebase ships proper conformances
 import FirebaseDataConnect
 import DefaultConnector
 
