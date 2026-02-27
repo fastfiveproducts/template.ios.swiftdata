@@ -39,16 +39,13 @@ extension DebugPrintable {
     }
 }
 
-func deviceLog(_ message: StaticString, category: String = "General", error: Error? = nil) {
-    
+func deviceLog(_ message: String, category: String = "General", error: Error? = nil) {
     let bundleIdentifier: String = Bundle.main.bundleIdentifier ?? "unknownBundleId"
     let log = OSLog(subsystem: bundleIdentifier, category: category)
-    
-    let msg = "\(message)"
+
     if let error = error {
-        os_log(.error, log: log, "%{public}@ %@", msg, error.localizedDescription)
+        os_log(.error, log: log, "%{public}@ %@", message, error.localizedDescription)
     } else {
-        os_log(.error, log: log, "%{public}@", msg)
+        os_log(.error, log: log, "%{public}@", message)
     }
-    
 }
