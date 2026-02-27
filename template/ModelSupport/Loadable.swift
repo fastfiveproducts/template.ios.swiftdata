@@ -84,6 +84,9 @@ extension Loadable: Equatable where Value: Equatable {
             case (.loading, .loading):
                 return true
             case let (.error(error1), .error(error2)):
+                // Error doesn't conform to Equatable either; comparing localizedDescription
+                // is a pragmatic tradeoff - preventing unnecessary SwiftUI re-renders at the
+                // risk of treating different errors with identical localizedDescription as equal.
                 return error1.localizedDescription == error2.localizedDescription
             case let (.loaded(value1), .loaded(value2)):
                 return value1 == value2
