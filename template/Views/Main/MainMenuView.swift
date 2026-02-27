@@ -3,8 +3,8 @@
 //
 //  Template created by Pete Maiser, July 2024 through May 2025
 //  Renamed from HomeView by Pete Maiser, Fast Five Products LLC, on 10/23/25.
-//  Modified by Pete Maiser, Fast Five Products LLC, on 2/18/26.
-//      Template v0.2.9 (updated) — Fast Five Products LLC's public AGPL template.
+//  Modified by Pete Maiser, Fast Five Products LLC, on 2/26/26.
+//      Template v0.3.4 (updated) — Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025, 2026 Fast Five Products LLC. All rights reserved.
 //
@@ -66,7 +66,6 @@ extension MainMenuView {
 
         if currentUserService.isSignedIn
           ,FeatureFlagStore.shared.isEnabled("publicComments")
-//          ,publicCommentStore.list.count > 0    // uncomment this to have comments display only if there already is one
           ,self.selectedMenuItem != .comments
         {
             ToolbarItem(placement: .navigationBarTrailing) {
@@ -86,7 +85,6 @@ extension MainMenuView {
 
         if currentUserService.isVerifiedUser
           ,FeatureFlagStore.shared.isEnabled("privateMessages")
-//          ,privateMessageStore.list.count > 0   // uncomment this to have messages display only if there already is one
           ,self.selectedMenuItem != .messages
         {
             ToolbarItem(placement: .navigationBarTrailing) {

@@ -266,7 +266,7 @@ class UserAccountViewModel: ObservableObject, DebugPrintable {
         do {
             try await currentUserService.createUserAccount(accountCandidate, displayNameTextOverride: capturedEmailText)
         } catch {
-            debugprint("🛑 ERROR:  (View) User \(createdUserId) created in the Authentication system, but Clould error creating User Account: \(error)")
+            debugprint("🛑 ERROR:  (View) User \(createdUserId) created in the Authentication system, but Cloud error creating User Account: \(error)")
             showStatusMode = false
             createAccountMode = false
             self.error = AccountCreationError.userAccountCreationIncomplete(error)
@@ -284,7 +284,7 @@ class UserAccountViewModel: ObservableObject, DebugPrintable {
         do {
             try await currentUserService.createUserDisplayName(accountCandidate.displayName)
         } catch {
-            debugprint("🛑 ERROR:  (View) User \(createdUserId) created and Account initialized, but Clould error creating User Display Name: \(error)")
+            debugprint("🛑 ERROR:  (View) User \(createdUserId) created and Account initialized, but Cloud error creating User Display Name: \(error)")
             self.error = AccountCreationError.userDisplayNameCreationFailed
         }
         

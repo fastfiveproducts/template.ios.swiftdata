@@ -41,6 +41,8 @@ struct CreateAccountView: View, DebugPrintable {
         
         if !viewModel.showStatusMode {
             
+            // .emailAddress keyboard type is deliberate — keeps the keyboard
+            // consistent across the form after the user enters their email above.
             Section(header: Text("Create New Account")) {
                 LabeledContent {
                     SecureField(text: $viewModel.capturedPasswordMatchText, prompt: Text("password")) {}

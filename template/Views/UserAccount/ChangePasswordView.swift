@@ -41,6 +41,8 @@ struct ChangePasswordView: View, DebugPrintable {
     private enum Field: Hashable { case passwordOld, passwordNew, passwordAgain }
 
     var body: some View {
+        // .emailAddress keyboard type is deliberate — keeps the keyboard
+        // consistent with other account forms and avoids layout shifts.
         Section(header: Text("Change Password")) {
             LabeledContent {
                 SecureField(text: $viewModel.capturedPasswordTextOld, prompt: Text("current password")) {}

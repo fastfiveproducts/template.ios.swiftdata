@@ -46,7 +46,12 @@ struct FirestoreConnector: DebugPrintable {
     }
 }
 
-// Extend Firebase Firestore DocumentReference to wrap it with async/await functionality
+// Extend Firebase Firestore DocumentReference to wrap setData(from:) with async/await.
+// As of Firebase iOS SDK 11.x the Encodable variant of setData(from:) only offers a
+// completion-handler API — no native async overload exists.
+// This wrapper unifies encoding errors (synchronous throws) and server errors
+// (completion handler) into a single async throws call site. Remove this extension
+// if Firebase adds a native async setData(from:) for Encodable types.
 private extension DocumentReference {
     func setData<T: Encodable>(from value: T) async throws {
         return try await withCheckedThrowingContinuation { continuation in

@@ -3,8 +3,8 @@
 //
 //  Template created by Pete Maiser, July 2024 through May 2025
 //  Renamed from HomeView by Pete Maiser, Fast Five Products LLC, on 10/23/25.
-//  Modified by Pete Maiser, Fast Five Products LLC, on 2/18/26.
-//      Template v0.2.9 (updated) — Fast Five Products LLC's public AGPL template.
+//  Modified by Pete Maiser, Fast Five Products LLC, on 2/26/26.
+//      Template v0.3.4 (updated) — Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025, 2026 Fast Five Products LLC. All rights reserved.
 //
@@ -28,7 +28,7 @@ struct MainTabView: View {
     @ObservedObject var announcementStore: AnnouncementStore
     @ObservedObject var publicCommentStore: PublicCommentStore
     @ObservedObject var privateMessageStore: PrivateMessageStore
-
+    @ObservedObject private var featureFlagStore = FeatureFlagStore.shared
 
     @State private var selectedTabItem: NavigationItem = .home
 
@@ -82,7 +82,7 @@ extension MainTabView {
     @ToolbarContentBuilder
     var mainToolbar: some ToolbarContent {
         if currentUserService.isSignedIn
-//          ,publicCommentStore.list.count > 0    // uncomment this to have comments display only if there already is one
+          ,FeatureFlagStore.shared.isEnabled("publicComments")
         {
             ToolbarItem(placement: .navigationBarTrailing) {
                 NavigationLink(destination:
@@ -100,7 +100,7 @@ extension MainTabView {
         }
 
         if currentUserService.isVerifiedUser
-//          ,privateMessageStore.list.count > 0   // uncomment this to have messages display only if there already is one
+          ,FeatureFlagStore.shared.isEnabled("privateMessages")
         {
             ToolbarItem(placement: .navigationBarTrailing) {
                 NavigationLink(destination:
