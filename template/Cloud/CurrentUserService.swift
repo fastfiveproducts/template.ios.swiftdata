@@ -2,8 +2,8 @@
 //  CurrentUserService.swift
 //
 //  Template created by Pete Maiser, July 2024 through August 2025
-//  Modified by Pete Maiser, Fast Five Products LLC, on 2/24/26.
-//      Template v0.3.3 (updated) — Fast Five Products LLC's public AGPL template.
+//  Modified by Pete Maiser, Fast Five Products LLC, on 2/26/26.
+//      Template v0.3.4 (updated) — Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025, 2026 Fast Five Products LLC. All rights reserved.
 //
@@ -375,6 +375,8 @@ extension CurrentUserService {
         isCreatingUser = true
         isWaitingOnEmailAuthenticaion = true
         do {
+            // UserDefaults is acceptable here — the email is transient, used only
+            // to complete the email-link sign-in flow, and cleared after use.
             UserDefaults.standard.set(email, forKey: "emailForSignIn")
             let actionCodeSettings = ActionCodeSettings()
             actionCodeSettings.url = URL(string: "https://placeholder.page.link/ios")  // TODO: replace with your app's Dynamic Link URL

@@ -1,10 +1,10 @@
 //
 //  VideoBackgroundView.swift
 //
-//  Modified by Pete Maiser, Fast Five Products LLC, on 2/24/26.
-//      Template v0.3.3 (updated) — Fast Five Products LLC's public AGPL template.
+//  Modified by Pete Maiser, Fast Five Products LLC, on 2/26/26.
+//      Template v0.3.4 (updated) — Fast Five Products LLC's public AGPL template.
 //
-//  Copyright © 2025 Fast Five Products LLC. All rights reserved.
+//  Copyright © 2025, 2026 Fast Five Products LLC. All rights reserved.
 //
 //  This file is part of a project licensed under the GNU Affero General Public License v3.0.
 //  See the LICENSE file at the root of this repository for full terms.
@@ -63,6 +63,8 @@ struct VideoBackgroundView: UIViewRepresentable {
     }
 }
 
+// AnyView is used deliberately here — the guard-return pattern requires a
+// concrete return type, and the performance cost is negligible.
 struct ConditionalVideoBackgroundView: View {
     var body: some View {
         guard !ViewConfig.backgroundVideoName.isEmpty else {
