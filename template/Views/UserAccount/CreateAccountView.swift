@@ -2,10 +2,10 @@
 //  CreateAccountView.swift
 //
 //  Template created by Pete Maiser, July 2024 through August 2025
-//  Modified by Pete Maiser, Fast Five Products LLC, on 2/19/26.
-//      Template v0.3.2 (updated) — Fast Five Products LLC's public AGPL template.
+//  Modified by Pete Maiser, Fast Five Products LLC, on 2/26/26.
+//      Template v0.3.4 (updated) — Fast Five Products LLC's public AGPL template.
 //
-//  Copyright © 2025 Fast Five Products LLC. All rights reserved.
+//  Copyright © 2025, 2026 Fast Five Products LLC. All rights reserved.
 //
 //  This file is part of a project licensed under the GNU Affero General Public License v3.0.
 //  See the LICENSE file at the root of this repository for full terms.
@@ -41,6 +41,8 @@ struct CreateAccountView: View, DebugPrintable {
         
         if !viewModel.showStatusMode {
             
+            // .emailAddress keyboard type is deliberate — keeps the keyboard
+            // consistent across the form after the user enters their email above.
             Section(header: Text("Create New Account")) {
                 LabeledContent {
                     SecureField(text: $viewModel.capturedPasswordMatchText, prompt: Text("password")) {}

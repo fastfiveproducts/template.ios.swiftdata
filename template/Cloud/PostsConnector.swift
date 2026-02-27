@@ -64,9 +64,13 @@ struct PostsConnector {
         let references = try await fetchMyPrivateMessageReferences(limit: limit)
         let refDict = Dictionary(grouping: references, by: { $0.id })
             .mapValues { Set($0.map { $0.referenceId }) }
+        let statusDict = try await fetchMyPrivateMessageStatuses(limit: limit)
         for i in messages.indices {
             if let refs = refDict[messages[i].id] {
                 messages[i].references = refs
+            }
+            if let statuses = statusDict[messages[i].id] {
+                messages[i].status = statuses
             }
         }
         return messages
@@ -120,6 +124,18 @@ struct PostsConnector {
             return reference
         }
         return references
+    }
+
+    // MARK: - Status
+
+    func fetchMyPrivateMessageStatuses(limit: Int = defaultFetchLimit) async throws -> [UUID: [MessageStatus]] {
+        let queryRef = DataConnect.defaultConnector.getMyPrivateMessageStatusQuery.ref(limit: limit)
+        let operationResult = try await queryRef.execute()
+        let statuses = try operationResult.data.privateMessageStatuses.compactMap { firebaseStatus -> (UUID, MessageStatus)? in
+            let status = try makeMessageStatusStruct(from: firebaseStatus)
+            return (firebaseStatus.privateMessageId, status)
+        }
+        return Dictionary(grouping: statuses, by: { $0.0 }).mapValues { $0.map { $0.1 } }
     }
 
     // MARK: - Create Mutations

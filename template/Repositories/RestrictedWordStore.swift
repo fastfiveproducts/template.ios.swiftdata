@@ -188,7 +188,7 @@ final class RestrictedWordStore: ObservableObject, DebugPrintable {
             deviceLog("Restricted Word functionality requested but Restricted Words still loading.", category: "RestrictedWords")
         } else {
             debugprint("🛑 ERROR:  *****FIXME*****  Restricted Word functionality requested but was never enabled!!! Execution will continue.")
-            deviceLog("System Error:  Restricted Word functionality requsted but was never enabled by the application.", category: "RestrictedWords")
+            deviceLog("System Error:  Restricted Word functionality requested but was never enabled by the application.", category: "RestrictedWords")
         }
         return false
         

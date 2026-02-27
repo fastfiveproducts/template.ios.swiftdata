@@ -2,8 +2,8 @@
 //  SupportLinkView.swift
 //
 //  Template file created by Pete Maiser, Fast Five Products LLC, on 10/31/25.
-//  Modified by Pete Maiser, Fast Five Products LLC, on 2/22/26.
-//      Template v0.3.3 (updated) — Fast Five Products LLC's public AGPL template.
+//  Modified by Pete Maiser, Fast Five Products LLC, on 2/26/26.
+//      Template v0.3.4 (updated) — Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025, 2026 Fast Five Products LLC. All rights reserved.
 //
@@ -66,14 +66,12 @@ struct SupportLinkView: View {
                 SupportView()
                     .onAppear { onNavigate?() }
             } label: {
-                if inToolbar && currentUserService.isRealUser {
+                if currentUserService.isRealUser {
                     Label("Account Profile", systemImage: "\(NavigationItem.support.systemImage).fill")
                 } else {
                     HStack {
                         Text(leadingText)
-                        Image(systemName: currentUserService.isRealUser
-                              ? "\(NavigationItem.support.systemImage).fill"
-                              : NavigationItem.support.systemImage)
+                        Image(systemName: NavigationItem.support.systemImage)
                         Text(trailingText)
                     }
                     .foregroundStyle(ViewConfig.linkColor)
@@ -82,23 +80,19 @@ struct SupportLinkView: View {
             .buttonStyle(BorderlessButtonStyle())
         } else {
             if showDivider { Divider() }
-            
+
             NavigationLink {
                 SupportView()
-                    .onAppear { onNavigate?() } 
+                    .onAppear { onNavigate?() }
             } label: {
-                if inToolbar && currentUserService.isRealUser {
-                    Label("Account Profile", systemImage: "\(NavigationItem.support.systemImage).fill")
-                } else {
-                    HStack {
-                        Text(leadingText)
-                        Image(systemName: currentUserService.isRealUser
-                              ? "\(NavigationItem.support.systemImage).fill"
-                              : NavigationItem.support.systemImage)
-                        Text(trailingText)
-                    }
-                    .foregroundStyle(ViewConfig.linkColor)
+                HStack {
+                    Text(leadingText)
+                    Image(systemName: currentUserService.isRealUser
+                          ? "\(NavigationItem.support.systemImage).fill"
+                          : NavigationItem.support.systemImage)
+                    Text(trailingText)
                 }
+                .foregroundStyle(ViewConfig.linkColor)
             }
             .buttonStyle(BorderlessButtonStyle())
         }

@@ -78,8 +78,15 @@ When asked to "do a code review", follow this process:
 ### Output Format
 Present findings as a numbered table with columns: ID, Category, Priority, Summary, and File(s). Use short IDs (e.g. B1, S1, E1, D1, P1, C1, L1) by category. Prioritize bugs and security issues first.
 
+### Cross-Referencing
+Before reporting any finding, cross-reference it against:
+1. **Existing GitHub issues** (open and closed) — if a finding is already tracked by an issue, omit it
+2. **Previous code review comments** — check prior code review issues (e.g., the body and comments of issues titled "code review") for findings that were previously reported and given a disposition (fixed, deferred, won't-fix, or explained). If a GitHub issue already exists for a finding (that isn't closed) or the finding was dispositioned won't-fix in a prior review, omit it unless circumstances have materially changed.  For other dispositions, report the past disposition.
+
+Focus on genuinely new findings not already tracked or dispositioned.
+
 ### Workflow
-1. Explore the repo thoroughly, then present the full findings table
+1. Explore the repo thoroughly, cross-reference against existing issues and prior code review dispositions, then present the filtered findings table
 2. Discuss each finding with the user — they will decide to fix, close, or defer each one
 3. For each fix: edit → build → commit → push
 4. After each commit, regenerate the tracking table with updated statuses
@@ -167,3 +174,9 @@ git diff main..develop
 **Commit message**: The first line must be exactly `Release vX.Y.Z` with no suffix — this is the title GitHub displays. After a blank line, add the release notes body. Review `git log main..develop --oneline` and prior release messages on main (`git log main --oneline`) to match the established style. Group changes into categories (e.g. **Feature Area**, **Code Quality**, **Infrastructure**) with concise bullet points summarizing each PR/commit. Also look for previous commit messages that duplicate or cancel each other out and squash them. The body should read as release notes — what changed and why, not individual commit details.
 
 After release, main and develop will have different commit hashes but identical content. GitHub may report main as "behind"/"ahead" of develop — this is expected and should be ignored.
+
+
+## Common Issues
+- **Making small changes without updating the version number (and ideally date) in the file header**: Not updating the date may make it harder for apps that use the template to recognize a change has happened when upgrading.
+- **Using wrong build command**:  Always use the build command included above.  When agents invent their own they often include a Simulator that isn't installed, and the build command doesn't report back a problem so the process takes the full time-out period before it can move on.
+

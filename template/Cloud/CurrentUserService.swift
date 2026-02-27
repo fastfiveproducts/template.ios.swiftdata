@@ -2,8 +2,8 @@
 //  CurrentUserService.swift
 //
 //  Template created by Pete Maiser, July 2024 through August 2025
-//  Modified by Pete Maiser, Fast Five Products LLC, on 2/24/26.
-//      Template v0.3.3 (updated) — Fast Five Products LLC's public AGPL template.
+//  Modified by Pete Maiser, Fast Five Products LLC, on 2/26/26.
+//      Template v0.3.4 (updated) — Fast Five Products LLC's public AGPL template.
 //
 //  Copyright © 2025, 2026 Fast Five Products LLC. All rights reserved.
 //
@@ -20,7 +20,7 @@
 
 import Foundation
 import Combine
-@preconcurrency import FirebaseAuth
+@preconcurrency import FirebaseAuth  // Suppresses Sendable warnings until Firebase ships proper conformances
 import FirebaseDataConnect
 import DefaultConnector
 
@@ -42,7 +42,7 @@ class CurrentUserService: ObservableObject, DebugPrintable {
     @Published var isSignedIn = false
     @Published var isRealUser = false
     
-    // because Auth masters users, creating a User in the Authententication system is "creating a user"
+    // because Auth masters users, creating a User in the Authentication system is "creating a user"
     // even if the user is not complete until the Account is created and complete
     @Published var isCreatingUser = false
     
@@ -375,6 +375,8 @@ extension CurrentUserService {
         isCreatingUser = true
         isWaitingOnEmailAuthenticaion = true
         do {
+            // UserDefaults is acceptable here — the email is transient, used only
+            // to complete the email-link sign-in flow, and cleared after use.
             UserDefaults.standard.set(email, forKey: "emailForSignIn")
             let actionCodeSettings = ActionCodeSettings()
             actionCodeSettings.url = URL(string: "https://placeholder.page.link/ios")  // TODO: replace with your app's Dynamic Link URL
@@ -425,7 +427,7 @@ extension CurrentUserService {
                 try await createUserAccount(UserAccountCandidate(uid: userId, displayName: email, photoUrl: ""))
                 UserDefaults.standard.removeObject(forKey: "emailForSignIn")
             } catch {
-                debugprint("🛑 ERROR:  (View) User \(userId) created but Clould error creating User Profile. Error: \(error)")
+                debugprint("🛑 ERROR:  (View) User \(userId) created but Cloud error creating User Profile. Error: \(error)")
                 self.error = error
             }
         }
