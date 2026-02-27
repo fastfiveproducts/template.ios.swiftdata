@@ -29,7 +29,7 @@ struct Announcement: Listable {
     private(set) var imageUrl: String?
 
     var isValid: Bool {
-        !content.trimmingCharacters(in: .whitespaces).isEmpty
+        !content.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
     }
 }
 
